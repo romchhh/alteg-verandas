@@ -40,6 +40,12 @@ const WhatsAppIcon: React.FC<{ className?: string }> = ({ className = '' }) => (
   </svg>
 );
 
+const LinkedInIcon: React.FC<{ className?: string }> = ({ className = '' }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <path d="M20.447 20.452H17.24v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.447-2.136 2.942v5.664H9.046V9h3.073v1.561h.044c.428-.81 1.474-1.664 3.034-1.664 3.245 0 3.842 2.137 3.842 4.917v6.638zM5.337 7.433c-.986 0-1.783-.8-1.783-1.786 0-.987.797-1.787 1.783-1.787.985 0 1.785.8 1.785 1.787 0 .986-.8 1.786-1.785 1.786zM6.813 20.452H3.861V9h2.952v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
+  </svg>
+);
+
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
@@ -70,6 +76,15 @@ export const Footer: React.FC = () => {
               </a>
               <a href="https://www.instagram.com/alteg_uk/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/10 hover:bg-[#445DFE] rounded-full flex items-center justify-center transition-colors" aria-label="Instagram">
                 <InstagramIcon className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/alteg-uk-5891693b2/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-white/10 hover:bg-[#445DFE] rounded-full flex items-center justify-center transition-colors"
+                aria-label="LinkedIn"
+              >
+                <LinkedInIcon className="w-5 h-5" />
               </a>
             </div>
           </div>
