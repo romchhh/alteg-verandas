@@ -29,6 +29,7 @@ type RawProductInput = {
   pricePerKg?: number;
   pricePerM?: number;
   categoryId: string;
+  inStock?: boolean;
 };
 
 /**
@@ -205,6 +206,7 @@ const RAW_PRODUCTS: RawProductInput[] = [
     weightKgPerM: 1.0,
     pricePerKg: 12.77,
     categoryId: 't_profile',
+    inStock: false,
   },
   // 17 — Handrail Tube Ø42.4×2 ~0.6 200 10,77
   {
@@ -387,7 +389,7 @@ function buildProductFromRaw(raw: RawProductInput, index: number): Product {
     standardLengths: STD_LENGTHS,
     material: 'Aluminium',
     finish: raw.finish,
-    inStock: true,
+    inStock: raw.inStock ?? true,
   };
 }
 
