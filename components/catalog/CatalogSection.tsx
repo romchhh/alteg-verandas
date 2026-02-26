@@ -6,7 +6,7 @@ import { PRODUCT_CATEGORIES, CATALOG_PRODUCTS } from '@/lib/constants/catalog';
 import { Product, ProductCategory, ProductCategoryInfo } from '@/lib/types/product';
 import { Button } from '@/components/shared/Button';
 import { useContactModalStore } from '@/store/contactModal';
-import { getUploadImageSrc } from '@/lib/utils/image';
+import { getUploadImageSrc, isServerUploadUrl } from '@/lib/utils/image';
 
 const INITIAL_PRODUCTS = 20; // 5 rows on desktop (4 columns x 5 rows = 20 products)
 const PRODUCTS_PER_PAGE = 20; // Load 20 more products each time (5 more rows)
@@ -192,7 +192,7 @@ export const CatalogSection: React.FC = () => {
                   <div
                     className="absolute inset-0 bg-cover bg-center transition-transform duration-500 ease-out group-hover:scale-110"
                     style={{
-                      backgroundImage: `url(${getUploadImageSrc('/production_1.jpg')})`,
+                      backgroundImage: `url(/production_1.jpg)`,
                     }}
                   />
                 </div>
@@ -219,7 +219,13 @@ export const CatalogSection: React.FC = () => {
                     <div
                       className="absolute inset-0 bg-cover bg-center transition-transform duration-500 ease-out group-hover:scale-110"
                       style={{
-                        backgroundImage: `url(${getUploadImageSrc(info.image || '/production_1.jpg')})`,
+                        backgroundImage: (() => {
+                          const base = info.image || '/production_1.jpg';
+                          if (isServerUploadUrl(base)) {
+                            return `url(${getUploadImageSrc(base, true)})`;
+                          }
+                          return `url(${base})`;
+                        })(),
                       }}
                     />
                   </div>

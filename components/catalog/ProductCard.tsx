@@ -23,15 +23,23 @@ const MAX_CUSTOM_LENGTH = 25;
 const DEFAULT_PRODUCT_IMAGE = '/production_1.jpg';
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, categoryInfo }) => {
-  // Try product image first (if it's a server upload), then category image (if it's a server upload), then default
-  let rawImage: string | null = null;
-  if (product.image && isServerUploadUrl(product.image)) {
-    rawImage = product.image;
-  } else if (categoryInfo.image && isServerUploadUrl(categoryInfo.image)) {
-    rawImage = categoryInfo.image;
-  }
-  // Use direct /uploads/ path for Next.js Image optimization (auto WebP conversion)
-  const displaySrc = rawImage ? getUploadImageSrc(rawImage, true) : DEFAULT_PRODUCT_IMAGE;
+  // Resolve image from product or category; supports both uploads and static paths.
+  const resolveImageSrc = (url?: string | null): string | null => {
+    if (!url) return null;
+    const trimmed = url.trim();
+    if (!trimmed) return null;
+    if (isServerUploadUrl(trimmed)) {
+      // Use direct /uploads path for Next.js optimisation
+      return getUploadImageSrc(trimmed, true);
+    }
+    // Static path like /category-images/...
+    return trimmed;
+  };
+
+  const displaySrc =
+    resolveImageSrc(product.image) ??
+    resolveImageSrc(categoryInfo.image) ??
+    DEFAULT_PRODUCT_IMAGE;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSuccessAlertOpen, setIsSuccessAlertOpen] = useState(false);
   const [length, setLength] = useState(product.standardLengths[0]);

@@ -333,7 +333,13 @@ export const OrderCalculator: React.FC = () => {
                       <div className="relative flex-1 min-h-0 overflow-hidden">
                         <div className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-110">
                           <Image
-                            src={getCategoryImage(key) ? getUploadImageSrc(getCategoryImage(key), true) : '/production_1.jpg'}
+                            src={(() => {
+                              const img = getCategoryImage(key) || '/production_1.jpg';
+                              if (isServerUploadUrl(img)) {
+                                return getUploadImageSrc(img, true);
+                              }
+                              return img;
+                            })()}
                             alt={`${getCategoryName(key)} background`}
                             fill
                             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
