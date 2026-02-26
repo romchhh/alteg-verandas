@@ -16,6 +16,7 @@ import {
   insertCustomCategoryRaw,
   getCustomCategories,
   deleteCustomCategory,
+  updateCustomCategory,
 } from '../lib/data/categories';
 
 const STD_LENGTHS: number[] = [1, 3, 6];
@@ -231,7 +232,7 @@ const RAW_PRODUCTS: RawProductInput[] = [
  */
 function ensureCategoriesForRawProducts() {
   // 1) Remove redundant duplicate categories that we don't want to show.
-  const redundantIds = ['box_section', 'flat_bar', 'tube_pipe'];
+  const redundantIds = ['box_section', 'flat_bar', 'tube_pipe', 't_section'];
   for (const id of redundantIds) {
     const existing = getCustomCategory(id);
     if (existing) {
@@ -303,8 +304,6 @@ function ensureCategoriesForRawProducts() {
 
   for (const id of categoryIds) {
     const existing = getCustomCategory(id);
-    if (existing) continue;
-
     const labels =
       CATEGORY_LABELS[id] ??
       ({
@@ -314,13 +313,26 @@ function ensureCategoriesForRawProducts() {
         image: null,
       } as const);
 
-    insertCustomCategoryRaw({
-      id,
-      name: labels.name,
-      nameEn: labels.nameEn,
-      description: labels.description ?? null,
-      image: labels.image ?? null,
-    });
+    if (existing) {
+      // Update existing category with latest English name/description and image.
+      updateCustomCategory(id, {
+        name: labels.name,
+        nameEn: labels.nameEn,
+        description: labels.description ?? undefined,
+        image: labels.image ?? undefined,
+      });
+      console.log(`Updated category ${id} (name/description/image).`);
+    } else {
+      // Insert new custom category row.
+      insertCustomCategoryRaw({
+        id,
+        name: labels.name,
+        nameEn: labels.nameEn,
+        description: labels.description ?? null,
+        image: labels.image ?? null,
+      });
+      console.log(`Inserted category ${id} with image ${labels.image ?? 'none'}.`);
+    }
   }
 }
 
