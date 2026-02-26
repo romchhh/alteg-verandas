@@ -3,9 +3,21 @@ import type { ProductCategory } from '@/lib/types/product';
 import { PRODUCT_CATEGORIES } from '@/lib/constants/catalog';
 
 export const BUILT_IN_IDS = new Set<string>([
-  'angle', 'plate', 'channel', 'i_beam', 't_beam', 'round_bar',
-  't_profile', 'z_profile', 'tube_round', 'square_bar', 'sheet',
-  'threshold', 'tube_square', 'tube_rectangular',
+  'angle',
+  'plate',
+  'channel',
+  'i_beam',
+  't_beam',
+  'round_bar',
+  't_profile',
+  'z_profile',
+  'tube_round',
+  'square_bar',
+  'sheet',
+  'threshold',
+  'tube_square',
+  'tube_rectangular',
+  'custom_profile',
 ]);
 
 export interface CategoryOverride {

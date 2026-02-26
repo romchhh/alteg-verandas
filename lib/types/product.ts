@@ -12,7 +12,8 @@ export type ProductCategory =
   | 'sheet'
   | 'threshold'
   | 'tube_square'
-  | 'tube_rectangular';
+  | 'tube_rectangular'
+  | 'custom_profile';
 
 export interface ProductCategoryInfo {
   name: string;

@@ -400,51 +400,113 @@ export const OrderCalculator: React.FC = () => {
                     </button>
                     {profileDropdownOpen && (
                       <ul className="absolute z-10 mt-1 w-full max-h-80 overflow-auto border-2 border-gray-200 rounded-lg bg-white shadow-lg py-1">
-                        {availableProducts.length === 0 ? (
-                          <li className="px-4 py-4 text-center text-gray-600">
-                            <p className="font-medium text-[#050544] mb-1">No products in this category.</p>
-                            <p className="text-sm">Please select another category.</p>
-                          </li>
-                        ) : (
-                          availableProducts.map((product) => {
-                            const ppm = getPricePerMeter(product);
-                            const img = getProductImage(product);
-                            const imgSrc = isServerUploadUrl(img) ? getUploadImageSrc(img, true) : img;
+                        {(() => {
+                          const inStockProducts = availableProducts.filter((p) => p.inStock);
+                          const outOfStockProducts = availableProducts.filter((p) => !p.inStock);
+
+                          if (availableProducts.length === 0) {
                             return (
-                              <li key={product.id}>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    handleProductSelect(product.id);
-                                    setProfileDropdownOpen(false);
-                                  }}
-                                  className={`w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-[#E9EDF4] transition-colors ${
-                                    selectedProduct?.id === product.id ? 'bg-[#E9EDF4]' : ''
-                                  }`}
-                                >
-                                  <span className="relative w-12 h-12 shrink-0 rounded overflow-hidden bg-gray-100">
-                                    <Image
-                                      src={imgSrc}
-                                      alt=""
-                                      fill
-                                      className="object-cover"
-                                      sizes="48px"
-                                    />
-                                  </span>
-                                  <span className="flex-1 min-w-0">
-                                    <span className="font-medium text-[#050544] block truncate">
-                                      {product.nameEn} ({product.dimensions})
-                                    </span>
-                                    <span className="text-sm text-gray-600">
-                                      £{(ppm ?? product.pricePerKg ?? 0).toFixed(2)}
-                                      {ppm != null ? '/m' : '/kg'}
-                                    </span>
-                                  </span>
-                                </button>
+                              <li className="px-4 py-4 text-center text-gray-600">
+                                <p className="font-medium text-[#050544] mb-1">No products in this category.</p>
+                                <p className="text-sm">Please select another category.</p>
                               </li>
                             );
-                          })
-                        )}
+                          }
+
+                          return (
+                            <>
+                              {inStockProducts.map((product) => {
+                                const ppm = getPricePerMeter(product);
+                                const img = getProductImage(product);
+                                const imgSrc = isServerUploadUrl(img) ? getUploadImageSrc(img, true) : img;
+                                return (
+                                  <li key={product.id}>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        handleProductSelect(product.id);
+                                        setProfileDropdownOpen(false);
+                                      }}
+                                      className={`w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-[#E9EDF4] transition-colors ${
+                                        selectedProduct?.id === product.id ? 'bg-[#E9EDF4]' : ''
+                                      }`}
+                                    >
+                                      <span className="relative w-12 h-12 shrink-0 rounded overflow-hidden bg-gray-100">
+                                        <Image
+                                          src={imgSrc}
+                                          alt=""
+                                          fill
+                                          className="object-cover"
+                                          sizes="48px"
+                                        />
+                                      </span>
+                                      <span className="flex-1 min-w-0">
+                                        <span className="font-medium text-[#050544] block truncate">
+                                          {product.nameEn} ({product.dimensions})
+                                        </span>
+                                        <div className="flex items-center justify-between gap-2">
+                                          <span className="text-sm text-gray-600">
+                                            £{(ppm ?? product.pricePerKg ?? 0).toFixed(2)}
+                                            {ppm != null ? '/m' : '/kg'}
+                                          </span>
+                                          <span className="text-xs font-semibold text-green-600 whitespace-nowrap">
+                                            In stock
+                                          </span>
+                                        </div>
+                                      </span>
+                                    </button>
+                                  </li>
+                                );
+                              })}
+
+                              {outOfStockProducts.length > 0 && inStockProducts.length > 0 && (
+                                <li className="px-4 py-2 text-xs uppercase tracking-wide text-gray-500 border-t border-gray-200">
+                                  Out of stock
+                                </li>
+                              )}
+
+                              {outOfStockProducts.map((product) => {
+                                const ppm = getPricePerMeter(product);
+                                const img = getProductImage(product);
+                                const imgSrc = isServerUploadUrl(img) ? getUploadImageSrc(img, true) : img;
+                                return (
+                                  <li key={product.id}>
+                                    <button
+                                      type="button"
+                                      disabled
+                                      aria-disabled="true"
+                                      className="w-full px-4 py-3 flex items-center gap-3 text-left bg-gray-50 text-gray-400 cursor-not-allowed opacity-70"
+                                    >
+                                      <span className="relative w-12 h-12 shrink-0 rounded overflow-hidden bg-gray-100">
+                                        <Image
+                                          src={imgSrc}
+                                          alt=""
+                                          fill
+                                          className="object-cover"
+                                          sizes="48px"
+                                        />
+                                      </span>
+                                      <span className="flex-1 min-w-0">
+                                        <span className="font-medium block truncate">
+                                          {product.nameEn} ({product.dimensions})
+                                        </span>
+                                        <div className="flex items-center justify-between gap-2">
+                                          <span className="text-sm">
+                                            £{(ppm ?? product.pricePerKg ?? 0).toFixed(2)}
+                                            {ppm != null ? '/m' : '/kg'}
+                                          </span>
+                                          <span className="text-xs font-semibold text-red-500 whitespace-nowrap">
+                                            Out of stock
+                                          </span>
+                                        </div>
+                                      </span>
+                                    </button>
+                                  </li>
+                                );
+                              })}
+                            </>
+                          );
+                        })()}
                       </ul>
                     )}
                   </div>

@@ -77,10 +77,17 @@ export const CatalogSection: React.FC = () => {
   }, []);
 
   const productsList = productsFromApi !== null && productsFromApi.length > 0 ? productsFromApi : CATALOG_PRODUCTS;
-  const filteredProducts =
+
+  const filteredProductsRaw =
     selectedCategory === 'all'
       ? productsList
       : productsList.filter((p) => String(p.category) === selectedCategory);
+
+  // Show in-stock products first, then out-of-stock
+  const filteredProducts = [...filteredProductsRaw].sort((a, b) => {
+    if (a.inStock === b.inStock) return 0;
+    return a.inStock ? -1 : 1;
+  });
 
   const displayedProducts = filteredProducts.slice(0, displayCount);
   const hasMore = displayCount < filteredProducts.length;

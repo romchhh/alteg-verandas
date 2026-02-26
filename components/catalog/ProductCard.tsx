@@ -102,6 +102,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, categoryInfo 
   };
 
   const handleAddToCart = () => {
+    if (!product.inStock) return;
     addItem(product, effectiveLength, quantity, freeCutting, additionalProcessing.trim() || undefined);
     setIsModalOpen(false);
     setIsSuccessAlertOpen(true);
@@ -144,9 +145,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, categoryInfo 
             sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
             priority={false}
           />
-          {product.inStock && (
+          {product.inStock ? (
             <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-sm text-emerald-700 text-xs font-semibold px-2.5 py-1 rounded-md shadow-sm border border-emerald-200/80">
               In stock
+            </div>
+          ) : (
+            <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-sm text-red-600 text-xs font-semibold px-2.5 py-1 rounded-md shadow-sm border border-red-200/80">
+              Out of stock
             </div>
           )}
         </div>
@@ -185,11 +190,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, categoryInfo 
           {/* Buttons - Fifth Row */}
           <div className="mt-auto flex flex-col gap-2">
             <Button
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                if (!product.inStock) return;
+                setIsModalOpen(true);
+              }}
               variant="primary"
-              className="w-full bg-[#445DFE] hover:bg-[#050544] text-white py-2 px-3 text-xs sm:text-sm transition-colors duration-300"
+              disabled={!product.inStock}
+              aria-disabled={!product.inStock}
+              className={`w-full bg-[#445DFE] text-white py-2 px-3 text-xs sm:text-sm transition-colors duration-300 ${
+                product.inStock ? 'hover:bg-[#050544]' : 'opacity-60 cursor-not-allowed'
+              }`}
             >
-              Add to Order
+              {product.inStock ? 'Add to Order' : 'Out of stock'}
             </Button>
             <Link
               href="/wholesale"
