@@ -245,17 +245,19 @@ function ensureCategoriesForRawProducts() {
 
   const CATEGORY_LABELS: Record<
     string,
-    { name: string; nameEn: string; description?: string | null }
+    { name: string; nameEn: string; description?: string | null; image?: string | null }
   > = {
     angle: {
       name: 'Angle',
       nameEn: 'Angle',
       description: 'Aluminium angle profiles.',
+      image: '/category-images/custom_profile.jpg', // fallback if needed
     },
     plate: {
       name: 'Plate / Flat Bar',
       nameEn: 'Plate / Flat Bar',
       description: 'Aluminium plate and flat bar profiles.',
+      image: '/category-images/plate-flat-bar.jpg',
     },
     channel: {
       name: 'Channel',
@@ -266,16 +268,19 @@ function ensureCategoriesForRawProducts() {
       name: 'Round Tube / Pipe',
       nameEn: 'Round Tube / Pipe',
       description: 'Aluminium round tube and pipe profiles.',
+      image: '/category-images/tube-round.png',
     },
     tube_square: {
       name: 'Square Tube',
       nameEn: 'Square Tube',
       description: 'Aluminium square tube profiles.',
+      image: '/category-images/tube-square.png',
     },
     tube_rectangular: {
       name: 'Rectangular Tube',
       nameEn: 'Rectangular Tube',
       description: 'Aluminium rectangular tube profiles.',
+      image: '/category-images/tube-profiles.jpg',
     },
     round_bar: {
       name: 'Round Bar',
@@ -286,11 +291,13 @@ function ensureCategoriesForRawProducts() {
       name: 'T Profile',
       nameEn: 'T Profile',
       description: 'Aluminium T profile and T-slot systems.',
+      image: '/api/uploads/mlf5k6b2-zqqmdp.png',
     },
     custom_profile: {
       name: 'Custom Profile',
       nameEn: 'Custom Profile',
       description: 'Custom aluminium extrusion profile according to drawing.',
+      image: '/category-images/custom_profile.jpg',
     },
   };
 
@@ -304,6 +311,7 @@ function ensureCategoriesForRawProducts() {
         name: id,
         nameEn: id,
         description: null,
+        image: null,
       } as const);
 
     insertCustomCategoryRaw({
@@ -311,7 +319,7 @@ function ensureCategoriesForRawProducts() {
       name: labels.name,
       nameEn: labels.nameEn,
       description: labels.description ?? null,
-      image: null,
+      image: labels.image ?? null,
     });
   }
 }
