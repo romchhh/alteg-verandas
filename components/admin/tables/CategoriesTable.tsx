@@ -188,10 +188,10 @@ export default function CategoriesTable() {
                     {productCountByCategory[cat.id] ?? 0}
                   </TableCell>
                   <TableCell className="px-5 py-4 w-20">
-                    {cat.image && isServerUploadUrl(cat.image) ? (
+                    {cat.image ? (
                       <div className="relative h-10 w-10 rounded overflow-hidden bg-gray-100">
                         <Image
-                          src={getUploadImageSrc(cat.image)}
+                          src={isServerUploadUrl(cat.image) ? getUploadImageSrc(cat.image) : cat.image}
                           alt=""
                           fill
                           className="object-cover"

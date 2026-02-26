@@ -75,9 +75,9 @@ export const OrderCalculator: React.FC = () => {
 
   const getCategoryImage = (categoryKey: string): string => {
     const fromApi = categoriesMap[categoryKey]?.image;
-    if (fromApi && isServerUploadUrl(fromApi)) return fromApi;
+    if (fromApi) return fromApi;
     const fromCatalog = (PRODUCT_CATEGORIES as Record<string, { image?: string }>)[categoryKey]?.image;
-    if (fromCatalog && isServerUploadUrl(fromCatalog)) return fromCatalog;
+    if (fromCatalog) return fromCatalog;
     return '';
   };
 
@@ -91,8 +91,8 @@ export const OrderCalculator: React.FC = () => {
 
   /** Product image, or category image when product has none (only server uploads) */
   const getProductImage = (product: Product): string => {
-    // Try product image if it's a server upload
-    if (product.image && isServerUploadUrl(product.image)) {
+    // Try product image first
+    if (product.image) {
       return product.image;
     }
     // Fallback to category image if it's a server upload
