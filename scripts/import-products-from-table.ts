@@ -12,11 +12,10 @@
 import type { Product } from '../lib/types/product';
 import { getProducts, addProduct, updateProduct } from '../lib/data/products';
 import {
-  getCustomCategory,
-  insertCustomCategoryRaw,
   getCustomCategories,
   deleteCustomCategory,
-  updateCustomCategory,
+  deleteAllCustomCategories,
+  upsertCategoryOverride,
 } from '../lib/data/categories';
 
 const STD_LENGTHS: number[] = [1, 3, 6];
@@ -231,17 +230,12 @@ const RAW_PRODUCTS: RawProductInput[] = [
  * - Creates / normalises categories for ids used in RAW_PRODUCTS.
  */
 function ensureCategoriesForRawProducts() {
-  // 1) Remove redundant duplicate categories that we don't want to show.
-  const redundantIds = ['box_section', 'flat_bar', 'tube_pipe', 't_section'];
-  for (const id of redundantIds) {
-    const existing = getCustomCategory(id);
-    if (existing) {
-      deleteCustomCategory(id);
-      console.log(`Deleted redundant category: ${id}`);
-    }
-  }
+  // 1) Remove any old custom categories (this project uses only built-in + overrides).
+  //    This also effectively removes redundant ids like box_section, flat_bar, tube_pipe, t_section.
+  deleteAllCustomCategories();
+  console.log('Cleared all custom_categories (using built-in categories + overrides only).');
 
-  // 2) Ensure categories for all ids used in the pricing table.
+  // 2) Ensure overrides for all ids used in the pricing table.
   const categoryIds = Array.from(new Set(RAW_PRODUCTS.map((p) => p.categoryId)));
 
   const CATEGORY_LABELS: Record<
@@ -303,7 +297,6 @@ function ensureCategoriesForRawProducts() {
   };
 
   for (const id of categoryIds) {
-    const existing = getCustomCategory(id);
     const labels =
       CATEGORY_LABELS[id] ??
       ({
@@ -313,26 +306,14 @@ function ensureCategoriesForRawProducts() {
         image: null,
       } as const);
 
-    if (existing) {
-      // Update existing category with latest English name/description and image.
-      updateCustomCategory(id, {
-        name: labels.name,
-        nameEn: labels.nameEn,
-        description: labels.description ?? undefined,
-        image: labels.image ?? undefined,
-      });
-      console.log(`Updated category ${id} (name/description/image).`);
-    } else {
-      // Insert new custom category row.
-      insertCustomCategoryRaw({
-        id,
-        name: labels.name,
-        nameEn: labels.nameEn,
-        description: labels.description ?? null,
-        image: labels.image ?? null,
-      });
-      console.log(`Inserted category ${id} with image ${labels.image ?? 'none'}.`);
-    }
+    // For built-in categories, we use category_overrides (upsertCategoryOverride).
+    upsertCategoryOverride(id, {
+      name: labels.name,
+      nameEn: labels.nameEn,
+      description: labels.description ?? undefined,
+      image: labels.image ?? undefined,
+    });
+    console.log(`Upserted override for category ${id} with image ${labels.image ?? 'none'}.`);
   }
 }
 

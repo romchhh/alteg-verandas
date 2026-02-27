@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { PRODUCT_CATEGORIES } from '@/lib/constants/catalog';
-import { getCategoryOverrides, getCustomCategories } from '@/lib/data/categories';
+import { getCategoryOverrides } from '@/lib/data/categories';
 
 /**
  * Public API: returns categories for catalog, checkout, etc.
@@ -8,19 +8,6 @@ import { getCategoryOverrides, getCustomCategories } from '@/lib/data/categories
  */
 export async function GET() {
   try {
-    const custom = getCustomCategories();
-    if (custom.length > 0) {
-      return NextResponse.json(
-        custom.map((c) => ({
-          id: c.id,
-          name: c.name,
-          nameEn: c.name_en,
-          description: c.description ?? '',
-          image: c.image ?? '',
-        }))
-      );
-    }
-
     const overrides = getCategoryOverrides();
     const overrideMap = new Map(overrides.map((o) => [o.id, o]));
 
