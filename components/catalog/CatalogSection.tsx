@@ -76,7 +76,14 @@ export const CatalogSection: React.FC = () => {
       .catch(() => {});
   }, []);
 
-  const productsList = productsFromApi !== null && productsFromApi.length > 0 ? productsFromApi : CATALOG_PRODUCTS;
+  const productsListRaw = productsFromApi !== null && productsFromApi.length > 0 ? productsFromApi : CATALOG_PRODUCTS;
+
+  // Hide products whose category no longer exists in the category list
+  const productsList = productsListRaw.filter((p) => {
+    const catId = String(p.category);
+    const map = categoriesMap ?? (PRODUCT_CATEGORIES as Record<string, ProductCategoryInfo>);
+    return !!map[catId];
+  });
 
   const filteredProductsRaw =
     selectedCategory === 'all'
