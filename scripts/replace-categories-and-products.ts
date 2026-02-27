@@ -1,8 +1,19 @@
 /**
- * Replace categories in DB with the new 12 categories and seed products (Angle, Box Section, Channel).
- * Deletes all existing custom categories, category overrides, and products; then inserts new data.
+ * Replace categories in DB with the new category set and seed products
+ * from the pricing table + placeholders.
  *
- * Run: npx tsx scripts/replace-categories-and-products.ts
+ * Deletes ALL existing custom categories, category overrides, and products,
+ * then inserts:
+ * - Categories:
+ *   Angle, Box Section, Channel, Flat Bar, Mesh, Round Bar, Sheet, Square Bar,
+ *   Tube / Pipe, RSJs / I-beams, Checker plate, T-Section,
+ *   Aluminium, Brass, Bronze, Cast Iron, Copper
+ * - Products:
+ *   - All rows from the provided pricing table, mapped to the new categories
+ *   - For every category, at least one fake product with price 0 and not in stock
+ *
+ * Run:
+ *   npx tsx scripts/replace-categories-and-products.ts
  */
 import {
   deleteAllCustomCategories,
@@ -12,203 +23,390 @@ import {
 import { saveProducts } from '../lib/data/products';
 import type { Product } from '../lib/types/product';
 
+// EXACTLY these 12 categories (your list)
 const NEW_CATEGORIES: { id: string; nameEn: string; description: string }[] = [
   {
     id: 'angle',
     nameEn: 'Angle',
-    description: 'Aluminium angles and corner trims are strong and durable whilst remaining lightweight and corrosion resistant. Ideal for use outdoors or in humid environments, commonly used on edges or corners in architectural and structural applications. Available in mill finish, brushed, bright polished and anodised. Free custom cutting to your dimensions.',
+    description:
+      'Angles and corner trims in various sizes for structural and decorative use. Strong, lightweight, corrosion resistant.',
   },
   {
     id: 'box_section',
     nameEn: 'Box Section',
-    description: 'Aluminium box sections (square tube) are extruded hollow square or rectangular profiles with a variety of applications: building works, shelf supports, storage racks, posts and fences, window and door frames. Excellent strength-to-weight ratio and corrosion resistance. Available in mill finish, brushed and bright polished. Free custom cutting service.',
+    description:
+      'Box sections and square hollow sections for frames, posts, racks and general fabrication.',
   },
   {
     id: 'channel',
     nameEn: 'Channel',
-    description: 'Aluminium channel (C or U channel) is commonly used for construction and fabrication, cable runs and lighting, vehicle and boat bodies and decorative applications. Lightweight and versatile, popular for DIY projects such as sliding doors or greenhouses. Free custom cutting to your dimensions.',
-  },
-  { id: 'flat_bar', nameEn: 'Flat Bar', description: 'Aluminium flat bar for structural and decorative use. Lightweight, corrosion resistant. Mill finish and other finishes available. Cutting to size on request.' },
-  { id: 'mesh', nameEn: 'Mesh', description: 'Aluminium mesh and grilles for screening, fencing and industrial applications. Durable and lightweight.' },
-  { id: 'round_bar', nameEn: 'Round Bar', description: 'Solid round aluminium bar in various diameters. Suitable for machining and fabrication. Mill finish. Cutting to size available.' },
-  { id: 'sheet', nameEn: 'Sheet', description: 'Aluminium sheet in various thicknesses and sizes for cladding, fabrication and industrial use. Cutting to size on request.' },
-  { id: 'square_bar', nameEn: 'Square Bar', description: 'Solid square aluminium bar. Standard sizes, cutting to size. Mill finish and other options.' },
-  { id: 'tube_pipe', nameEn: 'Tube / Pipe', description: 'Hollow aluminium round tube and pipe. Various diameters and wall thicknesses. For structures, handrails and engineering. Free cutting to size.' },
-  { id: 'rsj_ibeam', nameEn: 'RSJs / I-beams', description: 'Aluminium I-beams and RSJ sections for structural applications. High strength-to-weight ratio. Cutting to size available.' },
-  { id: 'checker_plate', nameEn: 'Checker plate', description: 'Aluminium checker (diamond) plate for anti-slip flooring, treads and industrial use. Durable and easy to clean.' },
-  { id: 't_section', nameEn: 'T-Section', description: 'Aluminium T-section profiles for framing, mounting and structural use. Various sizes. Cutting to size on request.' },
-];
-
-const STD_LENGTHS = [1, 2, 3, 4, 5, 6];
-
-/** Aluminium Angle products. pricePerMeter in GBP (ex VAT). */
-const ANGLE_PRODUCTS: Omit<Product, 'id' | 'category'>[] = [
-  { name: '9.5mm x 9.5mm x 1.6mm Aluminium Angle', nameEn: '9.5mm x 9.5mm x 1.6mm (3/8" x 3/8" x 1/16") Aluminium Angle', dimensions: '9.5x9.5x1.6', pricePerMeter: 7.96, weightPerMeter: 0.12, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Mill finish' },
-  { name: '12.7mm x 12.7mm x 1.6mm Aluminium Angle', nameEn: '12.7mm x 12.7mm x 1.6mm (1/2" x 1/2" x 1/16") Aluminium Angle', dimensions: '12.7x12.7x1.6', pricePerMeter: 1.85, weightPerMeter: 0.18, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Mill finish' },
-  { name: '12.7mm x 12.7mm x 3.2mm Aluminium Angle', nameEn: '12.7mm x 12.7mm x 3.2mm (1/2" x 1/2" x 1/8") Aluminium Angle', dimensions: '12.7x12.7x3.2', pricePerMeter: 2.9, weightPerMeter: 0.28, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Mill finish' },
-  { name: '15.8mm x 15.8mm x 1.6mm Aluminium Angle', nameEn: '15.8mm x 15.8mm x 1.6mm (5/8" x 5/8" x 1/16") Aluminium Angle', dimensions: '15.8x15.8x1.6', pricePerMeter: 1.73, weightPerMeter: 0.22, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Mill finish' },
-  { name: '15.8mm x 15.8mm x 3.2mm Aluminium Angle', nameEn: '15.8mm x 15.8mm x 3.2mm (5/8" x 5/8" x 1/8") Aluminium Angle', dimensions: '15.8x15.8x3.2', pricePerMeter: 4.4, weightPerMeter: 0.35, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Mill finish' },
-  { name: '19mm x 12.7mm x 1.6mm Aluminium Angle', nameEn: '19mm x 12.7mm x 1.6mm (3/4" x 1/2" x 1/16") Aluminium Angle', dimensions: '19x12.7x1.6', pricePerMeter: 1.43, weightPerMeter: 0.2, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Mill finish' },
-  { name: '19mm x 12.7mm x 1.6mm Brushed Aluminium Angle', nameEn: '19mm x 12.7mm x 1.6mm (3/4" x 1/2" x 1/16") Brushed Aluminium Angle', dimensions: '19x12.7x1.6 brushed', pricePerMeter: 50.45, weightPerMeter: 0.2, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Brushed' },
-  { name: '19mm x 12.7mm x 1.6mm Bright Polished Aluminium Angle', nameEn: '19mm x 12.7mm x 1.6mm (3/4" x 1/2" x 1/16") Bright Polished Aluminium Angle', dimensions: '19x12.7x1.6 polished', pricePerMeter: 98.7, weightPerMeter: 0.2, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Bright Polished' },
-  { name: '19mm x 19mm x 1.6mm Aluminium Angle', nameEn: '19mm x 19mm x 1.6mm (3/4" x 3/4" x 1/16") Aluminium Angle', dimensions: '19x19x1.6', pricePerMeter: 2.45, weightPerMeter: 0.22, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Mill finish' },
-  { name: '19mm x 19mm x 1.6mm Anodised Aluminium Angle', nameEn: '19mm x 19mm x 1.6mm (3/4" x 3/4" x 1/16") Anodised Aluminium Angle', dimensions: '19x19x1.6 anodised', pricePerMeter: 50.3, weightPerMeter: 0.22, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Anodised' },
-  { name: '19mm x 19mm x 1.6mm Brushed Aluminium Angle', nameEn: '19mm x 19mm x 1.6mm (3/4" x 3/4" x 1/16") Brushed Aluminium Angle', dimensions: '19x19x1.6 brushed', pricePerMeter: 63.61, weightPerMeter: 0.22, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Brushed' },
-  { name: '19mm x 19mm x 1.6mm Bright Polished Aluminium Angle', nameEn: '19mm x 19mm x 1.6mm (3/4" x 3/4" x 1/16") Bright Polished Aluminium Angle', dimensions: '19x19x1.6 polished', pricePerMeter: 99, weightPerMeter: 0.22, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Bright Polished' },
-];
-
-/** Aluminium Box Section products. pricePerMeter in GBP (ex VAT). */
-const BOX_SECTION_PRODUCTS: Omit<Product, 'id' | 'category'>[] = [
-  { name: '12.7mm x 12.7mm x 1.6mm Aluminium Box Section', nameEn: '12.7mm x 12.7mm x 1.6mm (1/2" x 1/2" x 16swg) Aluminium Box Section', dimensions: '12.7x12.7x1.6', pricePerMeter: 3.93, weightPerMeter: 0.15, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Mill finish' },
-  { name: '19mm x 19mm x 1.6mm Aluminium Box Section', nameEn: '19mm x 19mm x 1.6mm (3/4" x 3/4" x 16swg) Aluminium Box Section', dimensions: '19x19x1.6', pricePerMeter: 3.99, weightPerMeter: 0.2, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Mill finish' },
-  { name: '19mm x 19mm x 1.6mm Brushed Aluminium Box Section', nameEn: '19mm x 19mm x 1.6mm (3/4" x 3/4" x 16swg) Brushed Aluminium Box Section', dimensions: '19x19x1.6 brushed', pricePerMeter: 87.88, weightPerMeter: 0.2, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Brushed' },
-  { name: '19mm x 19mm x 1.6mm Bright Polished Aluminium Box Section', nameEn: '19mm x 19mm x 1.6mm (3/4" x 3/4" x 16swg) Bright Polished Aluminium Box Section', dimensions: '19x19x1.6 polished', pricePerMeter: 108.02, weightPerMeter: 0.2, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Bright Polished' },
-  { name: '19mm x 19mm x 3.2mm Aluminium Box Section', nameEn: '19mm x 19mm x 3.2mm (3/4" x 3/4" x 10swg) Aluminium Box Section', dimensions: '19x19x3.2', pricePerMeter: 9.59, weightPerMeter: 0.38, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Mill finish' },
-  { name: '19mm x 19mm x 3.2mm Brushed Aluminium Box Section', nameEn: '19mm x 19mm x 3.2mm (3/4" x 3/4" x 10swg) Brushed Aluminium Box Section', dimensions: '19x19x3.2 brushed', pricePerMeter: 95.74, weightPerMeter: 0.38, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Brushed' },
-  { name: '19mm x 19mm x 3.2mm Bright Polished Aluminium Box Section', nameEn: '19mm x 19mm x 3.2mm (3/4" x 3/4" x 10swg) Bright Polished Aluminium Box Section', dimensions: '19x19x3.2 polished', pricePerMeter: 149.51, weightPerMeter: 0.38, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Bright Polished' },
-  { name: '20mm x 20mm x 1.5mm Aluminium Box Section', nameEn: '20mm x 20mm x 1.5mm Aluminium Box Section', dimensions: '20x20x1.5', pricePerMeter: 5.95, weightPerMeter: 0.2, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Mill finish' },
-  { name: '25mm x 25mm x 1.5mm Aluminium Box Section', nameEn: '25mm x 25mm x 1.5mm Aluminium Box Section', dimensions: '25x25x1.5', pricePerMeter: 5.99, weightPerMeter: 0.25, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Mill finish' },
-  { name: '25.4mm x 12.7mm x 1.6mm Aluminium Box Section', nameEn: '25.4mm x 12.7mm x 1.6mm (1" x 1/2" x 16swg) Aluminium Box Section', dimensions: '25.4x12.7x1.6', pricePerMeter: 12.6, weightPerMeter: 0.22, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Mill finish' },
-  { name: '25.4mm x 25.4mm x 1.6mm Aluminium Box Section', nameEn: '25.4mm x 25.4mm x 1.6mm (1" x 1" x 16swg) Aluminium Box Section', dimensions: '25.4x25.4x1.6', pricePerMeter: 3.98, weightPerMeter: 0.3, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Mill finish' },
-  { name: '25.4mm x 25.4mm x 1.6mm Brushed Aluminium Box Section', nameEn: '25.4mm x 25.4mm x 1.6mm (1" x 1" x 16swg) Brushed Aluminium Box Section', dimensions: '25.4x25.4x1.6 brushed', pricePerMeter: 66.08, weightPerMeter: 0.3, standardLengths: STD_LENGTHS, inStock: true, material: 'Aluminium', finish: 'Brushed' },
-];
-
-/** Aluminium Channel products. pricePerMeter in GBP (ex VAT). */
-const CHANNEL_PRODUCTS: Omit<Product, 'id' | 'category'>[] = [
-  {
-    name: '12.7mm x 12.7mm x 1.6mm Aluminium Channel',
-    nameEn: '12.7mm x 12.7mm x 1.6mm (1/2" x 1/2" x 1/16") Aluminium Channel',
-    dimensions: '12.7x12.7x1.6',
-    pricePerMeter: 4.15,
-    weightPerMeter: 0.18,
-    standardLengths: STD_LENGTHS,
-    inStock: true,
-    material: 'Aluminium',
-    finish: 'Mill finish',
+    description:
+      'U- and C-channels for construction, framing, tracks and general engineering applications.',
   },
   {
-    name: '12.7mm x 12.7mm x 1.6mm Anodised Aluminium Channel',
-    nameEn: '12.7mm x 12.7mm x 1.6mm (1/2" x 1/2" x 1/16") Anodised Aluminium Channel',
-    dimensions: '12.7x12.7x1.6 anodised',
-    pricePerMeter: 46.22,
-    weightPerMeter: 0.18,
-    standardLengths: STD_LENGTHS,
-    inStock: true,
-    material: 'Aluminium',
-    finish: 'Anodised',
+    id: 'flat_bar',
+    nameEn: 'Flat Bar',
+    description:
+      'Flat bars and strips for brackets, plates and general fabrication. Easy to cut and drill.',
   },
   {
-    name: '15.5mm x 7.5mm x 1mm Aluminium T Track',
-    nameEn: '15.5mm x 7.5mm x 1mm Aluminium T Track',
-    dimensions: '15.5x7.5x1',
-    pricePerMeter: 14.8,
-    weightPerMeter: 0.12,
-    standardLengths: STD_LENGTHS,
-    inStock: true,
-    material: 'Aluminium',
-    finish: 'Mill finish',
+    id: 'mesh',
+    nameEn: 'Mesh',
+    description:
+      'Mesh, perforated and expanded products for guarding, screening and ventilation.',
   },
   {
-    name: '15.8mm x 15.8mm x 3.2mm Aluminium Channel',
-    nameEn: '15.8mm x 15.8mm x 3.2mm (5/8" x 5/8" x 1/8") Aluminium Channel',
-    dimensions: '15.8x15.8x3.2',
-    pricePerMeter: 5.24,
-    weightPerMeter: 0.28,
-    standardLengths: STD_LENGTHS,
-    inStock: true,
-    material: 'Aluminium',
-    finish: 'Mill finish',
+    id: 'round_bar',
+    nameEn: 'Round Bar',
+    description:
+      'Solid round bar for turning, machining and fabrication across many industries.',
   },
   {
-    name: '19mm x 19mm x 1.6mm Aluminium Channel',
-    nameEn: '19mm x 19mm x 1.6mm (3/4" x 3/4" x 1/16") Aluminium Channel',
-    dimensions: '19x19x1.6',
-    pricePerMeter: 3.98,
-    weightPerMeter: 0.22,
-    standardLengths: STD_LENGTHS,
-    inStock: true,
-    material: 'Aluminium',
-    finish: 'Mill finish',
+    id: 'sheet',
+    nameEn: 'Sheet',
+    description:
+      'Sheet and plate for cladding, fabrication, panels and general use. Various thicknesses.',
   },
   {
-    name: '19mm x 19mm x 1.6mm Anodised Aluminium Channel',
-    nameEn: '19mm x 19mm x 1.6mm (3/4" x 3/4" x 1/16") Anodised Aluminium Channel',
-    dimensions: '19x19x1.6 anodised',
-    pricePerMeter: 56.96,
-    weightPerMeter: 0.22,
-    standardLengths: STD_LENGTHS,
-    inStock: true,
-    material: 'Aluminium',
-    finish: 'Anodised',
+    id: 'square_bar',
+    nameEn: 'Square Bar',
+    description:
+      'Solid square bar for general engineering and fabrication, easy to machine and weld.',
   },
   {
-    name: '19mm x 19mm x 3.2mm Aluminium Channel',
-    nameEn: '19mm x 19mm x 3.2mm (3/4" x 3/4" x 1/8") Aluminium Channel',
-    dimensions: '19x19x3.2',
-    pricePerMeter: 4.95,
-    weightPerMeter: 0.35,
-    standardLengths: STD_LENGTHS,
-    inStock: true,
-    material: 'Aluminium',
-    finish: 'Mill finish',
+    id: 'tube_pipe',
+    nameEn: 'Tube / Pipe',
+    description:
+      'Round and rectangular tube / pipe for structures, frames, handrails and general fabrication.',
   },
   {
-    name: '25mm x 16mm x 3mm Aluminium Double Channel',
-    nameEn: '25mm x 16mm x 3mm Aluminium Double Channel',
-    dimensions: '25x16x3 double',
-    pricePerMeter: 21.2,
-    weightPerMeter: 0.65,
-    standardLengths: STD_LENGTHS,
-    inStock: true,
-    material: 'Aluminium',
-    finish: 'Mill finish',
+    id: 'rsj_ibeam',
+    nameEn: 'RSJs / I-beams',
+    description:
+      'RSJs and I-beams for load-bearing structures where high strength is required.',
   },
   {
-    name: '25.4mm x 19mm x 3.2mm Aluminium Channel',
-    nameEn: '25.4mm x 19mm x 3.2mm (1" x 3/4" x 1/8") Aluminium Channel',
-    dimensions: '25.4x19x3.2',
-    pricePerMeter: 6.23,
-    weightPerMeter: 0.38,
-    standardLengths: STD_LENGTHS,
-    inStock: true,
-    material: 'Aluminium',
-    finish: 'Mill finish',
+    id: 'checker_plate',
+    nameEn: 'Checker plate',
+    description:
+      'Checker (tread) plate for anti-slip flooring, ramps and industrial walkways.',
   },
   {
-    name: '25.4mm x 25.4mm x 1.6mm Aluminium Channel',
-    nameEn: '25.4mm x 25.4mm x 1.6mm (1" x 1" x 1/16") Aluminium Channel',
-    dimensions: '25.4x25.4x1.6',
-    pricePerMeter: 11.44,
-    weightPerMeter: 0.35,
-    standardLengths: STD_LENGTHS,
-    inStock: true,
-    material: 'Aluminium',
-    finish: 'Mill finish',
-  },
-  {
-    name: '25.4mm x 25.4mm x 3.2mm Aluminium Channel',
-    nameEn: '25.4mm x 25.4mm x 3.2mm (1" x 1" x 1/8") Aluminium Channel',
-    dimensions: '25.4x25.4x3.2',
-    pricePerMeter: 6.7,
-    weightPerMeter: 0.52,
-    standardLengths: STD_LENGTHS,
-    inStock: true,
-    material: 'Aluminium',
-    finish: 'Mill finish',
-  },
-  {
-    name: '25.4mm x 25.4mm x 3.2mm Anodised Aluminium Channel',
-    nameEn: '25.4mm x 25.4mm x 3.2mm (1" x 1" x 1/8") Anodised Aluminium Channel',
-    dimensions: '25.4x25.4x3.2 anodised',
-    pricePerMeter: 97.0,
-    weightPerMeter: 0.52,
-    standardLengths: STD_LENGTHS,
-    inStock: true,
-    material: 'Aluminium',
-    finish: 'Anodised',
+    id: 't_section',
+    nameEn: 'T-Section',
+    description:
+      'T-sections and T-slot profiles for framing, sliding systems and modular constructions.',
   },
 ];
 
+const STD_LENGTHS = [1, 3, 6];
+
+type RawProductInput = {
+  code?: string;
+  description: string;
+  dimensions: string;
+  finish: string;
+  weightKgPerM: number;
+  pricePerKg?: number;
+  pricePerM?: number;
+  categoryId: string;
+  inStock?: boolean;
+};
+
+// Source pricing table rows (as per your brief).
+const RAW_PRODUCTS: RawProductInput[] = [
+  // 1  BPO-1015  Angle  20×20×3  mill finish  0,301  £10,70  £3,22  1 m / 3 m / 6 m
+  {
+    code: 'BPO-1015',
+    description: 'Angle',
+    dimensions: '20x20x3',
+    finish: 'Mill finish',
+    weightKgPerM: 0.301,
+    pricePerKg: 10.7,
+    pricePerM: 3.22,
+    categoryId: 'angle',
+  },
+  // 2  BPO-0927  Angle  25×25×3
+  {
+    code: 'BPO-0927',
+    description: 'Angle',
+    dimensions: '25x25x3',
+    finish: 'Mill finish',
+    weightKgPerM: 0.382,
+    pricePerKg: 10.7,
+    pricePerM: 4.09,
+    categoryId: 'angle',
+  },
+  // 3  BPZ-0348  Square Tube  20×20×1.5
+  {
+    code: 'BPZ-0348',
+    description: 'Square Tube',
+    dimensions: '20x20x1.5',
+    finish: 'Mill finish',
+    weightKgPerM: 0.3,
+    pricePerKg: 10.7,
+    pricePerM: 3.21,
+    categoryId: 'tube_square',
+  },
+  // 4  BPO-1268  T-Bar  20×20×2
+  {
+    code: 'BPO-1268',
+    description: 'T-Bar',
+    dimensions: '20x20x2',
+    finish: 'Mill finish',
+    weightKgPerM: 0.206,
+    pricePerKg: 11.54,
+    pricePerM: 2.38,
+    categoryId: 't_profile',
+  },
+  // 5  BPZ-0442  Rectangular Tube  40×15×2
+  {
+    code: 'BPZ-0442',
+    description: 'Rectangular Tube',
+    dimensions: '40x15x2',
+    finish: 'Mill finish',
+    weightKgPerM: 0.553,
+    pricePerKg: 10.3,
+    pricePerM: 5.7,
+    categoryId: 'tube_rectangular',
+  },
+  // 6  BPO-6065  Channel Bar  12×20×2
+  {
+    code: 'BPO-6065',
+    description: 'Channel Bar',
+    dimensions: '12x20x2',
+    finish: 'Mill finish',
+    weightKgPerM: 0.26,
+    pricePerKg: 11.5,
+    pricePerM: 2.99,
+    categoryId: 'channel',
+  },
+  // 7  BPZ-0548  Round Tube  Ø22×2
+  {
+    code: 'BPZ-0548',
+    description: 'Round Tube',
+    dimensions: 'Ø22x2',
+    finish: 'Mill finish',
+    weightKgPerM: 0.341,
+    pricePerKg: 10.15,
+    pricePerM: 3.46,
+    categoryId: 'tube_round',
+  },
+  // 8  BPO-0968  Custom Profile — (no exact dimensions in table)
+  {
+    code: 'BPO-0968',
+    description: 'Custom Profile',
+    dimensions: '',
+    finish: 'Mill finish',
+    weightKgPerM: 0.141,
+    pricePerKg: 12.36,
+    pricePerM: 1.74,
+    // Use a special category id so it has no visible category on the site.
+    // You can reassign the category later in the admin.
+    categoryId: 'custom_profile',
+  },
+  // 9  BPO-0219  Round Bar  Ø16
+  {
+    code: 'BPO-0219',
+    description: 'Round Bar',
+    dimensions: 'Ø16',
+    finish: 'Mill finish',
+    weightKgPerM: 0.67,
+    pricePerKg: 9.55,
+    pricePerM: 6.4,
+    categoryId: 'round_bar',
+  },
+  // 10  BPO-3301  Flat Bar  8×3
+  {
+    code: 'BPO-3301',
+    description: 'Flat Bar',
+    dimensions: '8x3',
+    finish: 'Mill finish',
+    weightKgPerM: 0.065,
+    pricePerKg: 12.46,
+    pricePerM: 0.81,
+    categoryId: 'plate',
+  },
+  // 11  BPO-2675  Flat Bar  40×5
+  {
+    code: 'BPO-2675',
+    description: 'Flat Bar',
+    dimensions: '40x5',
+    finish: 'Mill finish',
+    weightKgPerM: 0.235,
+    pricePerKg: 11.38,
+    pricePerM: 2.67,
+    categoryId: 'plate',
+  },
+  // 12  BPO-0055  Round Bar  Ø6
+  {
+    code: 'BPO-0055',
+    description: 'Round Bar',
+    dimensions: 'Ø6',
+    finish: 'Mill finish',
+    weightKgPerM: 0.077,
+    pricePerKg: 11.45,
+    pricePerM: 0.88,
+    categoryId: 'round_bar',
+  },
+  // 13 — Square Tube 40×40×2 ~0.8 350 10,77
+  {
+    description: 'Square Tube',
+    dimensions: '40x40x2',
+    finish: 'Mill finish',
+    weightKgPerM: 0.8,
+    pricePerKg: 10.77,
+    categoryId: 'tube_square',
+  },
+  // 14 — Rectangular Tube 60×40×2 ~1.0 300 10,77
+  {
+    description: 'Rectangular Tube',
+    dimensions: '60x40x2',
+    finish: 'Mill finish',
+    weightKgPerM: 1.0,
+    pricePerKg: 10.77,
+    categoryId: 'tube_rectangular',
+  },
+  // 15 — Angle 40×40×4 ~1.2 250 11,78
+  {
+    description: 'Angle',
+    dimensions: '40x40x4',
+    finish: 'Mill finish',
+    weightKgPerM: 1.2,
+    pricePerKg: 11.78,
+    categoryId: 'angle',
+  },
+  // 16 — T-slot profile 30×30 or 40×40  200 12,77
+  {
+    description: 'T-slot Profile',
+    dimensions: '30x30 / 40x40',
+    finish: 'Mill finish',
+    weightKgPerM: 1.0,
+    pricePerKg: 12.77,
+    categoryId: 't_profile',
+  },
+  // 17 — Handrail Tube Ø42.4×2 ~0.6 200 10,77
+  {
+    description: 'Handrail Tube',
+    dimensions: 'Ø42.4x2',
+    finish: 'Mill finish',
+    weightKgPerM: 0.6,
+    pricePerKg: 10.77,
+    categoryId: 'tube_round',
+  },
+];
+
+function mapOldCategoryToNew(oldId: string, description: string): string {
+  const lowerDesc = description.toLowerCase();
+
+  // Special case: Handrail Tube should be treated as Round Bar
+  if (lowerDesc.includes('handrail tube')) {
+    return 'round_bar';
+  }
+
+  // All Tube-related products (TUBE in name or old id is tube_*) go to Tube / Pipe
+  if (
+    oldId === 'tube_square' ||
+    oldId === 'tube_round' ||
+    oldId === 'tube_rectangular' ||
+    lowerDesc.includes('tube')
+  ) {
+    return 'tube_pipe';
+  }
+
+  if (oldId === 'angle') return 'angle';
+  if (oldId === 'channel') return 'channel';
+  if (oldId === 'round_bar') return 'round_bar';
+  if (oldId === 'plate') return 'flat_bar';
+  if (oldId === 't_profile') return 't_section';
+
+  // Custom profile -> no category on site (you can reassign category later in admin)
+  if (oldId === 'custom_profile') return 'uncategorised';
+
+  return 'aluminium';
+}
+
+function slugifyId(base: string): string {
+  return base
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function buildProductsFromRaw(): Product[] {
+  const products: Product[] = RAW_PRODUCTS.map((rp) => {
+    const idBase = rp.code ?? `${rp.description}-${rp.dimensions || 'na'}`;
+    const id = slugifyId(idBase);
+    const category = mapOldCategoryToNew(rp.categoryId, rp.description);
+    const pricePerKg = rp.pricePerKg;
+    const weightPerMeter = rp.weightKgPerM;
+    const pricePerMeter =
+      rp.pricePerM ??
+      (pricePerKg != null && weightPerMeter != null
+        ? pricePerKg * weightPerMeter
+        : undefined);
+
+    const nameEn = `${rp.description} ${rp.dimensions}`.trim();
+
+    const product: Product = {
+      id,
+      category,
+      name: nameEn,
+      nameEn,
+      dimensions: rp.dimensions || 'N/A',
+      pricePerMeter,
+      pricePerKg,
+      weightPerMeter,
+      standardLengths: STD_LENGTHS,
+      inStock: rp.inStock ?? true,
+      hidden: false,
+      material: 'Aluminium',
+      finish: rp.finish,
+      image: undefined,
+      description: '',
+      descriptionEn: '',
+      applications: [],
+    };
+
+    return product;
+  });
+
+  return products;
+}
+
+function buildPlaceholderProducts(existing: Product[]): Product[] {
+  const existingIds = new Set(existing.map((p) => p.id));
+
+  return NEW_CATEGORIES.map((cat) => {
+    const id = `placeholder-${cat.id}`;
+    if (existingIds.has(id)) {
+      return null;
+    }
+
+    const product: Product = {
+      id,
+      category: cat.id,
+      name: `${cat.nameEn} – placeholder`,
+      nameEn: `${cat.nameEn} – placeholder`,
+      dimensions: 'N/A',
+      pricePerMeter: 0,
+      pricePerKg: 0,
+      weightPerMeter: 0,
+      standardLengths: STD_LENGTHS,
+      inStock: false,
+      hidden: false,
+      material: 'Aluminium',
+      finish: 'N/A',
+      image: undefined,
+      description: 'Placeholder product used when no specific items are configured.',
+      descriptionEn: 'Placeholder product used when no specific items are configured.',
+      applications: [],
+    };
+
+    return product;
+  }).filter((p): p is Product => p !== null);
+}
 
 async function main() {
   console.log('Replacing categories and products...');
@@ -219,7 +417,7 @@ async function main() {
   deleteAllCustomCategories();
   console.log('Cleared custom_categories.');
 
-  // 2. Insert new 12 categories (raw insert so we can use ids like "angle", "channel")
+  // 2. Insert new categories (raw insert so we can use ids like "angle", "tube_pipe", "aluminium")
   for (const cat of NEW_CATEGORIES) {
     insertCustomCategoryRaw({
       id: cat.id,
@@ -231,15 +429,19 @@ async function main() {
   }
   console.log(`Inserted ${NEW_CATEGORIES.length} categories.`);
 
-  // 3. Build full products with id and category (Angle, Box Section, Channel)
-  const angleProducts: Product[] = ANGLE_PRODUCTS.map((p, i) => ({ ...p, id: `angle-${i + 1}`, category: 'angle' }));
-  const boxProducts: Product[] = BOX_SECTION_PRODUCTS.map((p, i) => ({ ...p, id: `box_section-${i + 1}`, category: 'box_section' }));
-  const channelProducts: Product[] = CHANNEL_PRODUCTS.map((p, i) => ({ ...p, id: `channel-${i + 1}`, category: 'channel' }));
-  const products: Product[] = [...angleProducts, ...boxProducts, ...channelProducts];
+  // 3. Build products from pricing table
+  const realProducts = buildProductsFromRaw();
 
-  // 4. Replace all products (delete existing + insert new)
+  // 4. Add fake placeholder products (price 0, not in stock) for every category
+  const placeholderProducts = buildPlaceholderProducts(realProducts);
+
+  const products: Product[] = [...realProducts, ...placeholderProducts];
+
+  // 5. Replace all products (delete existing + insert new)
   await saveProducts(products);
-  console.log(`Replaced products: ${angleProducts.length} angle + ${boxProducts.length} box section + ${channelProducts.length} channel = ${products.length} total.`);
+  console.log(
+    `Replaced products: ${realProducts.length} from table + ${placeholderProducts.length} placeholders = ${products.length} total.`,
+  );
 
   console.log('Done. Restart the app or refresh to see new categories and products.');
 }

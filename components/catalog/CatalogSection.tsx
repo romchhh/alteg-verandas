@@ -183,13 +183,13 @@ export const CatalogSection: React.FC = () => {
             </span>
           </div>
 
-          <div className="overflow-x-auto scrollbar-hide px-4 sm:px-0 py-3 snap-x snap-mandatory">
+          <div className="overflow-x-auto scrollbar-hide px-4 sm:px-0 py-4 snap-x snap-mandatory">
             <div className="flex gap-3 sm:gap-4">
               {/* All Products Category */}
               <button
                 id="category-all"
                 onClick={() => setSelectedCategory('all')}
-                className={`flex-shrink-0 snap-center flex flex-col h-36 w-[calc((100vw-3.5rem)/3)] sm:w-52 rounded-lg overflow-hidden group transition-all duration-300 border-2 scroll-mt-24 ${
+                className={`flex-shrink-0 snap-center flex flex-col h-40 w-[calc((100vw-3.5rem)/2.4)] sm:h-40 sm:w-52 rounded-xl overflow-hidden group transition-all duration-300 border-2 scroll-mt-24 ${
                   selectedCategory === 'all'
                     ? 'border-[#445DFE] shadow-lg scale-105'
                     : 'border-transparent shadow-md hover:shadow-lg'
@@ -203,8 +203,8 @@ export const CatalogSection: React.FC = () => {
                     }}
                   />
                 </div>
-                <div className="bg-[#050544] px-3 py-2 flex items-center justify-center min-h-[2.75rem]">
-                  <h3 className="text-white font-bold text-center text-sm sm:text-base leading-tight">
+                <div className="bg-[#050544] px-3 py-2 flex items-center justify-center min-h-[3rem]">
+                  <h3 className="text-white font-bold text-center text-xs sm:text-base leading-tight line-clamp-2">
                     All Products
                   </h3>
                 </div>
@@ -216,7 +216,7 @@ export const CatalogSection: React.FC = () => {
                   key={key}
                   id={`category-${key}`}
                   onClick={() => setSelectedCategory(key)}
-                  className={`flex-shrink-0 snap-center flex flex-col h-36 w-[calc((100vw-3.5rem)/3)] sm:w-52 rounded-lg overflow-hidden group transition-all duration-300 border-2 scroll-mt-24 ${
+                  className={`flex-shrink-0 snap-center flex flex-col h-40 w-[calc((100vw-3.5rem)/2.4)] sm:h-40 sm:w-52 rounded-xl overflow-hidden group transition-all duration-300 border-2 scroll-mt-24 ${
                     selectedCategory === key
                       ? 'border-[#445DFE] shadow-lg scale-105'
                       : 'border-transparent shadow-md hover:shadow-lg'
@@ -236,8 +236,8 @@ export const CatalogSection: React.FC = () => {
                       }}
                     />
                   </div>
-                  <div className="bg-[#050544] px-3 py-2 flex items-center justify-center min-h-[2.75rem]">
-                    <h3 className="text-white font-bold text-center text-sm sm:text-base leading-tight">
+                  <div className="bg-[#050544] px-3 py-2 flex items-center justify-center min-h-[3rem]">
+                    <h3 className="text-white font-bold text-center text-xs sm:text-base leading-tight line-clamp-2">
                       {info.nameEn}
                     </h3>
                   </div>

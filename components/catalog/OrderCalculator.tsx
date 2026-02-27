@@ -299,9 +299,10 @@ export const OrderCalculator: React.FC = () => {
 
   return (
     <>
-      <section id="calculator" className="pt-12 sm:pt-16 md:pt-20 lg:pt-24 pb-12 sm:pb-16 md:pb-20 lg:pb-24 bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-6xl mx-auto">
+      <section id="calculator" className="pt-8 sm:pt-16 md:pt-20 lg:pt-24 pb-8 sm:pb-16 md:pb-20 lg:pb-24 bg-white">
+        {/* Desktop layout back to previous container/max-width, mobile keeps tighter side padding via px-0 */}
+        <div className="container mx-auto px-0 sm:px-6 lg:px-8">
+          <div className="w-full max-w-6xl mx-auto">
             {/* Header */}
             <div className="text-center mb-6 sm:mb-8">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#050544] mb-2 sm:mb-3 leading-tight tracking-tight">
@@ -313,18 +314,18 @@ export const OrderCalculator: React.FC = () => {
             </div>
 
             {/* Calculator Card */}
-            <div className="bg-white border-2 border-[#E9EDF4] rounded-lg shadow-lg p-6 sm:p-8 md:p-10">
+            <div className="w-full bg-white border-2 border-[#E9EDF4] rounded-lg shadow-lg p-6 sm:p-8 md:p-10">
               {/* Step 1: Category Selection */}
               <div className="mb-8">
                 <h3 className="text-lg sm:text-xl font-bold text-[#050544] mb-4">
                   Step 1: Select Category
                 </h3>
-                <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+                <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 w-[90vw] sm:w-full mx-auto">
                   {calculatorCategories.map((key) => (
                     <button
                       key={key}
                       onClick={() => handleCategorySelect(key)}
-                      className={`overflow-hidden w-full aspect-square border-2 rounded-lg transition-all duration-300 text-sm sm:text-base font-semibold group flex flex-col ${
+                      className={`overflow-hidden w-full h-36 sm:h-40 lg:h-auto lg:aspect-square border-2 rounded-lg transition-all duration-300 text-[11px] sm:text-sm font-semibold group flex flex-col ${
                         selectedCategoryKey === key
                           ? 'border-[#445DFE] shadow-lg scale-105'
                           : 'border-gray-300 hover:border-[#445DFE] hover:shadow-md'
@@ -349,7 +350,7 @@ export const OrderCalculator: React.FC = () => {
                         </div>
                       </div>
                       <div className="bg-[#050544] px-2 py-2 flex items-center justify-center min-h-[2.75rem]">
-                        <span className="text-white font-semibold text-center leading-tight">
+                        <span className="text-white font-semibold text-center leading-tight line-clamp-2">
                           {getCategoryName(key)}
                         </span>
                       </div>
