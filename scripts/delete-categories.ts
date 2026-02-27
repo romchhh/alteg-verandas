@@ -26,17 +26,17 @@ async function main() {
 
   const placeholders = CATEGORY_IDS_TO_DELETE.map(() => '?').join(', ');
 
-  const catImages: Row[] = db
-    .prepare<Row>(`SELECT image FROM custom_categories WHERE id IN (${placeholders})`)
-    .all(...CATEGORY_IDS_TO_DELETE);
+  const catImages = db
+    .prepare(`SELECT image FROM custom_categories WHERE id IN (${placeholders})`)
+    .all(...CATEGORY_IDS_TO_DELETE) as Row[];
 
-  const overrideImages: Row[] = db
-    .prepare<Row>(`SELECT image FROM category_overrides WHERE id IN (${placeholders})`)
-    .all(...CATEGORY_IDS_TO_DELETE);
+  const overrideImages = db
+    .prepare(`SELECT image FROM category_overrides WHERE id IN (${placeholders})`)
+    .all(...CATEGORY_IDS_TO_DELETE) as Row[];
 
-  const productImages: Row[] = db
-    .prepare<Row>(`SELECT image FROM products WHERE category IN (${placeholders})`)
-    .all(...CATEGORY_IDS_TO_DELETE);
+  const productImages = db
+    .prepare(`SELECT image FROM products WHERE category IN (${placeholders})`)
+    .all(...CATEGORY_IDS_TO_DELETE) as Row[];
 
   const allImages = [...catImages, ...overrideImages, ...productImages]
     .map((r) => r.image)
