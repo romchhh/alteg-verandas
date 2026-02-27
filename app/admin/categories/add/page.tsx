@@ -6,7 +6,6 @@ import PageBreadcrumb from "@/components/admin/PageBreadCrumb";
 import ComponentCard from "@/components/admin/ComponentCard";
 import Label from "@/components/admin/form/Label";
 import Input from "@/components/admin/form/Input";
-import { adminCategorySchema } from "@/lib/utils/validators";
 import TextArea from "@/components/admin/form/TextArea";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 
@@ -25,50 +24,6 @@ export default function AddCategoryPage() {
     // Safety: in case the button is somehow enabled, block submission.
     setError("Creating new categories is disabled. Use existing categories only.");
     return;
-    setFieldErrors({});
-    setError(null);
-    const slug = nameEn.trim().toLowerCase().replace(/\s+/g, "_").replace(/[^a-z0-9_]/g, "");
-    const parsed = adminCategorySchema.safeParse({ id: slug || " ", nameEn: nameEn.trim() });
-    if (!parsed.success) {
-      const err: Record<string, string> = {};
-      parsed.error.errors.forEach((e) => {
-        const p = e.path[0];
-        if (p && typeof p === "string") err[p] = e.message;
-      });
-      if (!slug) err.nameEn = "Enter name (EN) so we can generate id.";
-      setFieldErrors(err);
-      return;
-    }
-    setLoading(true);
-    setSuccess(null);
-
-    try {
-      const res = await fetch("/api/admin/categories", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: slug,
-          name: nameEn.trim() || slug,
-          nameEn: nameEn.trim() || slug,
-          description: description.trim() || undefined,
-          image: image.trim() || undefined,
-        }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Failed to create");
-        setLoading(false);
-        return;
-      }
-
-      setSuccess("Category created!");
-      setTimeout(() => router.push("/admin/categories"), 1500);
-    } catch {
-      setError("Failed to create category");
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
