@@ -38,6 +38,22 @@ export const CatalogSection: React.FC = () => {
   const [categoriesMap, setCategoriesMap] = useState<Record<string, ProductCategoryInfo> | null>(null);
   const [productsFromApi, setProductsFromApi] = useState<Product[] | null>(null);
 
+  // Desired display order for catalog categories
+  const CATEGORY_DISPLAY_ORDER: string[] = [
+    'angle',
+    'box_section',
+    'channel',
+    'flat_bar',
+    'mesh',
+    'round_bar',
+    'sheet',
+    'square_bar',
+    'tube_pipe',
+    'rsj_ibeam',
+    'checker_plate',
+    't_section',
+  ];
+
   useEffect(() => {
     fetch('/api/categories')
       .then((res) => res.ok ? res.json() : null)
@@ -98,7 +114,14 @@ export const CatalogSection: React.FC = () => {
 
   const displayedProducts = filteredProducts.slice(0, displayCount);
   const hasMore = displayCount < filteredProducts.length;
-  const categories = Object.entries(categoriesMap ?? PRODUCT_CATEGORIES);
+  const rawCategoriesEntries = Object.entries(categoriesMap ?? PRODUCT_CATEGORIES);
+  const categories = [...rawCategoriesEntries].sort(([a], [b]) => {
+    const ia = CATEGORY_DISPLAY_ORDER.indexOf(a);
+    const ib = CATEGORY_DISPLAY_ORDER.indexOf(b);
+    const sa = ia === -1 ? Number.MAX_SAFE_INTEGER : ia;
+    const sb = ib === -1 ? Number.MAX_SAFE_INTEGER : ib;
+    return sa - sb || a.localeCompare(b);
+  });
   const categoriesRef = useRef(categories);
   categoriesRef.current = categories;
 

@@ -49,6 +49,22 @@ export const OrderCalculator: React.FC = () => {
   const [categoriesMap, setCategoriesMap] = useState<Record<string, { image?: string; nameEn?: string; description?: string }>>({});
   const [categoriesList, setCategoriesList] = useState<string[]>([]);
 
+  // Desired display order for categories in the calculator
+  const CATEGORY_DISPLAY_ORDER: string[] = [
+    'angle',
+    'box_section',
+    'channel',
+    'flat_bar',
+    'mesh',
+    'round_bar',
+    'sheet',
+    'square_bar',
+    'tube_pipe',
+    'rsj_ibeam',
+    'checker_plate',
+    't_section',
+  ];
+
   useEffect(() => {
     fetch('/api/categories')
       .then((res) => res.ok ? res.json() : null)
@@ -64,10 +80,26 @@ export const OrderCalculator: React.FC = () => {
           };
         });
         setCategoriesMap(next);
-        setCategoriesList(list.map((c) => c.id));
+        const ids = list.map((c) => c.id);
+        ids.sort((a, b) => {
+          const ia = CATEGORY_DISPLAY_ORDER.indexOf(a);
+          const ib = CATEGORY_DISPLAY_ORDER.indexOf(b);
+          const sa = ia === -1 ? Number.MAX_SAFE_INTEGER : ia;
+          const sb = ib === -1 ? Number.MAX_SAFE_INTEGER : ib;
+          return sa - sb || a.localeCompare(b);
+        });
+        setCategoriesList(ids);
       })
       .catch(() => {
-        setCategoriesList(Object.keys(PRODUCT_CATEGORIES));
+        const ids = Object.keys(PRODUCT_CATEGORIES);
+        ids.sort((a, b) => {
+          const ia = CATEGORY_DISPLAY_ORDER.indexOf(a);
+          const ib = CATEGORY_DISPLAY_ORDER.indexOf(b);
+          const sa = ia === -1 ? Number.MAX_SAFE_INTEGER : ia;
+          const sb = ib === -1 ? Number.MAX_SAFE_INTEGER : ib;
+          return sa - sb || a.localeCompare(b);
+        });
+        setCategoriesList(ids);
       });
   }, []);
 
