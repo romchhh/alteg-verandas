@@ -2,10 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PRODUCT_CATEGORIES } from '@/lib/constants/catalog';
 import {
   getCategoryOverrides,
+  getCustomCategories,
+  addCustomCategory,
   BUILT_IN_IDS,
 } from '@/lib/data/categories';
 
-function getMergedList(): { id: string; name: string; nameEn: string; description: string; image: string }[] {
+function getMergedList(): { id: string; name: string; nameEn: string; description: string; image: string; isCustom?: boolean }[] {
   const overrides = getCategoryOverrides();
   const overrideMap = new Map(overrides.map((o) => [o.id, o]));
   const builtIn = Object.entries(PRODUCT_CATEGORIES).map(([key, val]) => {
@@ -18,11 +20,32 @@ function getMergedList(): { id: string; name: string; nameEn: string; descriptio
       image: ov?.image ?? val.image ?? '',
     };
   });
-  return builtIn;
+  const custom = getCustomCategories().map((c) => ({
+    id: c.id,
+    name: c.name,
+    nameEn: c.name_en,
+    description: c.description ?? '',
+    image: c.image ?? '',
+    isCustom: true,
+  }));
+  return [...builtIn, ...custom];
 }
 
 export async function GET() {
   try {
+    const custom = getCustomCategories();
+    if (custom.length > 0) {
+      return NextResponse.json(
+        custom.map((c) => ({
+          id: c.id,
+          name: c.name,
+          nameEn: c.name_en,
+          description: c.description ?? '',
+          image: c.image ?? '',
+          isCustom: true,
+        }))
+      );
+    }
     const categories = getMergedList();
     return NextResponse.json(categories);
   } catch (error) {
@@ -49,19 +72,17 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    // Creating completely new category IDs is no longer supported.
-    // We only allow editing of existing built-in categories via overrides.
-    if (!BUILT_IN_IDS.has(id)) {
+    if (BUILT_IN_IDS.has(id)) {
       return NextResponse.json(
-        { error: 'Creating new categories is disabled. Use existing category ids only.' },
+        { error: 'This id is reserved for a built-in category' },
         { status: 400 }
       );
     }
 
-    return NextResponse.json(
-      { error: 'Use PATCH /api/admin/categories/{id} to update existing categories.' },
-      { status: 405 }
-    );
+    addCustomCategory({ id, name, nameEn, description, image });
+    const list = getMergedList();
+    const created = list.find((c) => c.id === id);
+    return NextResponse.json(created, { status: 201 });
   } catch (error) {
     console.error('Error creating category:', error);
     return NextResponse.json(

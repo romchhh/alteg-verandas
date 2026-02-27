@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { PRODUCT_CATEGORIES } from '@/lib/constants/catalog';
-import { getCategoryOverrides } from '@/lib/data/categories';
+import { getCategoryOverrides, getCustomCategories } from '@/lib/data/categories';
 
 /**
  * Public API: returns categories for catalog, checkout, etc.
@@ -8,6 +8,21 @@ import { getCategoryOverrides } from '@/lib/data/categories';
  */
 export async function GET() {
   try {
+    const custom = getCustomCategories();
+    if (custom.length > 0) {
+      // When custom categories exist in DB, they fully define the list.
+      return NextResponse.json(
+        custom.map((c) => ({
+          id: c.id,
+          name: c.name,
+          nameEn: c.name_en,
+          description: c.description ?? '',
+          image: c.image ?? '',
+        }))
+      );
+    }
+
+    // Fallback: built-in categories plus overrides.
     const overrides = getCategoryOverrides();
     const overrideMap = new Map(overrides.map((o) => [o.id, o]));
 
@@ -21,7 +36,7 @@ export async function GET() {
         image: ov?.image ?? val.image,
       };
     });
-    return NextResponse.json([...builtIn]);
+    return NextResponse.json(builtIn);
   } catch (error) {
     console.error('Error fetching categories:', error);
     return NextResponse.json(
