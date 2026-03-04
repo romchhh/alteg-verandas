@@ -50,7 +50,7 @@ export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer id="footer" className="bg-[#141414] text-white">
+    <footer id="footer" className="bg-white text-[#050544]">
       {/* Main Footer */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12">
@@ -67,21 +67,21 @@ export const Footer: React.FC = () => {
               </div>
               <div className="text-2xl font-bold">ALTEG</div>
             </div>
-            <p className="text-gray-400 text-sm mb-4">
+            <p className="text-gray-600 text-sm mb-4">
               European manufacturer of aluminium profiles supplying customers across the UK.
             </p>
             <div className="flex gap-4 justify-center sm:justify-start">
-              <a href="https://www.facebook.com/profile.php?id=61588085476531" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/10 hover:bg-[#445DFE] rounded-full flex items-center justify-center transition-colors" aria-label="Facebook">
+              <a href="https://www.facebook.com/profile.php?id=61588085476531" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#050544] hover:bg-[#445DFE] text-white rounded-full flex items-center justify-center transition-colors" aria-label="Facebook">
                 <FacebookIcon className="w-5 h-5" />
               </a>
-              <a href="https://www.instagram.com/alteg_uk/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/10 hover:bg-[#445DFE] rounded-full flex items-center justify-center transition-colors" aria-label="Instagram">
+              <a href="https://www.instagram.com/alteg_uk/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#050544] hover:bg-[#445DFE] text-white rounded-full flex items-center justify-center transition-colors" aria-label="Instagram">
                 <InstagramIcon className="w-5 h-5" />
               </a>
               <a
                 href="https://www.linkedin.com/in/alteg-uk-5891693b2/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 bg-white/10 hover:bg-[#445DFE] rounded-full flex items-center justify-center transition-colors"
+                className="w-10 h-10 bg-[#050544] hover:bg-[#445DFE] text-white rounded-full flex items-center justify-center transition-colors"
                 aria-label="LinkedIn"
               >
                 <LinkedInIcon className="w-5 h-5" />
@@ -89,65 +89,65 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Products — scroll to catalog / category on home */}
+          {/* Products — links to catalog pages */}
           <div className="text-center sm:text-left">
-            <h3 className="text-lg font-semibold mb-4 text-white">Products</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
+            <h3 className="text-lg font-semibold mb-4 text-[#050544]">Products</h3>
+            <ul className="space-y-2 text-sm text-gray-600">
               <li>
-                <a href="/#category-angle" className="hover:text-white transition-colors">Aluminium Angles</a>
+                <Link href="/catalog/verandas" className="text-gray-700 hover:text-[#050544] transition-colors">Verandas &amp; Canopies</Link>
               </li>
               <li>
-                <a href="/#category-angle" className="hover:text-white transition-colors">Tubes & Pipes</a>
+                <Link href="/catalog/fencing" className="text-gray-700 hover:text-[#050544] transition-colors">Aluminium Fencing</Link>
               </li>
               <li>
-                <a href="/#category-channel" className="hover:text-white transition-colors">Channels</a>
+                <Link href="/catalog/profiles" className="text-gray-700 hover:text-[#050544] transition-colors">Profile Systems</Link>
               </li>
               <li>
-                <a href="/#category-sheet" className="hover:text-white transition-colors">Sheets & Plates</a>
+                <Link href="/catalog/accessories" className="text-gray-700 hover:text-[#050544] transition-colors">Accessories &amp; Guttering</Link>
               </li>
               <li>
-                <a href="/#catalog" className="hover:text-white transition-colors">Custom Profiles</a>
+                <Link href="/contact" className="text-gray-700 hover:text-[#050544] transition-colors">Get a Quote</Link>
               </li>
             </ul>
           </div>
 
           {/* Services — scroll to matching blocks on home */}
           <div className="text-center sm:text-left">
-            <h3 className="text-lg font-semibold mb-4 text-white">Services</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
+            <h3 className="text-lg font-semibold mb-4 text-[#050544]">Services</h3>
+            <ul className="space-y-2 text-sm text-gray-600">
               <li>
-                <a href="/#advantages" className="hover:text-white transition-colors">Free Cutting to Size</a>
+                <a href="/#advantages" className="text-gray-700 hover:text-[#050544] transition-colors">Free Cutting to Size</a>
               </li>
               <li>
-                <a href="/#advantages" className="hover:text-white transition-colors">Custom Processing</a>
+                <a href="/#advantages" className="text-gray-700 hover:text-[#050544] transition-colors">Custom Processing</a>
               </li>
               <li>
-                <a href="/#delivery" className="hover:text-white transition-colors">UK Delivery</a>
+                <a href="/#delivery" className="text-gray-700 hover:text-[#050544] transition-colors">UK Delivery</a>
               </li>
               <li>
-                <a href="/#catalog" className="hover:text-white transition-colors">Wholesale Supply</a>
+                <a href="/#catalog" className="text-gray-700 hover:text-[#050544] transition-colors">Wholesale Supply</a>
               </li>
               <li>
-                <a href="/#contact" className="hover:text-white transition-colors">Technical Support</a>
+                <a href="/#contact" className="text-gray-700 hover:text-[#050544] transition-colors">Technical Support</a>
               </li>
             </ul>
           </div>
 
           {/* Contact */}
           <div className="text-center sm:text-left">
-            <h3 className="text-lg font-semibold mb-4 text-white">Contact Us</h3>
-            <ul className="space-y-3 text-sm text-gray-400">
+            <h3 className="text-lg font-semibold mb-4 text-[#050544]">Contact Us</h3>
+            <ul className="space-y-3 text-sm text-gray-700">
               <li className="flex items-start gap-3 justify-center sm:justify-start">
                 <PhoneIcon className="w-5 h-5 text-[#445DFE] flex-shrink-0 mt-0.5" />
                 <div>
-                  <a href={`tel:${siteConfig.links.phone}`} className="text-white hover:text-[#B7D2FF] transition-colors">{siteConfig.links.phoneDisplay}</a>
+                  <a href={`tel:${siteConfig.links.phone}`} className="text-[#050544] hover:text-[#445DFE] transition-colors">{siteConfig.links.phoneDisplay}</a>
                   <div className="text-xs">Mon-Fri: 9AM-6PM</div>
                 </div>
               </li>
               <li className="flex items-start gap-3 justify-center sm:justify-start">
                 <MailIcon className="w-5 h-5 text-[#445DFE] flex-shrink-0 mt-0.5" />
                 <div>
-                  <a href="mailto:info@alteg.co.uk" className="text-white hover:text-[#B7D2FF] transition-colors">
+                  <a href="mailto:info@alteg.co.uk" className="text-[#050544] hover:text-[#445DFE] transition-colors">
                     info@alteg.co.uk
                   </a>
                 </div>
@@ -155,15 +155,15 @@ export const Footer: React.FC = () => {
               <li className="flex items-start gap-3 justify-center sm:justify-start">
                 <WhatsAppIcon className="w-5 h-5 text-[#445DFE] flex-shrink-0 mt-0.5" />
                 <div>
-                  <a href={siteConfig.links.whatsApp} target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#B7D2FF] transition-colors">
+                  <a href={siteConfig.links.whatsApp} target="_blank" rel="noopener noreferrer" className="text-[#050544] hover:text-[#445DFE] transition-colors">
                     WhatsApp
                   </a>
                 </div>
               </li>
               <li className="flex items-start gap-3 justify-center sm:justify-start">
                 <MapPinIcon className="w-5 h-5 text-[#445DFE] flex-shrink-0 mt-0.5" />
-                <div className="text-white">
-                  <a href={siteConfig.links.mapUrl} target="_blank" rel="noopener noreferrer" className="hover:text-[#B7D2FF] transition-colors">
+                <div className="text-gray-700">
+                  <a href={siteConfig.links.mapUrl} target="_blank" rel="noopener noreferrer" className="text-[#050544] hover:text-[#445DFE] transition-colors">
                     ALTEG UK LTD<br />
                     Unit A3, Riverside Industrial Estate,<br />
                     Littlehampton, West Sussex, BN17 5DF
@@ -176,29 +176,29 @@ export const Footer: React.FC = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-white/10">
+      <div className="border-t border-gray-200">
         <div className="container mx-auto px-4 py-6">
-            <div className="flex flex-row flex-wrap justify-center md:justify-between items-center gap-2 sm:gap-4 text-[10px] sm:text-xs md:text-sm text-gray-400">
+            <div className="flex flex-row flex-wrap justify-center md:justify-between items-center gap-2 sm:gap-4 text-[10px] sm:text-xs md:text-sm text-gray-500">
               <div className="text-center whitespace-nowrap">
                 © {currentYear} ALTEG. All rights reserved. | Manufactured by BRAZ Factory
               </div>
               <div className="flex flex-wrap gap-2 sm:gap-4 md:gap-6 justify-center items-center">
-                <Link href="/privacy" className="hover:text-white transition-colors whitespace-nowrap">Privacy Policy</Link>
-                <Link href="/terms" className="hover:text-white transition-colors whitespace-nowrap">Terms & Conditions</Link>
-                <Link href="/cookies" className="hover:text-white transition-colors whitespace-nowrap">Cookie Policy</Link>
+                <Link href="/privacy" className="hover:text-[#050544] transition-colors whitespace-nowrap">Privacy Policy</Link>
+                <Link href="/terms" className="hover:text-[#050544] transition-colors whitespace-nowrap">Terms & Conditions</Link>
+                <Link href="/cookies" className="hover:text-[#050544] transition-colors whitespace-nowrap">Cookie Policy</Link>
                 {siteConfig.links.trustpilot ? (
-                  <Link href={siteConfig.links.trustpilot} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors whitespace-nowrap">Reviews (Trustpilot)</Link>
+                  <Link href={siteConfig.links.trustpilot} target="_blank" rel="noopener noreferrer" className="hover:text-[#050544] transition-colors whitespace-nowrap">Reviews (Trustpilot)</Link>
                 ) : (
                   <span className="text-gray-500 whitespace-nowrap">Reviews (Trustpilot) — Coming soon</span>
                 )}
               </div>
             </div>
-          <div className="w-full text-center mt-4 pt-4 border-t border-white/10">
+          <div className="w-full text-center mt-4 pt-4 border-t border-gray-200">
             <Link 
               href="https://new.telebots.site/en" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-gray-400 hover:text-white transition-colors text-[10px] sm:text-xs md:text-sm"
+              className="text-gray-500 hover:text-[#050544] transition-colors text-[10px] sm:text-xs md:text-sm"
             >
               TeleBots | Website Development
             </Link>

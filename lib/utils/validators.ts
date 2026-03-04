@@ -55,6 +55,13 @@ export const contactFormSchema = z.object({
   interest: z.string().optional().default('').refine((s) => !s || s.length >= 3, 'At least 3 characters if provided'),
 });
 
+export const productInquiryFormSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().email('Please enter a valid email address'),
+  phone: z.string().min(10, 'Phone number must be at least 10 digits'),
+  message: z.string().optional(),
+});
+
 export const adminProductSchema = z.object({
   nameEn: z.string().min(1, "Name is required"),
   dimensions: z.string().min(1, "Dimensions are required"),
@@ -91,3 +98,4 @@ export type QuoteRequestFormData = z.infer<typeof quoteRequestSchema>;
 export type OrderFormData = z.infer<typeof orderSchema>;
 export type WholesaleFormData = z.infer<typeof wholesaleFormSchema>;
 export type ContactFormData = z.infer<typeof contactFormSchema>;
+export type ProductInquiryFormData = z.infer<typeof productInquiryFormSchema>;

@@ -207,13 +207,13 @@ export const TrustSection: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4 leading-tight tracking-tight">
-            Trust, Production & Logistics
+            Manufacturer, Quality & Logistics
           </h2>
           <p className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto leading-relaxed px-2 mb-6">
-            Why choose ALTEG? We are not just a supplier — we are a manufacturer with complete control over production and quality.
+            ALTEG is not just a stockist — we are a European manufacturer with full control over production, quality and pricing for the UK market.
           </p>
           <p className="text-sm sm:text-base text-white/60 max-w-2xl mx-auto leading-relaxed px-2">
-            Confirm ALTEG's status as a manufacturer. Answer key questions about logistics and standards.
+            Below we confirm our status as a manufacturer and answer key questions about logistics, lead times and compliance with European (EN) standards.
           </p>
         </div>
 

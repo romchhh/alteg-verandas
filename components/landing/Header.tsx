@@ -62,28 +62,25 @@ export const Header: React.FC = () => {
             </div>
           </Link>
 
-          {/* Desktop Navigation - section links go to home so they work from any page */}
+          {/* Desktop Navigation - links to catalog pages */}
           <nav className="hidden lg:flex items-center gap-4 xl:gap-5">
-            <a href="/#catalog" className="text-[#050544] hover:text-[#445DFE] font-bold transition-colors text-sm uppercase tracking-wide">
-              Products
-            </a>
-            <a href="/#advantages" className="text-[#050544] hover:text-[#445DFE] font-bold transition-colors text-sm uppercase tracking-wide">
-              Advantages
-            </a>
-            <a href="/#how-to-order" className="text-[#050544] hover:text-[#445DFE] font-bold transition-colors text-sm uppercase tracking-wide">
-              How to Order
-            </a>
-            <a href="/#faq" className="text-[#050544] hover:text-[#445DFE] font-bold transition-colors text-sm uppercase tracking-wide">
-              FAQ
-            </a>
+            <Link href="/catalog/verandas" className="text-[#050544] hover:text-[#445DFE] font-bold transition-colors text-sm uppercase tracking-wide">
+              Verandas
+            </Link>
+            <Link href="/catalog/fencing" className="text-[#050544] hover:text-[#445DFE] font-bold transition-colors text-sm uppercase tracking-wide">
+              Fencing
+            </Link>
+            <Link href="/catalog/profiles" className="text-[#050544] hover:text-[#445DFE] font-bold transition-colors text-sm uppercase tracking-wide">
+              Profile Systems
+            </Link>
+            <Link href="/catalog/accessories" className="text-[#050544] hover:text-[#445DFE] font-bold transition-colors text-sm uppercase tracking-wide">
+              Accessories
+            </Link>
+            <Link href="/categories" className="text-[#050544] hover:text-[#445DFE] font-bold transition-colors text-sm uppercase tracking-wide">
+              Categories
+            </Link>
             <Link href="/contact" className="text-[#050544] hover:text-[#445DFE] font-bold transition-colors text-sm uppercase tracking-wide">
-              Contact
-            </Link>
-            <Link href="/delivery" className="text-[#050544] hover:text-[#445DFE] font-bold transition-colors text-sm uppercase tracking-wide">
-              Delivery
-            </Link>
-            <Link href="/wholesale" className="text-[#050544] hover:text-[#445DFE] font-bold transition-colors text-sm uppercase tracking-wide">
-              Wholesale
+              Get a Quote
             </Link>
           </nav>
 
@@ -105,9 +102,9 @@ export const Header: React.FC = () => {
             </Link>
 
             {/* Desktop CTA Button */}
-            <Link href="/#catalog" className="hidden lg:block">
+            <Link href="/contact" className="hidden lg:block">
               <button className="px-4 py-2 bg-black hover:bg-[#050544] text-white font-bold transition-all duration-300 text-xs rounded-none uppercase tracking-wide">
-                MAKE AN ENQUIRY
+                GET A FREE QUOTE
               </button>
             </Link>
 
@@ -144,54 +141,47 @@ export const Header: React.FC = () => {
             <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)] px-4 py-12 relative">
               {/* Menu Items */}
               <nav className="flex flex-col items-center gap-3 w-full max-w-md">
-                <Link 
-                  href="/#catalog" 
+                <Link
+                  href="/catalog/verandas"
                   onClick={() => setMobileMenuOpen(false)}
                   className="w-full text-center text-white hover:text-[#B7D2FF] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
                 >
-                  Products
+                  Verandas &amp; Canopies
                 </Link>
-                <Link 
-                  href="/#trust" 
+                <Link
+                  href="/catalog/fencing"
                   onClick={() => setMobileMenuOpen(false)}
                   className="w-full text-center text-white hover:text-[#B7D2FF] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
                 >
-                  Advantages
+                  Aluminium Fencing
                 </Link>
-                <Link 
-                  href="/#how-to-order" 
+                <Link
+                  href="/catalog/profiles"
                   onClick={() => setMobileMenuOpen(false)}
                   className="w-full text-center text-white hover:text-[#B7D2FF] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
                 >
-                  How to Order
+                  Profile Systems
                 </Link>
-                <Link 
-                  href="/#faq" 
+                <Link
+                  href="/catalog/accessories"
                   onClick={() => setMobileMenuOpen(false)}
                   className="w-full text-center text-white hover:text-[#B7D2FF] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
                 >
-                  FAQ
+                  Accessories &amp; Guttering
                 </Link>
-                <Link 
-                  href="/contact" 
+                <Link
+                  href="/categories"
                   onClick={() => setMobileMenuOpen(false)}
                   className="w-full text-center text-white hover:text-[#B7D2FF] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
                 >
-                  Contact
+                  Categories
                 </Link>
-                <Link 
-                  href="/delivery" 
+                <Link
+                  href="/contact"
                   onClick={() => setMobileMenuOpen(false)}
                   className="w-full text-center text-white hover:text-[#B7D2FF] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
                 >
-                  Delivery
-                </Link>
-                <Link 
-                  href="/wholesale" 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center text-white hover:text-[#B7D2FF] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
-                >
-                  Wholesale
+                  Get a Quote
                 </Link>
                 <a 
                   href={`tel:${siteConfig.links.phone}`} 
@@ -206,13 +196,13 @@ export const Header: React.FC = () => {
               {/* CTA Buttons */}
               <div className="w-full max-w-xs mt-12 space-y-4 pt-8 border-t border-white/20">
                 <Button 
-                  href="/#catalog" 
+                  href="/contact" 
                   variant="primary" 
                   fullWidth 
                   className="bg-white !text-black hover:bg-gray-100 border-none rounded-none py-4 text-base font-bold uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  MAKE AN ENQUIRY
+                  GET A FREE QUOTE
                 </Button>
                 <Button 
                   href="/checkout" 

@@ -5,40 +5,36 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "@/lib/SidebarContext";
-import { List, LayoutDashboard, ShoppingCart, Package } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Package } from "lucide-react";
 
 type NavItem = {
   name: string;
   icon: React.ReactNode;
   path: string;
-  countKey: "products" | "categories" | "orders" | null;
+  countKey: "products" | "orders" | null;
 };
 
 const navItems: NavItem[] = [
   { icon: <LayoutDashboard className="w-5 h-5" />, name: "Dashboard", path: "/admin", countKey: null },
   { icon: <Package className="w-5 h-5" />, name: "Products", path: "/admin/products", countKey: "products" },
-  { icon: <List className="w-5 h-5" />, name: "Categories", path: "/admin/categories", countKey: "categories" },
   { icon: <ShoppingCart className="w-5 h-5" />, name: "Orders", path: "/admin/orders", countKey: "orders" },
 ];
 
 export default function AppSidebar() {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const pathname = usePathname();
-  const [counts, setCounts] = useState<{ products: number; categories: number; orders: number }>({
+  const [counts, setCounts] = useState<{ products: number; orders: number }>({
     products: 0,
-    categories: 0,
     orders: 0,
   });
 
   useEffect(() => {
     Promise.all([
       fetch("/api/admin/products").then((r) => (r.ok ? r.json() : [])),
-      fetch("/api/admin/categories").then((r) => (r.ok ? r.json() : [])),
       fetch("/api/admin/orders").then((r) => (r.ok ? r.json() : [])),
-    ]).then(([products, categories, orders]) => {
+    ]).then(([products, orders]) => {
       setCounts({
         products: Array.isArray(products) ? products.length : 0,
-        categories: Array.isArray(categories) ? categories.length : 0,
         orders: Array.isArray(orders) ? orders.length : 0,
       });
     });
