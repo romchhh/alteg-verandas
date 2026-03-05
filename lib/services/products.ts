@@ -31,6 +31,10 @@ export async function searchProducts(query: string): Promise<Product[]> {
       product.name.toLowerCase().includes(lowerQuery) ||
       product.nameEn.toLowerCase().includes(lowerQuery) ||
       product.dimensions.toLowerCase().includes(lowerQuery) ||
-      (product.applications && product.applications.some((app) => app.toLowerCase().includes(lowerQuery)))
+      (product.applications && product.applications.some((app) => app.toLowerCase().includes(lowerQuery))) ||
+      (product.descriptionEn && product.descriptionEn.toLowerCase().includes(lowerQuery)) ||
+      (product.description && product.description.toLowerCase().includes(lowerQuery)) ||
+      (product.material && product.material.toLowerCase().includes(lowerQuery)) ||
+      (product.finish && product.finish.toLowerCase().includes(lowerQuery))
   );
 }

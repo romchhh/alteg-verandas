@@ -111,24 +111,34 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Services — scroll to matching blocks on home */}
+          {/* Services — all link to contact form in hero section */}
           <div className="text-center sm:text-left">
             <h3 className="text-lg font-semibold mb-4 text-[#050544]">Services</h3>
             <ul className="space-y-2 text-sm text-gray-600">
               <li>
-                <a href="/#advantages" className="text-gray-700 hover:text-[#050544] transition-colors">Free Cutting to Size</a>
+                <a href="/#contact" className="text-gray-700 hover:text-[#050544] transition-colors">
+                  Veranda &amp; canopy quotes
+                </a>
               </li>
               <li>
-                <a href="/#advantages" className="text-gray-700 hover:text-[#050544] transition-colors">Custom Processing</a>
+                <a href="/#contact" className="text-gray-700 hover:text-[#050544] transition-colors">
+                  Aluminium fencing quotes
+                </a>
               </li>
               <li>
-                <a href="/#delivery" className="text-gray-700 hover:text-[#050544] transition-colors">UK Delivery</a>
+                <a href="/#contact" className="text-gray-700 hover:text-[#050544] transition-colors">
+                  Wholesale &amp; trade supply
+                </a>
               </li>
               <li>
-                <a href="/#catalog" className="text-gray-700 hover:text-[#050544] transition-colors">Wholesale Supply</a>
+                <a href="/#contact" className="text-gray-700 hover:text-[#050544] transition-colors">
+                  Project pricing &amp; bundles
+                </a>
               </li>
               <li>
-                <a href="/#contact" className="text-gray-700 hover:text-[#050544] transition-colors">Technical Support</a>
+                <a href="/#contact" className="text-gray-700 hover:text-[#050544] transition-colors">
+                  Technical design support
+                </a>
               </li>
             </ul>
           </div>

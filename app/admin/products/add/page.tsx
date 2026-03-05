@@ -8,27 +8,22 @@ import Input from "@/components/admin/form/Input";
 import TextArea from "@/components/admin/form/TextArea";
 import ToggleSwitch from "@/components/admin/form/ToggleSwitch";
 import { ImageUpload } from "@/components/admin/ImageUpload";
-import { PRODUCT_CATEGORIES } from "@/lib/constants/catalog";
 import { adminProductSchema } from "@/lib/utils/validators";
 
-interface CategoryOption {
-  id: string;
-  name: string;
-  nameEn: string;
-}
-
 export default function AddProductPage() {
-  const [categories, setCategories] = useState<CategoryOption[]>([]);
+  const MARKETING_CATEGORIES = [
+    { id: "verandas", label: "Verandas & Canopies" },
+    { id: "fencing", label: "Aluminium Fencing" },
+    { id: "profiles", label: "Profile Systems" },
+    { id: "accessories", label: "Accessories & Guttering" },
+  ] as const;
+
+  const [category, setCategory] = useState<string>(MARKETING_CATEGORIES[0].id);
   const [nameEn, setNameEn] = useState("");
-  const [category, setCategory] = useState("angle");
   const [dimensions, setDimensions] = useState("");
   const [pricePerKg, setPricePerKg] = useState("");
   const [weightPerMeter, setWeightPerMeter] = useState("");
-  const [useDefaultData, setUseDefaultData] = useState(false);
   const [standardLengths, setStandardLengths] = useState("1, 3, 6");
-
-  const DEFAULT_PRICE_PER_KG = "4.20";
-  const DEFAULT_WEIGHT_PER_METER = "0.41";
   const [inStock, setInStock] = useState(true);
   const [hidden, setHidden] = useState(false);
   const [material, setMaterial] = useState("");
@@ -38,17 +33,6 @@ export default function AddProductPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    fetch("/api/admin/categories")
-      .then((res) => res.ok ? res.json() : [])
-      .then((list: CategoryOption[]) => {
-        const arr = Array.isArray(list) ? list : Object.entries(PRODUCT_CATEGORIES).map(([id, c]) => ({ id, name: c.name, nameEn: c.nameEn }));
-        setCategories(arr);
-        if (arr.length > 0 && !arr.some((c) => c.id === category)) setCategory(arr[0].id);
-      })
-      .catch(() => setCategories(Object.entries(PRODUCT_CATEGORIES).map(([id, c]) => ({ id, name: c.name, nameEn: c.nameEn }))));
-  }, []);
 
   const generateId = () => {
     const slug = dimensions.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase();
@@ -90,7 +74,7 @@ export default function AddProductPage() {
       const wpm = parseFloat(weightPerMeter) || 0;
       const body = {
         id,
-        category,
+        category: "custom_profile",
         name: nameEn || "",
         nameEn: nameEn || "",
         dimensions,
@@ -103,6 +87,7 @@ export default function AddProductPage() {
         material: material || undefined,
         finish: finish || undefined,
         image: image || undefined,
+        applications: [MARKETING_CATEGORIES.find((c) => c.id === category)?.label ?? "Profile Systems"],
       };
 
       const res = await fetch("/api/admin/products", {
@@ -153,10 +138,9 @@ export default function AddProductPage() {
                 onChange={(e) => setCategory(e.target.value)}
                 className="h-11 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm bg-white"
               >
-                {categories.length === 0 && <option value="angle">Angle</option>}
-                {categories.map((c) => (
+                {MARKETING_CATEGORIES.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c.nameEn}
+                    {c.label}
                   </option>
                 ))}
               </select>
@@ -170,23 +154,6 @@ export default function AddProductPage() {
                 required
               />
               {fieldErrors.dimensions && <p className="mt-1 text-sm text-red-600">{fieldErrors.dimensions}</p>}
-            </div>
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gray-200 bg-gray-50/50 p-4">
-              <div>
-                <p className="text-sm font-medium text-gray-900">Use default data</p>
-                <p className="text-xs text-gray-500 mt-0.5">£4.20/kg, 0.41 kg/m — fill price and weight with defaults</p>
-              </div>
-              <ToggleSwitch
-                enabled={useDefaultData}
-                setEnabled={(on) => {
-                  setUseDefaultData(on);
-                  if (on) {
-                    setPricePerKg(DEFAULT_PRICE_PER_KG);
-                    setWeightPerMeter(DEFAULT_WEIGHT_PER_METER);
-                  }
-                }}
-                label=""
-              />
             </div>
             <div>
               <Label>Price per kg (£)</Label>

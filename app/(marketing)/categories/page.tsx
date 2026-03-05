@@ -1,7 +1,97 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import type { Product } from '@/lib/types/product';
+import { getProducts } from '@/lib/data/products';
 
-export default function CategoriesPage() {
+const CATEGORY_CONFIG: Array<{
+  id: 'verandas' | 'fencing' | 'profiles' | 'accessories';
+  title: string;
+  description: string;
+  heroDescription: string;
+  bulletPoints: string[];
+  catalogHref: string;
+  primaryCtaLabel: string;
+  secondaryCtaLabel: string;
+  match: (p: Product) => boolean;
+}> = [
+  {
+    id: 'verandas',
+    title: 'Verandas & Canopies',
+    description:
+      'Tailor‑made aluminium verandas and canopies for British homes. Polycarbonate or safety glass, standard sizes and bespoke on request.',
+    heroDescription:
+      'Made‑to‑measure aluminium verandas and canopies for British homes. Available with polycarbonate or laminated safety glass (VSG) roofing, powder‑coated structure and integrated guttering.',
+    bulletPoints: [
+      'Typical sizes from approx. 4×3 m up to 7×4.5 m',
+      'Standard depths and widths, bespoke options on request',
+      'From price shown on the UK site, excl. VAT',
+    ],
+    catalogHref: '/catalog/verandas',
+    primaryCtaLabel: 'View verandas catalog',
+    secondaryCtaLabel: 'Get veranda quote',
+    match: (p) =>
+      (p.applications ?? []).includes('Verandas & Canopies'),
+  },
+  {
+    id: 'fencing',
+    title: 'Aluminium Fencing',
+    description:
+      'Modern privacy fencing that never needs painting. Powder‑coated aluminium boards and posts, low maintenance and long life.',
+    heroDescription:
+      'Modern aluminium privacy fencing as a long‑life alternative to timber panels and concrete posts. Boards, posts and capping are powder‑coated and low‑maintenance.',
+    bulletPoints: [
+      'Guide pricing from around £100 per metre (from price, excl. VAT)',
+      'Typical fence height around 1 m, higher options available',
+      'Standard RAL 7016 anthracite grey, other colours to order',
+    ],
+    catalogHref: '/catalog/fencing',
+    primaryCtaLabel: 'View fencing catalog',
+    secondaryCtaLabel: 'Get fencing quote',
+    match: (p) =>
+      (p.applications ?? []).includes('Aluminium Fencing'),
+  },
+  {
+    id: 'profiles',
+    title: 'Profile Systems',
+    description:
+      'Aluminium support posts, rafters and fence profiles for verandas and fencing. Trade supply across the UK.',
+    heroDescription:
+      'Aluminium profile systems for verandas, canopies and fencing: support posts, rafters and beams, fence posts and infill profiles for trade and project customers.',
+    bulletPoints: [
+      'Support posts (e.g. around 110×110 mm with base plates)',
+      'Load‑bearing roof beams and rafters for glass and polycarbonate roofs',
+      'Fence posts, boards, capping and rails for aluminium fencing',
+    ],
+    catalogHref: '/catalog/profiles',
+    primaryCtaLabel: 'View profiles catalog',
+    secondaryCtaLabel: 'Enquire about profiles',
+    match: (p) =>
+      (p.applications ?? []).includes('Profile Systems'),
+  },
+  {
+    id: 'accessories',
+    title: 'Accessories & Guttering',
+    description:
+      'Seals, gaskets, guttering and fixings for watertight veranda and fencing installations.',
+    heroDescription:
+      'Finishing components for watertight, long‑life installations: seals, gaskets, guttering, fixings and trims matched to our veranda and fencing systems.',
+    bulletPoints: [
+      'EPDM rubber seals and gaskets for glass and polycarbonate',
+      'Wall connection profiles and cover cap seals',
+      'Aluminium gutters, downpipes, end caps and fixings',
+    ],
+    catalogHref: '/catalog/accessories',
+    primaryCtaLabel: 'View accessories catalog',
+    secondaryCtaLabel: 'Ask about accessories',
+    match: (p) =>
+      (p.applications ?? []).includes('Accessories & Guttering'),
+  },
+];
+
+export default async function CategoriesPage() {
+  const allProducts = await getProducts();
+
   return (
     <main className="min-h-screen bg-white pt-16 md:pt-20">
       {/* Hero */}
@@ -23,126 +113,71 @@ export default function CategoriesPage() {
       <section className="py-12 sm:py-16 md:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-2 max-w-5xl mx-auto">
-            {/* Verandas & Canopies */}
-            <article className="border-2 border-gray-100 rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md hover:border-[#445DFE]/40 transition-all duration-300">
-              <h2 className="text-xl sm:text-2xl font-bold text-[#050544] mb-2">
-                Verandas &amp; Canopies
-              </h2>
-              <p className="text-sm sm:text-base text-gray-700 mb-4">
-                Made‑to‑measure aluminium verandas and canopies for British homes. Available with
-                polycarbonate or laminated safety glass (VSG) roofing, powder‑coated structure and
-                integrated guttering.
-              </p>
-              <ul className="text-sm text-gray-700 mb-5 list-disc list-inside space-y-1">
-                <li>Typical sizes from approx. 4×3 m up to 7×4.5 m</li>
-                <li>Standard depths and widths, bespoke options on request</li>
-                <li>From price shown on the UK site, excl. VAT</li>
-              </ul>
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/catalog/verandas"
-                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold border border-[#050544] text-[#050544] hover:bg-[#050544] hover:text-white rounded-none transition-colors"
-                >
-                  View verandas catalog
-                </Link>
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none transition-colors"
-                >
-                  Get veranda quote
-                </Link>
-              </div>
-            </article>
+            {CATEGORY_CONFIG.map((cat) => {
+              const firstProductWithImage = allProducts.find(
+                (p) => cat.match(p) && p.image
+              );
+              const imageSrc =
+                firstProductWithImage?.image ??
+                (cat.id === 'verandas'
+                  ? 'https://images.unsplash.com/photo-1523419409543-3e4f83b9b4c2?w=900&auto=format&fit=crop&q=80'
+                  : cat.id === 'fencing'
+                  ? 'https://images.unsplash.com/photo-1609918488960-6721c37cb0c7?w=900&auto=format&fit=crop&q=80'
+                  : 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=900&auto=format&fit=crop&q=80');
+              const imageAlt =
+                firstProductWithImage?.nameEn ??
+                (cat.id === 'verandas'
+                  ? 'Aluminium veranda attached to a modern UK home'
+                  : cat.id === 'fencing'
+                  ? 'Contemporary aluminium garden fencing'
+                  : cat.id === 'profiles'
+                  ? 'Aluminium profiles and beams in production'
+                  : 'Aluminium guttering, seals and accessories');
 
-            {/* Aluminium Fencing */}
-            <article className="border-2 border-gray-100 rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md hover:border-[#445DFE]/40 transition-all duration-300">
-              <h2 className="text-xl sm:text-2xl font-bold text-[#050544] mb-2">
-                Aluminium Fencing
-              </h2>
-              <p className="text-sm sm:text-base text-gray-700 mb-4">
-                Modern aluminium privacy fencing as a long‑life alternative to timber panels and concrete
-                posts. Boards, posts and capping are powder‑coated and low‑maintenance.
-              </p>
-              <ul className="text-sm text-gray-700 mb-5 list-disc list-inside space-y-1">
-                <li>Guide pricing from around £100 per metre (from price, excl. VAT)</li>
-                <li>Typical fence height around 1 m, higher options available</li>
-                <li>Standard RAL 7016 anthracite grey, other colours to order</li>
-              </ul>
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/catalog/fencing"
-                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold border border-[#050544] text-[#050544] hover:bg-[#050544] hover:text-white rounded-none transition-colors"
+              return (
+                <article
+                  key={cat.id}
+                  className="border-2 border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:border-[#445DFE]/40 transition-all duration-300"
                 >
-                  View fencing catalog
-                </Link>
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none transition-colors"
-                >
-                  Get fencing quote
-                </Link>
-              </div>
-            </article>
-
-            {/* Profile Systems */}
-            <article className="border-2 border-gray-100 rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md hover:border-[#445DFE]/40 transition-all duration-300">
-              <h2 className="text-xl sm:text-2xl font-bold text-[#050544] mb-2">
-                Profile Systems
-              </h2>
-              <p className="text-sm sm:text-base text-gray-700 mb-4">
-                Aluminium profile systems for verandas, canopies and fencing: support posts, rafters and
-                beams, fence posts and infill profiles for trade and project customers.
-              </p>
-              <ul className="text-sm text-gray-700 mb-5 list-disc list-inside space-y-1">
-                <li>Support posts (e.g. around 110×110 mm with base plates)</li>
-                <li>Load‑bearing roof beams and rafters for glass and polycarbonate roofs</li>
-                <li>Fence posts, boards, capping and rails for aluminium fencing</li>
-              </ul>
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/catalog/profiles"
-                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold border border-[#050544] text-[#050544] hover:bg-[#050544] hover:text-white rounded-none transition-colors"
-                >
-                  View profiles catalog
-                </Link>
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none transition-colors"
-                >
-                  Enquire about profiles
-                </Link>
-              </div>
-            </article>
-
-            {/* Accessories & Guttering */}
-            <article className="border-2 border-gray-100 rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md hover:border-[#445DFE]/40 transition-all duration-300">
-              <h2 className="text-xl sm:text-2xl font-bold text-[#050544] mb-2">
-                Accessories &amp; Guttering
-              </h2>
-              <p className="text-sm sm:text-base text-gray-700 mb-4">
-                Finishing components for watertight, long‑life installations: seals, gaskets, guttering,
-                fixings and trims matched to our veranda and fencing systems.
-              </p>
-              <ul className="text-sm text-gray-700 mb-5 list-disc list-inside space-y-1">
-                <li>EPDM rubber seals and gaskets for glass and polycarbonate</li>
-                <li>Wall connection profiles and cover cap seals</li>
-                <li>Aluminium gutters, downpipes, end caps and fixings</li>
-              </ul>
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/catalog/accessories"
-                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold border border-[#050544] text-[#050544] hover:bg-[#050544] hover:text-white rounded-none transition-colors"
-                >
-                  View accessories catalog
-                </Link>
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none transition-colors"
-                >
-                  Ask about accessories
-                </Link>
-              </div>
-            </article>
+                  <div className="relative h-56 sm:h-64 md:h-72 bg-gray-100">
+                    <Image
+                      src={imageSrc}
+                      alt={imageAlt}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 1024px) 50vw, 100vw"
+                    />
+                  </div>
+                  <div className="p-6 sm:p-8">
+                    <h2 className="text-xl sm:text-2xl font-bold text-[#050544] mb-2">
+                      {cat.title}
+                    </h2>
+                    <p className="text-sm sm:text-base text-gray-700 mb-4">
+                      {cat.heroDescription}
+                    </p>
+                    <ul className="text-sm text-gray-700 mb-5 list-disc list-inside space-y-1">
+                      {cat.bulletPoints.map((point) => (
+                        <li key={point}>{point}</li>
+                      ))}
+                    </ul>
+                    <div className="flex flex-wrap gap-3">
+                      <Link
+                        href={cat.catalogHref}
+                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold border border-[#050544] text-[#050544] hover:bg-[#050544] hover:text-white rounded-none transition-colors"
+                      >
+                        {cat.primaryCtaLabel}
+                      </Link>
+                      <Link
+                        href="/contact"
+                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none transition-colors"
+                      >
+                        {cat.secondaryCtaLabel}
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>

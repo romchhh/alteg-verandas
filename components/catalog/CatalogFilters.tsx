@@ -95,20 +95,50 @@ export function CatalogFilters({
     [pathname, router]
   );
 
-  const priceMinNum = Math.max(priceRange.min, minPrice ? parseInt(minPrice, 10) || priceRange.min : priceRange.min);
-  const priceMaxNum = Math.min(priceRange.max, maxPrice ? parseInt(maxPrice, 10) || priceRange.max : priceRange.max);
-  const step = priceRange.max - priceRange.min > 5000 ? 500 : priceRange.max - priceRange.min > 1000 ? 100 : 50;
-  const minVal = Math.min(priceMinNum, priceMaxNum);
-  const maxVal = Math.max(priceMinNum, priceMaxNum);
+  // Derive current numeric bounds from props (URL params + available range)
+  const priceMinNum = Math.max(
+    priceRange.min,
+    minPrice ? parseFloat(minPrice) || priceRange.min : priceRange.min
+  );
+  const priceMaxNum = Math.min(
+    priceRange.max,
+    maxPrice ? parseFloat(maxPrice) || priceRange.max : priceRange.max
+  );
+
+  // Local UI state for sliders so they move immediately, independent of navigation
+  const [localMin, setLocalMin] = useState(priceMinNum);
+  const [localMax, setLocalMax] = useState(priceMaxNum);
+
+  // Keep local slider state in sync when URL / props change
+  React.useEffect(() => {
+    setLocalMin(priceMinNum);
+  }, [priceMinNum]);
+
+  React.useEffect(() => {
+    setLocalMax(priceMaxNum);
+  }, [priceMaxNum]);
+  const rangeSpan = priceRange.max - priceRange.min;
+  const step =
+    rangeSpan <= 100
+      ? Math.max(Math.round(rangeSpan / 40), 1)
+      : rangeSpan <= 1000
+      ? 10
+      : 50;
+  const minVal = Math.min(localMin, localMax);
+  const maxVal = Math.max(localMin, localMax);
 
   const handleMinPriceSlider = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const v = Math.min(Number(e.target.value), maxVal);
-    updateFilters({ minPrice: v === priceRange.min ? undefined : String(v) });
+    const raw = Number(e.target.value);
+    const v = Math.min(raw, localMax);
+    setLocalMin(v);
+    updateFilters({ minPrice: v <= priceRange.min ? undefined : String(v) });
   };
 
   const handleMaxPriceSlider = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const v = Math.max(Number(e.target.value), minVal);
-    updateFilters({ maxPrice: v === priceRange.max ? undefined : String(v) });
+    const raw = Number(e.target.value);
+    const v = Math.max(raw, localMin);
+    setLocalMax(v);
+    updateFilters({ maxPrice: v >= priceRange.max ? undefined : String(v) });
   };
 
   const handleSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -208,7 +238,7 @@ export function CatalogFilters({
             </div>
           </div>
           <p className="mt-1.5 text-[11px] text-gray-500">
-            £{priceRange.min.toLocaleString()} – £{priceRange.max.toLocaleString()} (guide)
+            £{minVal.toLocaleString()} – £{maxVal.toLocaleString()} (guide)
           </p>
         </div>
 

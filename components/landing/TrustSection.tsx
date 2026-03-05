@@ -16,20 +16,20 @@ const trustPoints = [
     content: (
       <div>
         <p className="text-white/90 mb-4 leading-relaxed">
-          ALTEG is a European manufacturer of aluminium profiles supplying customers across the UK.
+          ALTEG is a European manufacturer of aluminium veranda, canopy and fencing systems supplying trade and homeowners across the UK.
         </p>
         <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
           <div>
             <div className="text-2xl sm:text-3xl font-bold text-white mb-1">15+</div>
-            <div className="text-xs text-white/70 leading-tight">Years in Production</div>
+            <div className="text-xs text-white/70 leading-tight">Years of experience</div>
           </div>
           <div>
             <div className="text-2xl sm:text-3xl font-bold text-white mb-1">500+</div>
-            <div className="text-xs text-white/70 leading-tight">Tons Monthly</div>
+            <div className="text-xs text-white/70 leading-tight">Tons of aluminium / month</div>
           </div>
           <div>
             <div className="text-2xl sm:text-3xl font-bold text-white mb-1">EN</div>
-            <div className="text-xs text-white/70 leading-tight">Standards</div>
+            <div className="text-xs text-white/70 leading-tight">EN-compliant systems</div>
           </div>
         </div>
       </div>
@@ -45,16 +45,16 @@ const trustPoints = [
     content: (
       <div>
         <p className="text-white/90 mb-3 leading-relaxed">
-          Direct supplies, no middleman markups. Straight from manufacturer to you.
+          Factory-direct veranda and fencing systems – no middleman mark‑ups.
         </p>
         <ul className="space-y-2 text-white/80 text-sm">
           <li className="flex items-start gap-2">
             <span className="text-white mt-1">✓</span>
-            <span>No intermediaries</span>
+            <span>Direct supplies from manufacturer to UK customers</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-white mt-1">✓</span>
-            <span>Competitive pricing</span>
+            <span>Transparent, trade-friendly pricing</span>
           </li>
         </ul>
       </div>
@@ -70,20 +70,20 @@ const trustPoints = [
     content: (
       <div>
         <p className="text-white/90 mb-3 leading-relaxed">
-          Full control from raw materials to finished profiles. EN standards compliant.
+          From raw aluminium to finished veranda kit or fence panel — full control in one production cycle.
         </p>
         <ul className="space-y-2 text-white/80 text-sm">
           <li className="flex items-start gap-2">
             <span className="text-white mt-1">✓</span>
-            <span>Full production cycle control</span>
+            <span>Complete in‑house production and finishing</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-white mt-1">✓</span>
-            <span>Factory quality control</span>
+            <span>Factory quality control at each stage</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-white mt-1">✓</span>
-            <span>Compliance with European standards (EN)</span>
+            <span>Compliance with European EN standards for aluminium systems</span>
           </li>
         </ul>
       </div>
@@ -99,20 +99,20 @@ const trustPoints = [
     content: (
       <div>
         <p className="text-white/90 mb-3 leading-relaxed">
-          Cutting, drilling, milling, and custom solutions tailored to your project.
+          Standard kits or bespoke solutions for verandas, canopies, fencing and profiles.
         </p>
         <ul className="space-y-2 text-white/80 text-sm">
           <li className="flex items-start gap-2">
             <span className="text-white mt-1">✓</span>
-            <span>Free cutting to size</span>
+            <span>Free cutting to size for profiles and posts</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-white mt-1">✓</span>
-            <span>All items cut to preferred size upon request</span>
+            <span>Options for drilling, milling and preparation for installation</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-white mt-1">✓</span>
-            <span>Tailored solutions</span>
+            <span>Tailored solutions for non‑standard terrace sizes and fence layouts</span>
           </li>
         </ul>
       </div>
@@ -128,24 +128,20 @@ const trustPoints = [
     content: (
       <div>
         <p className="text-white/90 mb-3 leading-relaxed">
-          Fast and reliable delivery to any location across the UK, on time and on schedule.
+          Reliable delivery of veranda kits, fencing and accessories anywhere in the UK.
         </p>
         <ul className="space-y-2 text-white/80 text-sm">
           <li className="flex items-start gap-2">
             <span className="text-white mt-1">✓</span>
-            <span>Delivery across the UK</span>
+            <span>Nationwide delivery across the UK</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-white mt-1">✓</span>
-            <span>Typical delivery time: 2-5 business days</span>
+            <span>Typical lead time: 2–5 business days on stock items</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-white mt-1">✓</span>
-            <span>Free delivery over £77 (ex. VAT)</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-white mt-1">✓</span>
-            <span>Pallet and courier delivery options</span>
+            <span>Pallet and courier delivery options to site or depot</span>
           </li>
         </ul>
       </div>
@@ -161,24 +157,24 @@ const trustPoints = [
     content: (
       <div>
         <p className="text-white/90 mb-3 leading-relaxed">
-          Committed to sustainable manufacturing practices, environmental stewardship, and ethical business operations.
+          Sustainable aluminium manufacturing for long‑life outdoor structures.
         </p>
         <ul className="space-y-2 text-white/80 text-sm">
           <li className="flex items-start gap-2">
             <span className="text-white mt-1">✓</span>
-            <span>Recyclable aluminium production</span>
+            <span>Aluminium that is fully recyclable at end of life</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-white mt-1">✓</span>
-            <span>Energy-efficient manufacturing processes</span>
+            <span>Energy‑efficient production processes where possible</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-white mt-1">✓</span>
-            <span>Waste reduction and material optimization</span>
+            <span>Waste reduction and material optimisation in cutting plans</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-white mt-1">✓</span>
-            <span>Ethical supply chain and fair labor practices</span>
+            <span>Ethical supply chain and fair labour practices</span>
           </li>
         </ul>
       </div>

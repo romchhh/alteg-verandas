@@ -7,6 +7,7 @@ import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/shared/Button';
 import { siteConfig } from '@/config/site';
 import { lockBodyScroll, unlockBodyScroll } from '@/lib/utils/bodyScrollLock';
+import { ProductSearchModal } from '@/components/catalog/ProductSearchModal';
 
 const MenuIcon: React.FC<{ className?: string }> = ({ className = '' }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -20,11 +21,7 @@ const XIcon: React.FC<{ className?: string }> = ({ className = '' }) => (
   </svg>
 );
 
-const CartIcon: React.FC<{ className?: string }> = ({ className = '' }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-  </svg>
-);
+// Cart icon and cart entry points removed per request
 
 const PhoneIcon: React.FC<{ className?: string }> = ({ className = '' }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -32,18 +29,25 @@ const PhoneIcon: React.FC<{ className?: string }> = ({ className = '' }) => (
   </svg>
 );
 
+const SearchIcon: React.FC<{ className?: string }> = ({ className = '' }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M11 18a7 7 0 100-14 7 7 0 000 14z" />
+  </svg>
+);
+
 export const Header: React.FC = () => {
   const { itemCount } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
-    if (mobileMenuOpen) {
+    if (mobileMenuOpen || searchOpen) {
       lockBodyScroll();
     } else {
       unlockBodyScroll();
     }
     return () => unlockBodyScroll();
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, searchOpen]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white">
@@ -86,20 +90,20 @@ export const Header: React.FC = () => {
 
           {/* Right side - CTA & Burger Menu */}
           <div className="flex items-center gap-4">
+            {/* Desktop Search */}
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="hidden lg:block text-[#050544] hover:text-[#445DFE] transition-colors p-1.5"
+              aria-label="Search products"
+            >
+              <SearchIcon className="w-5 h-5" />
+            </button>
+
             {/* Desktop Phone */}
             <a href={`tel:${siteConfig.links.phone}`} className="hidden lg:block text-[#050544] hover:text-[#445DFE] transition-colors p-1.5">
               <PhoneIcon className="w-6 h-6" />
             </a>
-
-            {/* Desktop Cart */}
-            <Link href="/checkout" className="hidden lg:block relative text-[#050544] hover:text-[#445DFE] transition-colors p-1.5">
-              <CartIcon className="w-6 h-6" />
-              {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#445DFE] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {itemCount > 9 ? '9+' : itemCount}
-                </span>
-              )}
-            </Link>
 
             {/* Desktop CTA Button */}
             <Link href="/contact" className="hidden lg:block">
@@ -108,20 +112,20 @@ export const Header: React.FC = () => {
               </button>
             </Link>
 
-            {/* Mobile Phone, Cart & Burger Menu */}
+            {/* Mobile Phone, Search, Cart & Burger Menu */}
             <div className="flex items-center gap-3 lg:hidden">
               <a href={`tel:${siteConfig.links.phone}`} className="text-[#050544] hover:text-[#445DFE] transition-colors p-2">
                 <PhoneIcon className="w-7 h-7" />
               </a>
 
-              <Link href="/checkout" className="relative text-[#050544] hover:text-[#445DFE] transition-colors p-2">
-                <CartIcon className="w-7 h-7" />
-                {itemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#445DFE] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {itemCount > 9 ? '9+' : itemCount}
-                  </span>
-                )}
-              </Link>
+              <button
+                type="button"
+                onClick={() => setSearchOpen(true)}
+                className="text-[#050544] hover:text-[#445DFE] transition-colors p-2"
+                aria-label="Search products"
+              >
+                <SearchIcon className="w-6 h-6" />
+              </button>
 
               {/* Burger Menu Button - Changes to X when menu is open */}
               <button 
@@ -135,89 +139,81 @@ export const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile Burger Menu - Full Screen Dark */}
+        {/* Mobile Burger Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden fixed inset-0 top-16 md:top-20 bg-[#050544] z-50 overflow-y-auto">
+          <div className="lg:hidden fixed inset-0 top-16 md:top-20 bg-white z-50 overflow-y-auto">
             <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)] px-4 py-12 relative">
               {/* Menu Items */}
               <nav className="flex flex-col items-center gap-3 w-full max-w-md">
                 <Link
                   href="/catalog/verandas"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center text-white hover:text-[#B7D2FF] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
+                  className="w-full text-center text-[#050544] hover:text-[#445DFE] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
                 >
                   Verandas &amp; Canopies
                 </Link>
                 <Link
                   href="/catalog/fencing"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center text-white hover:text-[#B7D2FF] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
+                  className="w-full text-center text-[#050544] hover:text-[#445DFE] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
                 >
                   Aluminium Fencing
                 </Link>
                 <Link
                   href="/catalog/profiles"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center text-white hover:text-[#B7D2FF] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
+                  className="w-full text-center text-[#050544] hover:text-[#445DFE] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
                 >
                   Profile Systems
                 </Link>
                 <Link
                   href="/catalog/accessories"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center text-white hover:text-[#B7D2FF] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
+                  className="w-full text-center text-[#050544] hover:text-[#445DFE] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
                 >
                   Accessories &amp; Guttering
                 </Link>
                 <Link
                   href="/categories"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center text-white hover:text-[#B7D2FF] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
+                  className="w-full text-center text-[#050544] hover:text-[#445DFE] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
                 >
                   Categories
                 </Link>
                 <Link
                   href="/contact"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center text-white hover:text-[#B7D2FF] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
+                  className="w-full text-center text-[#050544] hover:text-[#445DFE] font-semibold transition-colors text-base md:text-lg uppercase tracking-wide py-2"
                 >
                   Get a Quote
                 </Link>
                 <a 
                   href={`tel:${siteConfig.links.phone}`} 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center text-white hover:text-[#B7D2FF] font-semibold transition-colors text-sm md:text-base py-2 flex items-center justify-center gap-2"
+                  className="w-full text-center text-[#050544] hover:text-[#445DFE] font-semibold transition-colors text-sm md:text-base py-2 flex items-center justify-center gap-2"
                 >
                   <PhoneIcon className="w-6 h-6 md:w-7 md:h-7" />
                   <span>{siteConfig.links.phoneDisplay || siteConfig.links.phone}</span>
                 </a>
               </nav>
 
-              {/* CTA Buttons */}
-              <div className="w-full max-w-xs mt-12 space-y-4 pt-8 border-t border-white/20">
+              {/* CTA Button */}
+              <div className="w-full max-w-xs mt-12 space-y-4 pt-8 border-t border-gray-200">
                 <Button 
                   href="/contact" 
                   variant="primary" 
                   fullWidth 
-                  className="bg-white !text-black hover:bg-gray-100 border-none rounded-none py-4 text-base font-bold uppercase"
+                  className="bg-black text-white hover:bg-[#050544] border-none rounded-none py-4 text-base font-bold uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   GET A FREE QUOTE
-                </Button>
-                <Button 
-                  href="/checkout" 
-                  variant="outline" 
-                  fullWidth 
-                  className="border-2 border-white text-white hover:bg-white hover:text-[#050544] rounded-none py-4 text-base font-bold uppercase"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Cart ({itemCount})
                 </Button>
               </div>
             </div>
           </div>
         )}
       </div>
+      <ProductSearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 };

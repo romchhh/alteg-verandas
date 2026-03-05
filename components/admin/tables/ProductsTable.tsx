@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "../ui/table";
 import Link from "next/link";
-import { Product, ProductCategory } from "@/lib/types/product";
+import { Product } from "@/lib/types/product";
 import { PRODUCT_CATEGORIES } from "@/lib/constants/catalog";
 import { getUploadImageSrc, isServerUploadUrl } from "@/lib/utils/image";
 
@@ -37,10 +37,6 @@ export default function ProductsTable() {
   const { categoryFromUrl, pageFromUrl, setUrl } = useProductsListUrl();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [bulkPricePerKg, setBulkPricePerKg] = useState("");
-  const [bulkWeightPerMeter, setBulkWeightPerMeter] = useState("");
-  const [bulkLoading, setBulkLoading] = useState(false);
-  const [bulkMessage, setBulkMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [categoryFilter, setCategoryFilter] = useState<string>(categoryFromUrl);
@@ -56,10 +52,22 @@ export default function ProductsTable() {
     setCurrentPage(pageFromUrl);
   }, [categoryFromUrl, pageFromUrl]);
 
+  const ADMIN_MARKETING_CATEGORIES = [
+    { id: "verandas", label: "Verandas & Canopies" },
+    { id: "fencing", label: "Aluminium Fencing" },
+    { id: "profiles", label: "Profile Systems" },
+    { id: "accessories", label: "Accessories & Guttering" },
+  ] as const;
+
   const filteredProducts = useMemo(() => {
-    let list = categoryFilter
-      ? products.filter((p) => String(p.category) === categoryFilter)
-      : products;
+    let list = products;
+
+    if (categoryFilter) {
+      const selected = ADMIN_MARKETING_CATEGORIES.find((c) => c.id === categoryFilter);
+      if (selected) {
+        list = list.filter((p) => (p.applications ?? []).includes(selected.label));
+      }
+    }
     const q = searchQuery.trim().toLowerCase();
     if (q) {
       list = list.filter(
@@ -160,38 +168,6 @@ export default function ProductsTable() {
     }
   }
 
-  async function handleBulkUpdate() {
-    const pk = bulkPricePerKg.trim() ? parseFloat(bulkPricePerKg) : undefined;
-    const wpm = bulkWeightPerMeter.trim() ? parseFloat(bulkWeightPerMeter) : undefined;
-    if (pk == null && wpm == null) {
-      setBulkMessage({ type: "error", text: "Enter at least one: price per kg or weight per m (kg/m)" });
-      return;
-    }
-    if ((pk != null && (isNaN(pk) || pk < 0)) || (wpm != null && (isNaN(wpm) || wpm < 0))) {
-      setBulkMessage({ type: "error", text: "Values must be non-negative numbers" });
-      return;
-    }
-    setBulkLoading(true);
-    setBulkMessage(null);
-    try {
-      const res = await fetch("/api/admin/products/bulk", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pricePerKg: pk, weightPerMeter: wpm }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Bulk update failed");
-      setBulkMessage({ type: "success", text: data.message || `Updated ${data.updated} products` });
-      setBulkPricePerKg("");
-      setBulkWeightPerMeter("");
-      fetchProducts();
-    } catch (e) {
-      setBulkMessage({ type: "error", text: e instanceof Error ? e.message : "Bulk update failed" });
-    } finally {
-      setBulkLoading(false);
-    }
-  }
-
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
       <div className="overflow-x-auto">
@@ -220,9 +196,15 @@ export default function ProductsTable() {
                 className="rounded-md border border-gray-300 px-3 py-2 text-sm bg-white min-w-[140px]"
               >
                 <option value="">All</option>
-                {Object.entries(PRODUCT_CATEGORIES).map(([id, cat]) => (
-                  <option key={id} value={id}>
-                    {cat.nameEn} ({products.filter((p) => String(p.category) === id).length})
+                {ADMIN_MARKETING_CATEGORIES.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.label} (
+                    {
+                      products.filter((p) =>
+                        (p.applications ?? []).includes(cat.label)
+                      ).length
+                    }
+                    )
                   </option>
                 ))}
               </select>
@@ -240,53 +222,6 @@ export default function ProductsTable() {
               + Add product
             </Link>
           </div>
-        </div>
-
-        <div className="px-5 py-4 border-b border-gray-100 bg-gray-50">
-          <h3 className="text-sm font-semibold text-gray-700 mb-3">Bulk update: price per kg & weight per m</h3>
-          <p className="text-xs text-gray-500 mb-1">Enter price per kg and/or weight per m (kg/m) — applied to all products. Price per m will be recalculated.</p>
-          <p className="text-xs text-gray-600 mb-3">
-            Default values: <span className="font-medium">£4.20</span> per kg, <span className="font-medium">0.41</span> kg/m
-          </p>
-          <div className="flex flex-wrap items-end gap-3">
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Price per kg (£)</label>
-              <input
-                type="number"
-                min={0}
-                step={0.01}
-                value={bulkPricePerKg}
-                onChange={(e) => setBulkPricePerKg(e.target.value)}
-                placeholder="4.20"
-                className="w-28 px-3 py-2 border border-gray-300 rounded text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Weight per m (kg/m)</label>
-              <input
-                type="number"
-                min={0}
-                step={0.01}
-                value={bulkWeightPerMeter}
-                onChange={(e) => setBulkWeightPerMeter(e.target.value)}
-                placeholder="0.41"
-                className="w-28 px-3 py-2 border border-gray-300 rounded text-sm"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={handleBulkUpdate}
-              disabled={bulkLoading}
-              className="rounded-md bg-amber-600 px-4 py-2 text-sm text-white hover:bg-amber-700 disabled:opacity-50"
-            >
-              {bulkLoading ? "Applying…" : "Apply to all"}
-            </button>
-          </div>
-          {bulkMessage && (
-            <p className={`mt-2 text-sm ${bulkMessage.type === "success" ? "text-green-600" : "text-red-600"}`}>
-              {bulkMessage.text}
-            </p>
-          )}
         </div>
 
         <Table>
@@ -408,8 +343,7 @@ export default function ProductsTable() {
               </TableRow>
             ) : (
               paginatedProducts.map((product) => {
-                const categoryInfo = PRODUCT_CATEGORIES[product.category as ProductCategory];
-                const imageSrc = product.image || categoryInfo?.image;
+                const imageSrc = product.image;
                 const showImage = imageSrc && isServerUploadUrl(imageSrc);
                 return (
                 <TableRow
@@ -435,7 +369,7 @@ export default function ProductsTable() {
                     {product.nameEn || product.name}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-sm text-gray-600">
-                    {product.category}
+                    {product.applications?.[0] ?? "Unassigned"}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-sm text-gray-600">
                     {product.dimensions}

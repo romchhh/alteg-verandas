@@ -79,11 +79,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </section>
 
       <section className="py-8 sm:py-10 md:py-12">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 lg:gap-12 items-start">
             {/* Left: image */}
-            <div className="relative">
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
+            <div className="relative md:max-w-[480px] lg:max-w-[520px] w-full md:justify-self-start">
+              <div className="relative aspect-[4/3] md:h-[420px] lg:h-[480px] rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
                 {product.image ? (
                   <Image
                     src={product.image}
@@ -107,7 +107,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
 
             {/* Right: details */}
-            <div>
+            <div className="md:pl-8 lg:pl-10">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#050544] mb-2 leading-tight">
                 {product.nameEn}
               </h1>
@@ -129,7 +129,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <ProductOrderButton
                 productId={product.id}
                 productName={product.nameEn}
-                className="w-full sm:w-auto px-8 py-3.5 bg-[#050544] hover:bg-[#445DFE] text-white font-semibold rounded-none transition-colors"
+                className="w-full sm:w-auto px-8 py-3.5 md:px-12 md:py-4 bg-[#050544] hover:bg-[#445DFE] text-sm md:text-base text-white font-semibold rounded-none transition-colors"
               />
 
               {product.applications?.length ? (
@@ -159,11 +159,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
           {/* Related products */}
           {relatedProducts.length > 0 && (
             <div className="mt-16 pt-12 border-t border-gray-200">
-              <h2 className="text-xl sm:text-2xl font-bold text-[#050544] mb-6">
-                Similar products
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#050544] mb-6">
+                You may also like
               </h2>
               <div className="-mx-4 px-4 overflow-x-auto pb-4 lg:mx-0 lg:px-0">
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   {relatedProducts.map((p) => {
                     const pPrice = getPricePerMeter(p);
                     const pText = pPrice != null ? `from ${formatCurrency(pPrice)}` : 'Price on request';
@@ -171,9 +171,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
                       <Link
                         key={p.id}
                         href={`/product/${p.id}`}
-                            className="w-64 flex-shrink-0 border border-gray-200 rounded-2xl overflow-hidden shadow-sm bg-white flex flex-col hover:shadow-md transition-shadow"
-                          >
-                            <div className="relative h-48 bg-gray-100">
+                        className="w-72 flex-shrink-0 border border-gray-200 overflow-hidden shadow-sm bg-white flex flex-col hover:shadow-md transition-shadow"
+                      >
+                        <div className="relative h-56 bg-gray-100">
                           {p.image ? (
                             <Image
                               src={p.image}
@@ -188,10 +188,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
                             </div>
                           )}
                         </div>
-                            <div className="p-5 flex flex-col flex-1 min-w-0">
-                                <h3 className="text-base font-semibold text-[#050544] mb-1.5 line-clamp-2">
-                                  {p.nameEn}
-                                </h3>
+                        <div className="p-6 flex flex-col flex-1 min-w-0">
+                          <h3 className="text-lg font-semibold text-[#050544] mb-2 line-clamp-2">
+                            {p.nameEn}
+                          </h3>
                                 <p className="text-sm text-gray-600 mb-2">{p.dimensions}</p>
                           <p className="text-sm font-semibold text-[#E65100] mt-auto">
                             {pText} <span className="text-xs text-gray-600">excl. VAT</span>

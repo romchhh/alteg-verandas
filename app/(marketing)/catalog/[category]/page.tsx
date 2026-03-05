@@ -17,6 +17,8 @@ const CATALOG_CONFIG: Record<
     breadcrumbLabel: string;
     filterLabel: string;
     priceHint: string;
+    heroImage: string;
+    heroAlt: string;
     match: (p: Product) => boolean;
   }
 > = {
@@ -28,9 +30,11 @@ const CATALOG_CONFIG: Record<
     breadcrumbLabel: 'Verandas & Canopies',
     filterLabel: 'Roof type',
     priceHint: 'Typical veranda projects start from approximately £1,500–£3,000 (from price, excl. VAT).',
+    heroImage:
+      'https://images.unsplash.com/photo-1523419409543-3e4f83b9b4c2?w=1600&auto=format&fit=crop&q=80',
+    heroAlt: 'Aluminium veranda and patio cover on a modern UK home',
     match: (p) =>
-      (p.applications ?? []).includes('Verandas & Canopies') ||
-      p.category === 'custom_profile',
+      (p.applications ?? []).includes('Verandas & Canopies'),
   },
   fencing: {
     title: 'Aluminium Fencing',
@@ -40,9 +44,11 @@ const CATALOG_CONFIG: Record<
     breadcrumbLabel: 'Aluminium Fencing',
     filterLabel: 'Fence height',
     priceHint: 'Guide pricing from around £100 per metre for a 1 m high fence in RAL 7016 (from price, excl. VAT).',
+    heroImage:
+      'https://images.unsplash.com/photo-1609918488960-6721c37cb0c7?w=1600&auto=format&fit=crop&q=80',
+    heroAlt: 'Contemporary aluminium garden fencing',
     match: (p) =>
-      (p.applications ?? []).includes('Aluminium Fencing') ||
-      p.category === 'square_bar',
+      (p.applications ?? []).includes('Aluminium Fencing'),
   },
   profiles: {
     title: 'Profile Systems',
@@ -52,10 +58,11 @@ const CATALOG_CONFIG: Record<
     breadcrumbLabel: 'Profile Systems',
     filterLabel: 'Profile type',
     priceHint: 'Pricing depends on profile, alloy and length. Send us your list for an accurate quotation.',
+    heroImage:
+      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1600&auto=format&fit=crop&q=80',
+    heroAlt: 'Aluminium profiles and beams in production',
     match: (p) =>
-      (p.applications ?? []).includes('Profile Systems') ||
-      p.category === 'angle' ||
-      p.category === 'channel',
+      (p.applications ?? []).includes('Profile Systems'),
   },
   accessories: {
     title: 'Accessories & Guttering',
@@ -65,9 +72,11 @@ const CATALOG_CONFIG: Record<
     breadcrumbLabel: 'Accessories & Guttering',
     filterLabel: 'Accessory type',
     priceHint: 'Accessories are usually priced per kit or per metre. Use this page as a guide and then request a detailed quote.',
+    heroImage:
+      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1600&auto=format&fit=crop&q=80',
+    heroAlt: 'Aluminium guttering, seals and accessories',
     match: (p) =>
-      (p.applications ?? []).includes('Accessories & Guttering') ||
-      p.category === 'sheet',
+      (p.applications ?? []).includes('Accessories & Guttering'),
   },
 };
 
@@ -117,9 +126,11 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
 
   const allProducts = await getProducts();
   const categoryProducts = allProducts.filter(config.match);
+  const firstProductWithImage = categoryProducts.find((p) => p.image);
 
-  const minPriceParam = typeof raw.minPrice === 'string' ? raw.minPrice.replace(/\D/g, '') : '';
-  const maxPriceParam = typeof raw.maxPrice === 'string' ? raw.maxPrice.replace(/\D/g, '') : '';
+  // Read raw min/max price from query without stripping decimals; normalise comma to dot
+  const minPriceParam = typeof raw.minPrice === 'string' ? raw.minPrice : '';
+  const maxPriceParam = typeof raw.maxPrice === 'string' ? raw.maxPrice : '';
   const sortVal = Array.isArray(raw.sort) ? raw.sort[0] : raw.sort;
   const sortParam = (['price_asc', 'price_desc', 'name'].includes(String(sortVal ?? ''))
     ? sortVal
@@ -128,13 +139,16 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
   const materialParam = Array.isArray(raw.material) ? raw.material : raw.material ? [raw.material] : [];
   const finishParam = Array.isArray(raw.finish) ? raw.finish : raw.finish ? [raw.finish] : [];
 
-  const minPriceNum = minPriceParam ? parseInt(minPriceParam, 10) : NaN;
-  const maxPriceNum = maxPriceParam ? parseInt(maxPriceParam, 10) : NaN;
+  const normalisePrice = (value: string): number =>
+    value ? Number(value.replace(',', '.')) : NaN;
+
+  const minPriceNum = normalisePrice(minPriceParam);
+  const maxPriceNum = normalisePrice(maxPriceParam);
 
   let products = categoryProducts.filter((p) => {
     const price = getProductPrice(p);
-    if (minPriceNum && price != null && price < minPriceNum) return false;
-    if (maxPriceNum && price != null && price > maxPriceNum) return false;
+    if (!Number.isNaN(minPriceNum) && price != null && price < minPriceNum) return false;
+    if (!Number.isNaN(maxPriceNum) && price != null && price > maxPriceNum) return false;
     if (roofParam.length && !matchesRoof(p.nameEn, roofParam)) return false;
     if (materialParam.length && (!p.material || !materialParam.includes(p.material))) return false;
     if (finishParam.length && (!p.finish || !finishParam.includes(p.finish))) return false;
@@ -166,30 +180,41 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
   return (
     <main className="min-h-screen bg-white pt-16 md:pt-20">
       {/* Hero / breadcrumbs */}
-      <section className="border-b border-gray-200 bg-[#F5F7FB] py-4 sm:py-5">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="text-xs sm:text-sm text-gray-600 mb-2 flex flex-wrap gap-1 items-center">
-            <Link href="/" className="hover:text-[#050544]">
-              Home
-            </Link>
-            <span className="opacity-60">/</span>
-            <Link href="/categories" className="hover:text-[#050544]">
-              Categories
-            </Link>
-            <span className="opacity-60">/</span>
-            <span className="text-gray-900 font-medium">{config.breadcrumbLabel}</span>
-          </nav>
+      <section className="relative border-b border-gray-200 bg-[#050544] text-white overflow-hidden">
+        <div className="absolute inset-0">
+          <Image
+            src={firstProductWithImage?.image ?? config.heroImage}
+            alt={firstProductWithImage?.nameEn ?? config.heroAlt}
+            fill
+            className="object-cover"
+            sizes="100vw"
+            priority={slug === 'verandas'}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/10" />
+        </div>
+        <div className="relative py-10 sm:py-14 md:py-16 lg:py-20 min-h-[260px] sm:min-h-[320px] md:min-h-[380px] lg:min-h-[440px] flex items-center">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <nav className="text-xs sm:text-sm text-white/80 mb-2 flex flex-wrap gap-1 items-center">
+              <Link href="/" className="hover:text-white">
+                Home
+              </Link>
+              <span className="opacity-70">/</span>
+              <Link href="/categories" className="hover:text-white">
+                Categories
+              </Link>
+              <span className="opacity-70">/</span>
+              <span className="text-white font-medium">{config.breadcrumbLabel}</span>
+            </nav>
 
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
-            <div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#050544] leading-tight mb-1">
-                {config.title}
-              </h1>
-              <p className="text-sm sm:text-base text-gray-700">{config.subtitle}</p>
-            </div>
-            <div className="text-sm text-gray-600">
-              <span className="font-medium text-[#050544]">{products.length}</span>{' '}
-              {products.length === 1 ? 'result' : 'results'}
+            <div className="flex flex-col gap-3">
+              <div>
+                <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-5xl font-bold text-white leading-tight mb-2">
+                  {config.title}
+                </h1>
+                <p className="text-sm sm:text-base md:text-lg text-white/80 max-w-2xl">
+                  {config.subtitle}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -230,7 +255,7 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
                   they are created in the database.
                 </div>
               ) : (
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
                   {products.map((product) => {
                     const price =
                       product.pricePerMeter ??
@@ -243,9 +268,9 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
                       <Link
                         key={product.id}
                         href={`/product/${product.id}`}
-                        className="border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col bg-white"
+                        className="border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col bg-white"
                       >
-                        <div className="relative h-48 sm:h-52 bg-gray-100">
+                        <div className="relative h-56 sm:h-64 bg-gray-100">
                           {product.image ? (
                             <Image
                               src={product.image}
@@ -260,8 +285,8 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
                             </div>
                           )}
                         </div>
-                        <div className="p-5 flex flex-col flex-1">
-                          <h3 className="text-base font-semibold text-[#050544] mb-1.5 line-clamp-2">
+                        <div className="p-6 flex flex-col flex-1">
+                          <h3 className="text-lg font-semibold text-[#050544] mb-2 line-clamp-2">
                             {product.nameEn}
                           </h3>
                           <p className="text-sm text-gray-600 mb-2">{product.dimensions}</p>

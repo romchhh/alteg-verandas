@@ -5,18 +5,21 @@ import Link from 'next/link';
 const steps = [
   {
     number: '1',
-    title: 'Calculate',
-    description: 'Use our interactive calculator to select profiles, configure dimensions, and get instant pricing.',
+    title: 'Tell us about your project',
+    description:
+      'Send us basic details about your veranda, canopy or fencing project – dimensions, preferred roof type and colour.',
   },
   {
     number: '2',
-    title: 'Place an Order Online',
-    description: 'Complete your order online or send a wholesale inquiry. Receive a quote within 24 hours.',
+    title: 'Receive your tailored quote',
+    description:
+      'We prepare a personalised quotation for a veranda kit, fencing run or profile package and confirm lead times for the UK.',
   },
   {
     number: '3',
-    title: 'Have your order delivered',
-    description: 'Get your order delivered to any UK location or collect from our warehouse. Fast and reliable logistics.',
+    title: 'Approve and arrange delivery',
+    description:
+      'Approve the quote and choose delivery or collection. We manufacture, prepare and ship your order anywhere in the UK.',
   },
 ];
 
@@ -27,10 +30,10 @@ export const HowToOrderSection: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#050544] mb-4 sm:mb-5 leading-tight tracking-tight">
-            How to Order in 3 Steps
+            How to get your veranda or fencing
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed px-2">
-            Simple process, professional service. Get your aluminium profiles in three easy steps.
+            Simple process, professional service. From first enquiry to installation‑ready veranda or fencing in three clear steps.
           </p>
         </div>
 

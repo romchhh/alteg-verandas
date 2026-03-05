@@ -42,8 +42,8 @@ export function CategorySection({
           </p>
         ) : (
           <>
-            <div className="-mx-4 px-4 overflow-x-auto pb-3 lg:mx-0 lg:px-0">
-              <div className="flex flex-nowrap gap-3">
+            <div className="-mx-4 px-4 lg:mx-0 lg:px-0">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
                 {products.map((product) => {
                   const price =
                     product.pricePerMeter ??
@@ -57,9 +57,9 @@ export function CategorySection({
                     <Link
                       key={product.id}
                       href={`/product/${product.id}`}
-                      className="w-64 flex-shrink-0 border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col bg-white min-w-0"
+                      className="border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col bg-white min-w-0"
                     >
-                      <div className="relative h-48 sm:h-52 bg-gray-100">
+                      <div className="relative h-56 sm:h-64 bg-gray-100">
                         {product.image ? (
                           <Image
                             src={product.image}
@@ -74,8 +74,8 @@ export function CategorySection({
                           </div>
                         )}
                       </div>
-                      <div className="p-5 flex flex-col flex-1 min-w-0">
-                        <h3 className="text-base font-semibold text-[#050544] mb-1.5 line-clamp-2">
+                      <div className="p-6 flex flex-col flex-1 min-w-0">
+                        <h3 className="text-lg font-semibold text-[#050544] mb-2 line-clamp-2">
                           {product.nameEn}
                         </h3>
                         <p className="text-sm text-gray-600 mb-2">{product.dimensions}</p>
@@ -91,13 +91,15 @@ export function CategorySection({
                 })}
               </div>
             </div>
-            <div className="mt-4 text-right">
+            <div className="mt-6 flex justify-center">
               <Link
                 href={catalogHref}
-                className="text-sm font-semibold text-[#050544] hover:text-[#445DFE] inline-flex items-center gap-1 transition-colors"
+                className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none shadow-sm hover:shadow-md transition-colors"
               >
                 {catalogLabel}
-                <span aria-hidden="true">→</span>
+                <span aria-hidden="true" className="ml-1">
+                  →
+                </span>
               </Link>
             </div>
           </>

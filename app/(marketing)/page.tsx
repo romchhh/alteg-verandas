@@ -23,10 +23,9 @@ const CATEGORIES: Array<{
     description:
       'Tailor‑made aluminium verandas and canopies for British homes. Polycarbonate or safety glass, standard sizes and bespoke on request.',
     catalogHref: '/catalog/verandas',
-    catalogLabel: 'View all verandas',
+    catalogLabel: 'View more',
     match: (p) =>
-      (p.applications ?? []).includes('Verandas & Canopies') ||
-      p.category === 'custom_profile',
+      (p.applications ?? []).includes('Verandas & Canopies'),
   },
   {
     id: 'fencing',
@@ -34,10 +33,9 @@ const CATEGORIES: Array<{
     description:
       'Modern privacy fencing that never needs painting. Powder‑coated aluminium boards and posts, low maintenance and long life.',
     catalogHref: '/catalog/fencing',
-    catalogLabel: 'View all fencing',
+    catalogLabel: 'View more',
     match: (p) =>
-      (p.applications ?? []).includes('Aluminium Fencing') ||
-      p.category === 'square_bar',
+      (p.applications ?? []).includes('Aluminium Fencing'),
   },
   {
     id: 'profiles',
@@ -45,11 +43,9 @@ const CATEGORIES: Array<{
     description:
       'Aluminium support posts, rafters and fence profiles for verandas and fencing. Trade supply across the UK.',
     catalogHref: '/catalog/profiles',
-    catalogLabel: 'View all profiles',
+    catalogLabel: 'View more',
     match: (p) =>
-      (p.applications ?? []).includes('Profile Systems') ||
-      p.category === 'angle' ||
-      p.category === 'channel',
+      (p.applications ?? []).includes('Profile Systems'),
   },
   {
     id: 'accessories',
@@ -57,10 +53,9 @@ const CATEGORIES: Array<{
     description:
       'Seals, gaskets, guttering and fixings for watertight veranda and fencing installations.',
     catalogHref: '/catalog/accessories',
-    catalogLabel: 'View all accessories',
+    catalogLabel: 'View more',
     match: (p) =>
-      (p.applications ?? []).includes('Accessories & Guttering') ||
-      p.category === 'sheet',
+      (p.applications ?? []).includes('Accessories & Guttering'),
   },
 ];
 
@@ -81,7 +76,7 @@ export default async function HomePage() {
           description={cat.description}
           catalogHref={cat.catalogHref}
           catalogLabel={cat.catalogLabel}
-          products={allProducts.filter(cat.match)}
+          products={allProducts.filter(cat.match).slice(0, 3)}
         />
       ))}
 
