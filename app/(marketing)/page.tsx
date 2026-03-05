@@ -9,6 +9,9 @@ import { MapSection } from '@/components/landing/MapSection';
 import { FaqJsonLd } from '@/components/seo/FaqJsonLd';
 import { getProducts } from '@/lib/data/products';
 
+// Ensure homepage always reads latest products from SQLite in production
+export const dynamic = 'force-dynamic';
+
 const CATEGORIES: Array<{
   id: string;
   title: string;
