@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3001",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3001",
     "lint": "eslint",
     "db:seed": "npx tsx scripts/seed-db.ts",
     "db:replace-categories": "npx tsx scripts/replace-categories-and-products.ts"
