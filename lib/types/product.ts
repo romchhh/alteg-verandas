@@ -38,6 +38,8 @@ export interface Product {
   weightPerMeter: number;
   standardLengths: number[]; // [1, 3, 6]
   image?: string;
+  /** Optional additional images for gallery view. */
+  images?: string[];
   applications?: string[];
   inStock: boolean;
   /** When true, product is hidden from public catalog (CMS/admin control). */
@@ -46,4 +48,10 @@ export interface Product {
   descriptionEn?: string;
   material?: string; // e.g., "6063-T5", "6082-T6"
   finish?: string; // e.g., "Mill finish", "Anodized"
+  /** Human-readable price unit label, e.g. "per m", "per m²", "per set". */
+  priceUnit?: string;
+  /** Optional: original supplier price per metre (for reference in admin). */
+  supplierPricePerMeter?: number;
+  /** Optional: original supplier price per m² for a kit/set (for reference in admin). */
+  supplierPricePerSquareMeterSet?: number;
 }

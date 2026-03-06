@@ -8,7 +8,9 @@
     "start": "next start -p 3001",
     "lint": "eslint",
     "db:seed": "npx tsx scripts/seed-db.ts",
-    "db:replace-categories": "npx tsx scripts/replace-categories-and-products.ts"
+    "db:replace-categories": "npx tsx scripts/replace-categories-and-products.ts",
+    "db:add-fencing-products": "npx tsx scripts/add-fencing-products.ts",
+    "db:add-accessories-products": "npx tsx scripts/add-accessories-products.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",

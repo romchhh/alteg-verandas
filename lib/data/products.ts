@@ -16,9 +16,13 @@ function rowToProduct(row: {
   material: string | null;
   finish: string | null;
   image: string | null;
+  images?: string | null;
   description: string | null;
   description_en: string | null;
   applications: string | null;
+  price_unit?: string | null;
+  supplier_price_per_meter?: number | null;
+  supplier_price_per_m2_set?: number | null;
 }): Product {
   const standardLengths = JSON.parse(row.standard_lengths || '[]') as number[];
   const applications = row.applications ? (JSON.parse(row.applications) as string[]) : undefined;
@@ -37,9 +41,13 @@ function rowToProduct(row: {
     material: row.material ?? undefined,
     finish: row.finish ?? undefined,
     image: row.image ?? undefined,
+    images: row.images ? (JSON.parse(row.images) as string[]) : undefined,
     description: row.description ?? undefined,
     descriptionEn: row.description_en ?? undefined,
     applications,
+    priceUnit: row.price_unit ?? undefined,
+    supplierPricePerMeter: row.supplier_price_per_meter ?? undefined,
+    supplierPricePerSquareMeterSet: row.supplier_price_per_m2_set ?? undefined,
   };
 }
 
@@ -62,8 +70,8 @@ export async function saveProducts(products: Product[]): Promise<void> {
   const tx = database.transaction(() => {
     database.prepare('DELETE FROM products').run();
     const stmt = database.prepare(`
-      INSERT INTO products (id, category, name, name_en, dimensions, price_per_meter, price_per_kg, weight_per_meter, standard_lengths, in_stock, hidden, material, finish, image, description, description_en, applications)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO products (id, category, name, name_en, dimensions, price_per_meter, price_per_kg, weight_per_meter, standard_lengths, in_stock, hidden, material, finish, image, images, description, description_en, applications, price_unit, supplier_price_per_meter, supplier_price_per_m2_set)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
     for (const p of products) {
       stmt.run(
@@ -81,9 +89,13 @@ export async function saveProducts(products: Product[]): Promise<void> {
         p.material ?? null,
         p.finish ?? null,
         p.image ?? null,
+        p.images ? JSON.stringify(p.images) : null,
         p.description ?? null,
         p.descriptionEn ?? null,
-        p.applications ? JSON.stringify(p.applications) : null
+        p.applications ? JSON.stringify(p.applications) : null,
+        p.priceUnit ?? null,
+        p.supplierPricePerMeter ?? null,
+        p.supplierPricePerSquareMeterSet ?? null
       );
     }
   });
@@ -97,8 +109,8 @@ export async function addProduct(product: Product): Promise<void> {
     throw new Error(`Product with id ${product.id} already exists`);
   }
   database.prepare(`
-    INSERT INTO products (id, category, name, name_en, dimensions, price_per_meter, price_per_kg, weight_per_meter, standard_lengths, in_stock, hidden, material, finish, image, description, description_en, applications)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO products (id, category, name, name_en, dimensions, price_per_meter, price_per_kg, weight_per_meter, standard_lengths, in_stock, hidden, material, finish, image, images, description, description_en, applications, price_unit, supplier_price_per_meter, supplier_price_per_m2_set)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).run(
     product.id,
     product.category,
@@ -114,9 +126,13 @@ export async function addProduct(product: Product): Promise<void> {
     product.material ?? null,
     product.finish ?? null,
     product.image ?? null,
+    product.images ? JSON.stringify(product.images) : null,
     product.description ?? null,
     product.descriptionEn ?? null,
-    product.applications ? JSON.stringify(product.applications) : null
+    product.applications ? JSON.stringify(product.applications) : null,
+    product.priceUnit ?? null,
+    product.supplierPricePerMeter ?? null,
+    product.supplierPricePerSquareMeterSet ?? null
   );
 }
 
@@ -131,7 +147,7 @@ export async function updateProduct(id: string, update: Partial<Product>): Promi
       category = ?, name = ?, name_en = ?, dimensions = ?,
       price_per_meter = ?, price_per_kg = ?, weight_per_meter = ?,
       standard_lengths = ?, in_stock = ?, hidden = ?, material = ?, finish = ?,
-      image = ?, description = ?, description_en = ?, applications = ?
+      image = ?, images = ?, description = ?, description_en = ?, applications = ?, price_unit = ?, supplier_price_per_meter = ?, supplier_price_per_m2_set = ?
     WHERE id = ?
   `).run(
     merged.category,
@@ -147,9 +163,13 @@ export async function updateProduct(id: string, update: Partial<Product>): Promi
     merged.material ?? null,
     merged.finish ?? null,
     merged.image ?? null,
+    merged.images ? JSON.stringify(merged.images) : null,
     merged.description ?? null,
     merged.descriptionEn ?? null,
     merged.applications ? JSON.stringify(merged.applications) : null,
+    merged.priceUnit ?? null,
+    merged.supplierPricePerMeter ?? null,
+    merged.supplierPricePerSquareMeterSet ?? null,
     id
   );
 }

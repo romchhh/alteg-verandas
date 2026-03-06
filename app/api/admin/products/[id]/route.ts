@@ -18,8 +18,12 @@ const productUpdateSchema = z.object({
   material: z.string().optional(),
   finish: z.string().optional(),
   image: z.string().optional(),
+  images: z.array(z.string()).optional(),
   description: z.string().optional(),
   descriptionEn: z.string().optional(),
+  priceUnit: z.string().optional(),
+  supplierPricePerMeter: z.number().optional(),
+  supplierPricePerSquareMeterSet: z.number().optional(),
 });
 
 export async function GET(

@@ -8,7 +8,7 @@ import { useAdminToast } from "@/lib/AdminToastContext";
 import Label from "@/components/admin/form/Label";
 import Input from "@/components/admin/form/Input";
 import ToggleSwitch from "@/components/admin/form/ToggleSwitch";
-import { ImageUpload } from "@/components/admin/ImageUpload";
+import { MultiImageUpload } from "@/components/admin/MultiImageUpload";
 export default function EditProductPage() {
   const params = useParams();
   const router = useRouter();
@@ -33,6 +33,11 @@ export default function EditProductPage() {
   const [material, setMaterial] = useState("");
   const [finish, setFinish] = useState("");
   const [image, setImage] = useState("");
+  const [images, setImages] = useState<string[]>([]);
+  const [price, setPrice] = useState("");
+  const [priceUnit, setPriceUnit] = useState<"per m" | "per m²" | "per set" | "per item">("per m");
+  const [supplierPricePerMeter, setSupplierPricePerMeter] = useState("");
+  const [supplierPricePerSquareMeterSet, setSupplierPricePerSquareMeterSet] = useState("");
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [success, setSuccess] = useState<string | null>(null);
@@ -66,12 +71,13 @@ export default function EditProductPage() {
           MARKETING_CATEGORIES[0].id;
         setCategory(currentId);
         setDimensions(p.dimensions || "");
-        setPricePerKg(
-          p.pricePerKg != null
-            ? String(p.pricePerKg)
-            : p.pricePerMeter != null && p.weightPerMeter
-            ? String((p.pricePerMeter / p.weightPerMeter).toFixed(2))
-            : ""
+        const unitPrice = p.pricePerMeter ?? null;
+        setPrice(unitPrice != null ? String(unitPrice) : "");
+        setPriceUnit(
+          (p.priceUnit as typeof priceUnit) ??
+            (p.id.startsWith("LED-SET-") || p.id.startsWith("FENCE-SET-") || /set/i.test(p.nameEn)
+              ? "per set"
+              : "per m")
         );
         setWeightPerMeter(p.weightPerMeter != null ? String(p.weightPerMeter) : "");
         setStandardLengths(
@@ -84,6 +90,21 @@ export default function EditProductPage() {
         setMaterial(p.material || "");
         setFinish(p.finish || "");
         setImage(p.image || "");
+        setImages(
+          Array.isArray(p.images) && p.images.length
+            ? p.images
+            : p.image
+            ? [p.image]
+            : []
+        );
+        setSupplierPricePerMeter(
+          p.supplierPricePerMeter != null ? String(p.supplierPricePerMeter) : ""
+        );
+        setSupplierPricePerSquareMeterSet(
+          p.supplierPricePerSquareMeterSet != null
+            ? String(p.supplierPricePerSquareMeterSet)
+            : ""
+        );
       } catch (err) {
         setError("Failed to load product");
       } finally {
@@ -106,22 +127,30 @@ export default function EditProductPage() {
         .filter((n) => !isNaN(n));
       if (lengths.length === 0) lengths.push(1, 3, 6);
 
-      const pk = pricePerKg ? parseFloat(pricePerKg) : undefined;
+      const unitPrice = price ? parseFloat(price) : undefined;
       const wpm = parseFloat(weightPerMeter) || 0;
+      const spm = supplierPricePerMeter ? parseFloat(supplierPricePerMeter) : undefined;
+      const spm2 = supplierPricePerSquareMeterSet
+        ? parseFloat(supplierPricePerSquareMeterSet)
+        : undefined;
       const body = {
         category: "custom_profile",
         name: nameEn || "",
         nameEn: nameEn || "",
         dimensions,
-        pricePerKg: pk,
+        pricePerKg: undefined,
         weightPerMeter: wpm,
-        pricePerMeter: pk != null && wpm > 0 ? pk * wpm : undefined,
+        pricePerMeter: unitPrice,
         standardLengths: lengths,
         inStock,
         hidden,
         material: material || undefined,
         finish: finish || undefined,
-        image: image.trim(),
+        image: (images[0] || image).trim(),
+        images: images.length ? images : undefined,
+        priceUnit,
+        supplierPricePerMeter: spm,
+        supplierPricePerSquareMeterSet: spm2,
         applications: [
           MARKETING_CATEGORIES.find((c) => c.id === category)?.label ?? "Profile Systems",
         ],
@@ -224,36 +253,55 @@ export default function EditProductPage() {
               />
             </div>
             <div>
-              <Label>Price per kg (£)</Label>
+              <Label>Price (£)</Label>
               <Input
                 type="number"
-                value={pricePerKg}
-                onChange={(e) => setPricePerKg(e.target.value)}
-                placeholder="4.20"
-                min={0}
-                step={0.01}
-              />
-              <p className="mt-1 text-xs text-gray-500">Price per m = price per kg × weight per m (kg/m)</p>
-            </div>
-            <div>
-              <Label>Weight per m (kg/m)</Label>
-              <Input
-                type="number"
-                value={weightPerMeter}
-                onChange={(e) => setWeightPerMeter(e.target.value)}
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="100.00"
                 min={0}
                 step={0.01}
                 required
               />
             </div>
-            <div className="rounded-lg bg-gray-50 p-3">
-              <Label className="text-gray-600">Price per m (calculated)</Label>
-              <p className="text-lg font-semibold text-[#050544]">
-                {pricePerKg && weightPerMeter && parseFloat(weightPerMeter) > 0
-                  ? `£${(parseFloat(pricePerKg) * parseFloat(weightPerMeter)).toFixed(2)}`
-                  : "—"}
+            <div>
+              <Label>Price unit</Label>
+              <select
+                value={priceUnit}
+                onChange={(e) => setPriceUnit(e.target.value as typeof priceUnit)}
+                className="h-11 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm bg-white"
+              >
+                <option value="per m">per m</option>
+                <option value="per m²">per m²</option>
+                <option value="per set">per set</option>
+                <option value="per item">per item</option>
+              </select>
+            </div>
+            <div>
+              <Label>Supplier price per m (reference)</Label>
+              <Input
+                type="number"
+                value={supplierPricePerMeter}
+                onChange={(e) => setSupplierPricePerMeter(e.target.value)}
+                min={0}
+                step={0.01}
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                Optional: original supplier price per running metre, for internal reference.
               </p>
-              <p className="text-xs text-gray-500">price per kg × weight per m</p>
+            </div>
+            <div>
+              <Label>Supplier price per m² (per set, reference)</Label>
+              <Input
+                type="number"
+                value={supplierPricePerSquareMeterSet}
+                onChange={(e) => setSupplierPricePerSquareMeterSet(e.target.value)}
+                min={0}
+                step={0.01}
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                Optional: original supplier price per m² for a kit/set, for internal reference.
+              </p>
             </div>
             <div>
               <Label>Standard lengths</Label>
@@ -271,11 +319,11 @@ export default function EditProductPage() {
               <Input value={finish} onChange={(e) => setFinish(e.target.value)} />
             </div>
             <div>
-              <ImageUpload
-                label="Product image"
-                value={image}
-                onChange={setImage}
-                hint="Drag and drop — saved as /uploads/..."
+              <MultiImageUpload
+                values={images}
+                onChange={setImages}
+                label="Product images"
+                hint="First image will be used as the main image. You can drag & drop multiple images or paste a list of URLs."
               />
             </div>
             <div className="flex items-center justify-between">

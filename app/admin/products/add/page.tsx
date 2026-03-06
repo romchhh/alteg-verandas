@@ -1,14 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PageBreadcrumb from "@/components/admin/PageBreadCrumb";
 import ComponentCard from "@/components/admin/ComponentCard";
 import Label from "@/components/admin/form/Label";
 import Input from "@/components/admin/form/Input";
-import TextArea from "@/components/admin/form/TextArea";
 import ToggleSwitch from "@/components/admin/form/ToggleSwitch";
-import { ImageUpload } from "@/components/admin/ImageUpload";
-import { adminProductSchema } from "@/lib/utils/validators";
+import { MultiImageUpload } from "@/components/admin/MultiImageUpload";
 
 export default function AddProductPage() {
   const MARKETING_CATEGORIES = [
@@ -21,8 +19,12 @@ export default function AddProductPage() {
   const [category, setCategory] = useState<string>(MARKETING_CATEGORIES[0].id);
   const [nameEn, setNameEn] = useState("");
   const [dimensions, setDimensions] = useState("");
-  const [pricePerKg, setPricePerKg] = useState("");
-  const [weightPerMeter, setWeightPerMeter] = useState("");
+  const [price, setPrice] = useState("");
+  const [priceUnit, setPriceUnit] = useState<"per m" | "per m²" | "per set" | "per item">("per m");
+  const [weightPerMeter] = useState("1"); // internal default for schema
+  const [images, setImages] = useState<string[]>([]);
+  const [supplierPricePerMeter, setSupplierPricePerMeter] = useState("");
+  const [supplierPricePerSquareMeterSet, setSupplierPricePerSquareMeterSet] = useState("");
   const [standardLengths, setStandardLengths] = useState("1, 3, 6");
   const [inStock, setInStock] = useState(true);
   const [hidden, setHidden] = useState(false);
@@ -43,20 +45,18 @@ export default function AddProductPage() {
     e.preventDefault();
     setFieldErrors({});
     setError(null);
-    const parsed = adminProductSchema.safeParse({
-      nameEn: nameEn.trim(),
-      dimensions: dimensions.trim(),
-      standardLengths: standardLengths.trim(),
-      pricePerKg: pricePerKg.trim() || undefined,
-      weightPerMeter: weightPerMeter.trim() || undefined,
-    });
-    if (!parsed.success) {
-      const err: Record<string, string> = {};
-      parsed.error.errors.forEach((e) => {
-        const p = e.path[0];
-        if (p && typeof p === "string") err[p] = e.message;
-      });
-      setFieldErrors(err);
+
+    const nextErrors: Record<string, string> = {};
+    if (!nameEn.trim()) nextErrors.nameEn = "Name is required";
+    if (!dimensions.trim()) nextErrors.dimensions = "Dimensions are required";
+    if (!standardLengths.trim()) nextErrors.standardLengths = "At least one length is required";
+    const priceVal = parseFloat(price);
+    if (!price.trim() || Number.isNaN(priceVal) || priceVal < 0) {
+      nextErrors.price = "Enter a valid price (≥ 0)";
+    }
+
+    if (Object.keys(nextErrors).length > 0) {
+      setFieldErrors(nextErrors);
       return;
     }
     setLoading(true);
@@ -70,23 +70,29 @@ export default function AddProductPage() {
         .filter((n) => !isNaN(n));
       if (lengths.length === 0) lengths.push(1, 3, 6);
 
-      const pk = pricePerKg ? parseFloat(pricePerKg) : undefined;
-      const wpm = parseFloat(weightPerMeter) || 0;
+      const unitPrice = parseFloat(price);
+      const wpm = parseFloat(weightPerMeter) || 1;
+      const spm = supplierPricePerMeter ? parseFloat(supplierPricePerMeter) : undefined;
+      const spm2 = supplierPricePerSquareMeterSet ? parseFloat(supplierPricePerSquareMeterSet) : undefined;
       const body = {
         id,
         category: "custom_profile",
         name: nameEn || "",
         nameEn: nameEn || "",
         dimensions,
-        pricePerKg: pk,
+        pricePerKg: undefined,
         weightPerMeter: wpm,
-        pricePerMeter: pk != null && wpm > 0 ? pk * wpm : undefined,
+        pricePerMeter: unitPrice,
         standardLengths: lengths,
         inStock,
         hidden,
         material: material || undefined,
         finish: finish || undefined,
-        image: image || undefined,
+        image: (images[0] || image || "").trim() || undefined,
+        images: images.length ? images : undefined,
+        priceUnit,
+        supplierPricePerMeter: spm,
+        supplierPricePerSquareMeterSet: spm2,
         applications: [MARKETING_CATEGORIES.find((c) => c.id === category)?.label ?? "Profile Systems"],
       };
 
@@ -104,10 +110,11 @@ export default function AddProductPage() {
       setSuccess("Product created successfully!");
       setNameEn("");
       setDimensions("");
-      setPricePerKg("");
-      setWeightPerMeter("");
+      setPrice("");
       setStandardLengths("1, 3, 6");
       setImage("");
+      setSupplierPricePerMeter("");
+      setSupplierPricePerSquareMeterSet("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create product");
     } finally {
@@ -156,39 +163,57 @@ export default function AddProductPage() {
               {fieldErrors.dimensions && <p className="mt-1 text-sm text-red-600">{fieldErrors.dimensions}</p>}
             </div>
             <div>
-              <Label>Price per kg (£)</Label>
+              <Label>Price (£)</Label>
               <Input
                 type="number"
-                value={pricePerKg}
-                onChange={(e) => setPricePerKg(e.target.value)}
-                placeholder="4.20"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="100.00"
                 min={0}
                 step={0.01}
               />
-              {fieldErrors.pricePerKg && <p className="mt-1 text-sm text-red-600">{fieldErrors.pricePerKg}</p>}
-              <p className="mt-1 text-xs text-gray-500">Price per m = price per kg × weight per m (kg/m)</p>
+              {fieldErrors.price && <p className="mt-1 text-sm text-red-600">{fieldErrors.price}</p>}
             </div>
             <div>
-              <Label>Weight per m (kg/m)</Label>
+              <Label>Price unit</Label>
+              <select
+                value={priceUnit}
+                onChange={(e) => setPriceUnit(e.target.value as typeof priceUnit)}
+                className="h-11 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm bg-white"
+              >
+                <option value="per m">per m</option>
+                <option value="per m²">per m²</option>
+                <option value="per set">per set</option>
+                <option value="per item">per item</option>
+              </select>
+            </div>
+            <div>
+              <Label>Supplier price per m (reference)</Label>
               <Input
                 type="number"
-                value={weightPerMeter}
-                onChange={(e) => setWeightPerMeter(e.target.value)}
-                placeholder="0.41"
+                value={supplierPricePerMeter}
+                onChange={(e) => setSupplierPricePerMeter(e.target.value)}
+                placeholder="e.g. 3.00"
                 min={0}
                 step={0.01}
-                required
               />
-              {fieldErrors.weightPerMeter && <p className="mt-1 text-sm text-red-600">{fieldErrors.weightPerMeter}</p>}
-            </div>
-            <div className="rounded-lg bg-gray-50 p-3">
-              <Label className="text-gray-600">Price per m (calculated)</Label>
-              <p className="text-lg font-semibold text-[#050544]">
-                {pricePerKg && weightPerMeter && parseFloat(weightPerMeter) > 0
-                  ? `£${(parseFloat(pricePerKg) * parseFloat(weightPerMeter)).toFixed(2)}`
-                  : "—"}
+              <p className="mt-1 text-xs text-gray-500">
+                Optional: original supplier price per running metre, for internal reference.
               </p>
-              <p className="text-xs text-gray-500">price per kg × weight per m</p>
+            </div>
+            <div>
+              <Label>Supplier price per m² (per set, reference)</Label>
+              <Input
+                type="number"
+                value={supplierPricePerSquareMeterSet}
+                onChange={(e) => setSupplierPricePerSquareMeterSet(e.target.value)}
+                placeholder="e.g. 146.55"
+                min={0}
+                step={0.01}
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                Optional: original supplier price per m² for a kit/set, for internal reference.
+              </p>
             </div>
             <div>
               <Label>Standard lengths (comma-separated)</Label>
@@ -216,11 +241,11 @@ export default function AddProductPage() {
               />
             </div>
             <div>
-              <ImageUpload
-                label="Product image"
-                value={image}
-                onChange={setImage}
-                hint="Drag and drop — saved as local path (/uploads/...)"
+              <MultiImageUpload
+                values={images}
+                onChange={setImages}
+                label="Product images"
+                hint="First image will be used as the main image. You can drag & drop multiple images or paste a list of URLs."
               />
             </div>
             <div className="flex items-center justify-between">

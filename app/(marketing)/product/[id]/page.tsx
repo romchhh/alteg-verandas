@@ -6,6 +6,8 @@ import type { Product } from '@/lib/types/product';
 import { getProductById, getProducts } from '@/lib/data/products';
 import { formatCurrency, getPricePerMeter } from '@/lib/utils/calculations';
 import { ProductOrderButton } from '@/components/product/ProductOrderButton';
+import { ProductImageGallery } from '@/components/product/ProductImageGallery';
+import { getUploadImageSrc, isServerUploadUrl } from '@/lib/utils/image';
 
 const APPLICATION_TO_SLUG: Record<string, string> = {
   'Verandas & Canopies': 'verandas',
@@ -33,7 +35,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const allProducts = await getProducts();
   const categorySlug = getCategorySlug(product);
   const price = getPricePerMeter(product);
-  const priceText = price != null ? `from ${formatCurrency(price)}` : 'Price on request';
+  const isSetHeuristic =
+    product.id.startsWith('LED-SET-') ||
+    product.id.startsWith('FENCE-SET-') ||
+    /set/i.test(product.nameEn);
+  const unitLabel =
+    price != null ? product.priceUnit ?? (isSetHeuristic ? 'per set' : 'per m') : '';
+  const priceText =
+    price != null ? `from ${formatCurrency(price)} ${unitLabel}` : 'Price on request';
 
   const relatedProducts = allProducts
     .filter((p) => p.id !== product.id && !p.hidden)
@@ -81,24 +90,18 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <section className="py-8 sm:py-10 md:py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 lg:gap-12 items-start">
-            {/* Left: image */}
+            {/* Left: image gallery */}
             <div className="relative md:max-w-[480px] lg:max-w-[520px] w-full md:justify-self-start">
-              <div className="relative aspect-[4/3] md:h-[420px] lg:h-[480px] rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
-                {product.image ? (
-                  <Image
-                    src={product.image}
-                    alt={product.nameEn}
-                    fill
-                    className="object-cover"
-                    sizes="(min-width: 1024px) 50vw, 100vw"
-                    priority
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                    No image
-                  </div>
-                )}
-              </div>
+              <ProductImageGallery
+                images={
+                  product.images && product.images.length
+                    ? product.images
+                    : product.image
+                    ? [product.image]
+                    : []
+                }
+                alt={product.nameEn}
+              />
               {product.dimensions && (
                 <div className="absolute top-4 left-4 rounded-lg bg-amber-400 px-3 py-2 text-sm font-bold text-gray-900 shadow-md">
                   {product.dimensions} · Aluminium
@@ -124,7 +127,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
               </div>
               <p className="text-xl sm:text-2xl font-bold text-[#E65100] mb-4">
                 {priceText}{' '}
-                <span className="text-sm font-normal text-gray-600">excl. VAT</span>
+                {price != null && (
+                  <span className="text-sm font-normal text-gray-600">excl. VAT</span>
+                )}
               </p>
               <ProductOrderButton
                 productId={product.id}
@@ -166,7 +171,21 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 <div className="flex gap-2">
                   {relatedProducts.map((p) => {
                     const pPrice = getPricePerMeter(p);
-                    const pText = pPrice != null ? `from ${formatCurrency(pPrice)}` : 'Price on request';
+                    const pIsSetHeuristic =
+                      p.id.startsWith('LED-SET-') ||
+                      p.id.startsWith('FENCE-SET-') ||
+                      /set/i.test(p.nameEn);
+                    const pUnitLabel =
+                      pPrice != null
+                        ? p.priceUnit ?? (pIsSetHeuristic ? 'per set' : 'per m')
+                        : '';
+                    const pText =
+                      pPrice != null
+                        ? `from ${formatCurrency(pPrice)} ${pUnitLabel}`
+                        : 'Price on request';
+                    const imgIsServer = p.image && isServerUploadUrl(p.image);
+                    const imgSrc =
+                      p.image && imgIsServer ? getUploadImageSrc(p.image, true) : p.image ?? '';
                     return (
                       <Link
                         key={p.id}
@@ -174,14 +193,23 @@ export default async function ProductPage({ params }: ProductPageProps) {
                         className="w-72 flex-shrink-0 border border-gray-200 overflow-hidden shadow-sm bg-white flex flex-col hover:shadow-md transition-shadow"
                       >
                         <div className="relative h-56 bg-gray-100">
-                          {p.image ? (
-                            <Image
-                              src={p.image}
-                              alt={p.nameEn}
-                              fill
-                              className="object-cover"
-                              sizes="224px"
-                            />
+                          {imgSrc ? (
+                            imgIsServer ? (
+                              <Image
+                                src={imgSrc}
+                                alt={p.nameEn}
+                                fill
+                                className="object-cover"
+                                sizes="224px"
+                              />
+                            ) : (
+                              <img
+                                src={imgSrc}
+                                alt={p.nameEn}
+                                className="h-full w-full object-cover"
+                                loading="lazy"
+                              />
+                            )
                           ) : (
                             <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-xs">
                               No image
@@ -194,7 +222,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
                           </h3>
                                 <p className="text-sm text-gray-600 mb-2">{p.dimensions}</p>
                           <p className="text-sm font-semibold text-[#E65100] mt-auto">
-                            {pText} <span className="text-xs text-gray-600">excl. VAT</span>
+                            {pText}{' '}
+                            {pPrice != null && (
+                              <span className="text-xs text-gray-600">excl. VAT</span>
+                            )}
                           </p>
                         </div>
                       </Link>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Product } from '@/lib/types/product';
 import { getProducts } from '@/lib/data/products';
+import { getUploadImageSrc, isServerUploadUrl } from '@/lib/utils/image';
 
 const CATEGORY_CONFIG: Array<{
   id: 'verandas' | 'fencing' | 'profiles' | 'accessories';
@@ -117,13 +118,19 @@ export default async function CategoriesPage() {
               const firstProductWithImage = allProducts.find(
                 (p) => cat.match(p) && p.image
               );
-              const imageSrc =
+              const rawImageSrc =
                 firstProductWithImage?.image ??
                 (cat.id === 'verandas'
                   ? 'https://images.unsplash.com/photo-1523419409543-3e4f83b9b4c2?w=900&auto=format&fit=crop&q=80'
                   : cat.id === 'fencing'
                   ? 'https://images.unsplash.com/photo-1609918488960-6721c37cb0c7?w=900&auto=format&fit=crop&q=80'
                   : 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=900&auto=format&fit=crop&q=80');
+              const imageIsServer = rawImageSrc && isServerUploadUrl(rawImageSrc);
+              const imageSrc = rawImageSrc
+                ? imageIsServer
+                  ? getUploadImageSrc(rawImageSrc, true)
+                  : rawImageSrc
+                : '';
               const imageAlt =
                 firstProductWithImage?.nameEn ??
                 (cat.id === 'verandas'
@@ -140,13 +147,28 @@ export default async function CategoriesPage() {
                   className="border-2 border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:border-[#445DFE]/40 transition-all duration-300"
                 >
                   <div className="relative h-56 sm:h-64 md:h-72 bg-gray-100">
-                    <Image
-                      src={imageSrc}
-                      alt={imageAlt}
-                      fill
-                      className="object-cover"
-                      sizes="(min-width: 1024px) 50vw, 100vw"
-                    />
+                    {imageSrc ? (
+                      imageIsServer ? (
+                        <Image
+                          src={imageSrc}
+                          alt={imageAlt}
+                          fill
+                          className="object-cover"
+                          sizes="(min-width: 1024px) 50vw, 100vw"
+                        />
+                      ) : (
+                        <img
+                          src={imageSrc}
+                          alt={imageAlt}
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                        />
+                      )
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-xs">
+                        No image
+                      </div>
+                    )}
                   </div>
                   <div className="p-6 sm:p-8">
                     <h2 className="text-xl sm:text-2xl font-bold text-[#050544] mb-2">

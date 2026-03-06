@@ -262,7 +262,16 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
                       (product.pricePerKg && product.weightPerMeter
                         ? product.pricePerKg * product.weightPerMeter
                         : undefined);
-                    const fromText = price != null ? `from ${formatCurrency(price)}` : 'Price on request';
+                    const isSetHeuristic =
+                      product.id.startsWith('LED-SET-') ||
+                      product.id.startsWith('FENCE-SET-') ||
+                      /set/i.test(product.nameEn);
+                    const unitLabel =
+                      price != null
+                        ? product.priceUnit ?? (isSetHeuristic ? 'per set' : 'per m')
+                        : '';
+                    const fromText =
+                      price != null ? `from ${formatCurrency(price)} ${unitLabel}` : 'Price on request';
 
                     return (
                       <Link
@@ -292,7 +301,10 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
                           <p className="text-sm text-gray-600 mb-2">{product.dimensions}</p>
                           <div className="mt-auto">
                             <p className="text-sm font-semibold text-[#E65100]">
-                              {fromText} <span className="text-xs text-gray-600">excl. VAT</span>
+                              {fromText}{' '}
+                              {price != null && (
+                                <span className="text-xs text-gray-600">excl. VAT</span>
+                              )}
                             </p>
                           </div>
                         </div>

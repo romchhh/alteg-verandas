@@ -37,9 +37,13 @@ function initSchema(database: Database.Database) {
       material TEXT,
       finish TEXT,
       image TEXT,
+      images TEXT,
       description TEXT,
       description_en TEXT,
       applications TEXT,
+      price_unit TEXT,
+      supplier_price_per_meter REAL,
+      supplier_price_per_m2_set REAL,
       created_at TEXT DEFAULT (datetime('now'))
     );
   `);
@@ -50,6 +54,26 @@ function initSchema(database: Database.Database) {
   }
   try {
     database.exec("ALTER TABLE orders ADD COLUMN status TEXT NOT NULL DEFAULT 'new'");
+  } catch {
+    // Column already exists
+  }
+  try {
+    database.exec('ALTER TABLE products ADD COLUMN supplier_price_per_meter REAL');
+  } catch {
+    // Column already exists
+  }
+  try {
+    database.exec('ALTER TABLE products ADD COLUMN supplier_price_per_m2_set REAL');
+  } catch {
+    // Column already exists
+  }
+  try {
+    database.exec('ALTER TABLE products ADD COLUMN price_unit TEXT');
+  } catch {
+    // Column already exists
+  }
+  try {
+    database.exec('ALTER TABLE products ADD COLUMN images TEXT');
   } catch {
     // Column already exists
   }

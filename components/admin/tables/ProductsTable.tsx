@@ -344,22 +344,36 @@ export default function ProductsTable() {
             ) : (
               paginatedProducts.map((product) => {
                 const imageSrc = product.image;
-                const showImage = imageSrc && isServerUploadUrl(imageSrc);
+                const isServer = imageSrc && isServerUploadUrl(imageSrc);
+                const src = imageSrc
+                  ? isServer
+                    ? getUploadImageSrc(imageSrc, true)
+                    : imageSrc
+                  : "";
                 return (
                 <TableRow
                   key={product.id}
                   className="hover:bg-gray-50"
                 >
                   <TableCell className="px-5 py-4 w-20">
-                    {showImage ? (
+                    {src ? (
                       <div className="relative h-10 w-10 rounded overflow-hidden bg-gray-100">
-                        <Image
-                          src={getUploadImageSrc(imageSrc, true)}
-                          alt=""
-                          fill
-                          className="object-cover"
-                          sizes="40px"
-                        />
+                        {isServer ? (
+                          <Image
+                            src={src}
+                            alt=""
+                            fill
+                            className="object-cover"
+                            sizes="40px"
+                          />
+                        ) : (
+                          <img
+                            src={src}
+                            alt=""
+                            className="h-full w-full object-cover"
+                            loading="lazy"
+                          />
+                        )}
                       </div>
                     ) : (
                       <span className="text-gray-400 text-xs">—</span>

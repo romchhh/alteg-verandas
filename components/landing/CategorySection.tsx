@@ -50,8 +50,20 @@ export function CategorySection({
                     (product.pricePerKg && product.weightPerMeter
                       ? product.pricePerKg * product.weightPerMeter
                       : undefined);
+                  const isSetHeuristic =
+                    product.id.startsWith('LED-SET-') ||
+                    product.id.startsWith('FENCE-SET-') ||
+                    /set/i.test(product.nameEn);
+                  const unitLabel =
+                    price != null
+                      ? product.priceUnit ?? (isSetHeuristic ? 'per set' : 'per m')
+                      : '';
                   const fromText =
-                    price != null ? `from ${formatCurrency(price)}` : 'Price on request';
+                    price != null ? `from ${formatCurrency(price)} ${unitLabel}` : 'Price on request';
+
+                  const imgIsServer = product.image && product.image.startsWith('/uploads/');
+                  const imgSrc =
+                    product.image && imgIsServer ? product.image : product.image ?? '';
 
                   return (
                     <Link
@@ -60,14 +72,23 @@ export function CategorySection({
                       className="border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col bg-white min-w-0"
                     >
                       <div className="relative h-56 sm:h-64 bg-gray-100">
-                        {product.image ? (
-                          <Image
-                            src={product.image}
-                            alt={product.nameEn}
-                            fill
-                            className="object-cover"
-                            sizes="256px"
-                          />
+                        {imgSrc ? (
+                          imgIsServer ? (
+                            <Image
+                              src={imgSrc}
+                              alt={product.nameEn}
+                              fill
+                              className="object-cover"
+                              sizes="256px"
+                            />
+                          ) : (
+                            <img
+                              src={imgSrc}
+                              alt={product.nameEn}
+                              className="h-full w-full object-cover"
+                              loading="lazy"
+                            />
+                          )
                         ) : (
                           <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-xs">
                             No image
@@ -82,7 +103,9 @@ export function CategorySection({
                         <div className="mt-auto">
                           <p className="text-sm font-semibold text-[#E65100]">
                             {fromText}{' '}
-                            <span className="text-xs text-gray-600">excl. VAT</span>
+                            {price != null && (
+                              <span className="text-xs text-gray-600">excl. VAT</span>
+                            )}
                           </p>
                         </div>
                       </div>

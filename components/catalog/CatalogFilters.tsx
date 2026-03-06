@@ -44,6 +44,15 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: 'name', label: 'Name A–Z' },
 ];
 
+const priceFormatter = new Intl.NumberFormat('en-GB', {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+});
+
+function formatPrice(value: number): string {
+  return priceFormatter.format(value);
+}
+
 function buildQuery(
   current: URLSearchParams,
   updates: Record<string, string | string[] | undefined>
@@ -209,7 +218,7 @@ export function CatalogFilters({
             <div>
               <div className="flex justify-between text-[11px] text-gray-600 mb-1">
                 <span>From</span>
-                <span className="font-semibold text-[#050544]">£{minVal.toLocaleString()}</span>
+                <span className="font-semibold text-[#050544]">£{formatPrice(minVal)}</span>
               </div>
               <input
                 type="range"
@@ -224,7 +233,7 @@ export function CatalogFilters({
             <div>
               <div className="flex justify-between text-[11px] text-gray-600 mb-1">
                 <span>To</span>
-                <span className="font-semibold text-[#050544]">£{maxVal.toLocaleString()}</span>
+                <span className="font-semibold text-[#050544]">£{formatPrice(maxVal)}</span>
               </div>
               <input
                 type="range"
@@ -238,7 +247,7 @@ export function CatalogFilters({
             </div>
           </div>
           <p className="mt-1.5 text-[11px] text-gray-500">
-            £{minVal.toLocaleString()} – £{maxVal.toLocaleString()} (guide)
+            £{formatPrice(minVal)} – £{formatPrice(maxVal)} (guide)
           </p>
         </div>
 
