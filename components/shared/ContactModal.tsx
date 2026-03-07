@@ -100,17 +100,34 @@ export const ContactModal: React.FC = () => {
 
           <div className="w-full space-y-1.5 lg:space-y-2">
             <label className="block text-sm font-medium text-[#050544] mb-1 lg:mb-1.5">
+              Email <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="email"
+              {...register('email')}
+              placeholder="your@email.com"
+              className="w-full px-0 py-1.5 lg:py-2 bg-transparent border-0 border-b-2 border-black placeholder:text-gray-400 focus:outline-none focus:border-[#050544] text-black text-base"
+            />
+            {errors.email && (
+              <p className="mt-1 text-sm text-red-600" role="alert">
+                {errors.email.message}
+              </p>
+            )}
+          </div>
+
+          <div className="w-full space-y-1.5 lg:space-y-2">
+            <label className="block text-sm font-medium text-[#050544] mb-1 lg:mb-1.5">
               Request (optional)
             </label>
             <textarea
-              {...register('interest')}
+              {...register('projectDetails')}
               rows={3}
               placeholder="Describe your project, drawing or profile..."
               className="w-full px-0 py-1.5 lg:py-2 bg-transparent border-0 border-b-2 border-black placeholder:text-gray-400 focus:outline-none focus:border-[#050544] text-black text-base resize-none"
             />
-            {errors.interest && (
+            {errors.projectDetails && (
               <p className="mt-1 text-sm text-red-600" role="alert">
-                {errors.interest.message}
+                {errors.projectDetails.message}
               </p>
             )}
           </div>
