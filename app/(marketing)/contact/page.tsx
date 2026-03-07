@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { contactFormSchema, ContactFormData } from '@/lib/utils/validators';
+import { contactFormSchema, ContactFormData, QUOTE_INTEREST_OPTIONS } from '@/lib/utils/validators';
 import { Input } from '@/components/shared/Input';
 import { Button } from '@/components/shared/Button';
 import { siteConfig } from '@/config/site';
@@ -234,22 +234,25 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              {/* Right Side - Contact Form */}
+              {/* Right Side - Get a Quote Form (Block 6) */}
               <div>
                 <div className="bg-white border-2 border-gray-200 rounded-lg p-6 md:p-8 shadow-lg">
-                  <h2 className="text-2xl md:text-3xl font-bold text-[#050544] mb-6">
-                    Send us a Message
+                  <h2 className="text-2xl md:text-3xl font-bold text-[#050544] mb-2">
+                    Get a Quote
                   </h2>
-                  
+                  <p className="text-gray-600 text-sm mb-6">
+                    Leave your details and we will get back to you with a quote. Tell us about your veranda, fencing or accessories project.
+                  </p>
+
                   <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     <div>
                       <label className="block text-sm font-semibold text-[#050544] mb-2">
-                        Name <span className="text-red-500">*</span>
+                        Full Name <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         {...register('name')}
-                        placeholder="Enter your name"
+                        placeholder="Enter your full name"
                         className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-[#445DFE] text-[#050544] text-base"
                       />
                       {errors.name && (
@@ -261,7 +264,7 @@ export default function ContactPage() {
 
                     <div>
                       <label className="block text-sm font-semibold text-[#050544] mb-2">
-                        Phone Number <span className="text-red-500">*</span>
+                        Phone Number
                       </label>
                       <input
                         type="tel"
@@ -278,17 +281,51 @@ export default function ContactPage() {
 
                     <div>
                       <label className="block text-sm font-semibold text-[#050544] mb-2">
-                        Request (optional)
+                        Email Address <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        {...register('email')}
+                        placeholder="your@email.com"
+                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-[#445DFE] text-[#050544] text-base"
+                      />
+                      {errors.email && (
+                        <p className="mt-2 text-sm text-red-600" role="alert">
+                          {errors.email.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-[#050544] mb-2">
+                        I&apos;m interested in
+                      </label>
+                      <select
+                        {...register('interestedIn')}
+                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-[#445DFE] text-[#050544] text-base bg-white"
+                      >
+                        <option value="">— Select —</option>
+                        {QUOTE_INTEREST_OPTIONS.map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-[#050544] mb-2">
+                        Project Details (size, dimensions, etc.)
                       </label>
                       <textarea
-                        {...register('interest')}
+                        {...register('projectDetails')}
                         rows={5}
-                        placeholder="Describe your project or inquiry..."
+                        placeholder="e.g. Veranda 6×4m with polycarbonate roof, or fencing length and height…"
                         className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-[#445DFE] text-[#050544] text-base resize-none"
                       />
-                      {errors.interest && (
+                      {errors.projectDetails && (
                         <p className="mt-2 text-sm text-red-600" role="alert">
-                          {errors.interest.message}
+                          {errors.projectDetails.message}
                         </p>
                       )}
                     </div>
@@ -309,9 +346,9 @@ export default function ContactPage() {
                       type="submit"
                       disabled={isSubmitting}
                       variant="primary"
-                      className="w-full bg-[#445DFE] hover:bg-[#050544] text-white py-3 px-6 text-base font-semibold transition-all duration-300 rounded-none"
+                      className="w-full bg-[#050544] hover:bg-[#445DFE] text-white py-3 px-6 text-base font-semibold transition-all duration-300 rounded-none"
                     >
-                      {isSubmitting ? 'Sending...' : 'Send Message'}
+                      {isSubmitting ? 'Sending...' : 'Send Request'}
                     </Button>
                   </form>
                 </div>

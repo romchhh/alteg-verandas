@@ -18,17 +18,25 @@ export async function POST(request: NextRequest) {
     }
 
     const data = validationResult.data;
-    const formType = (body as { formType?: string }).formType === 'request_individual_quote' ? 'Request individual quote' : 'Contact Form';
+    const formType = (body as { formType?: string }).formType === 'request_individual_quote' ? 'Request individual quote' : 'Get a Quote';
     const isB2B = formType === 'Request individual quote';
     const leadTitle = isB2B ? `Lead web B2B — ${data.name} — ${data.phone}` : `Lead web B2C — ${data.name} — ${data.phone}`;
+    const details = data.projectDetails?.trim() || '';
 
     // Create lead in Bitrix24
     const leadData: Bitrix24Lead = {
       TITLE: leadTitle,
       NAME: data.name,
-      EMAIL: [],
+      EMAIL: data.email ? [{ VALUE: data.email, VALUE_TYPE: 'WORK' }] : [],
       PHONE: [{ VALUE: data.phone, VALUE_TYPE: 'WORK' }],
-      COMMENTS: `Form type: ${formType}\n\nName: ${data.name}\nPhone: ${data.phone}\n\nWhat interests them:\n${data.interest}`,
+      COMMENTS: [
+        `Form: ${formType}`,
+        `Name: ${data.name}`,
+        `Phone: ${data.phone}`,
+        data.email ? `Email: ${data.email}` : '',
+        data.interestedIn ? `I'm interested in: ${data.interestedIn}` : '',
+        details ? `Project details:\n${details}` : '',
+      ].filter(Boolean).join('\n'),
       SOURCE_ID: 'WEB',
       SOURCE_DESCRIPTION: isB2B ? 'Lead web B2B' : 'Lead web B2C',
     };
@@ -44,34 +52,38 @@ export async function POST(request: NextRequest) {
       }
 
       const lines = [
-        '<b>📩 Contact form submission</b>',
+        '<b>📩 Get a Quote</b>',
         `Name: ${data.name}`,
         `Phone: ${data.phone}`,
-        `Interest: ${data.interest}`,
-      ];
+        data.email ? `Email: ${data.email}` : '',
+        data.interestedIn ? `Interest: ${data.interestedIn}` : '',
+        data.projectDetails?.trim() ? `Details: ${data.projectDetails.trim()}` : '',
+      ].filter(Boolean);
       sendTelegramMessage(lines.join('\n')).catch(() => {});
 
       return NextResponse.json(
         { 
           success: true, 
           leadId: result.result?.toString(),
-          message: 'Contact form submitted successfully. Our team will contact you soon.' 
+          message: "Thank you! We'll contact you shortly." 
         },
         { status: 200 }
       );
     } catch (error) {
       console.error('Bitrix24 error:', error);
       const lines = [
-        '<b>📩 Contact form submission</b>',
+        '<b>📩 Get a Quote</b>',
         `Name: ${data.name}`,
         `Phone: ${data.phone}`,
-        `Interest: ${data.interest}`,
-      ];
+        data.email ? `Email: ${data.email}` : '',
+        data.interestedIn ? `Interest: ${data.interestedIn}` : '',
+        data.projectDetails?.trim() ? `Details: ${data.projectDetails.trim()}` : '',
+      ].filter(Boolean);
       sendTelegramMessage(lines.join('\n')).catch(() => {});
       return NextResponse.json(
         { 
           success: true, 
-          message: 'Contact form received. Our team will contact you soon.' 
+          message: "Thank you! We'll contact you shortly." 
         },
         { status: 200 }
       );

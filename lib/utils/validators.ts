@@ -49,10 +49,20 @@ export const wholesaleFormSchema = z.object({
   attachmentUrl: z.string().optional(),
 });
 
+/** Get a Quote form — Block 6 (contact page). Also used by hero form. */
+export const QUOTE_INTEREST_OPTIONS = [
+  'Veranda / Canopy',
+  'Fencing',
+  'Profile Systems',
+  'Accessories / Seals',
+] as const;
+
 export const contactFormSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   phone: z.string().min(10, 'Phone number must be at least 10 digits'),
-  interest: z.string().optional().default('').refine((s) => !s || s.length >= 3, 'At least 3 characters if provided'),
+  email: z.string().email('Please enter a valid email address'),
+  interestedIn: z.enum(QUOTE_INTEREST_OPTIONS).optional(),
+  projectDetails: z.string().optional().default('').refine((s) => !s || s.length >= 3, 'At least 3 characters if provided'),
 });
 
 export const productInquiryFormSchema = z.object({

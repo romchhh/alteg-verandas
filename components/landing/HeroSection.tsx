@@ -182,17 +182,34 @@ export const HeroSection: React.FC = () => {
 
               <div className="w-full space-y-1 sm:space-y-1.5">
                 <label className="block text-xs sm:text-sm font-medium text-[#050544] mb-0.5 sm:mb-1">
+                  Email <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  {...register('email')}
+                  placeholder="your@email.com"
+                  className="w-full px-0 py-1 sm:py-1.5 bg-transparent border-0 border-b-2 border-black placeholder:text-gray-400 focus:outline-none focus:border-[#050544] text-black text-sm sm:text-base"
+                />
+                {errors.email && (
+                  <p className="mt-1 text-xs sm:text-sm text-red-600" role="alert">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="w-full space-y-1 sm:space-y-1.5">
+                <label className="block text-xs sm:text-sm font-medium text-[#050544] mb-0.5 sm:mb-1">
                   Project details (optional)
                 </label>
                 <textarea
-                  {...register('interest')}
+                  {...register('projectDetails')}
                   rows={3}
                   placeholder="For example: veranda 6x3m with glass roof, or aluminium fencing along rear boundary…"
                   className="w-full px-0 py-1 sm:py-1.5 bg-transparent border-0 border-b-2 border-black placeholder:text-gray-400 focus:outline-none focus:border-[#050544] text-black text-sm sm:text-base resize-none"
                 />
-                {errors.interest && (
+                {errors.projectDetails && (
                   <p className="mt-1 text-xs sm:text-sm text-red-600" role="alert">
-                    {errors.interest.message}
+                    {errors.projectDetails.message}
                   </p>
                 )}
               </div>

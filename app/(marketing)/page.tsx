@@ -6,8 +6,10 @@ import { TrustSection } from '@/components/landing/TrustSection';
 import { HowToOrderSection } from '@/components/landing/HowToOrderSection';
 import { FAQSection } from '@/components/landing/FAQSection';
 import { MapSection } from '@/components/landing/MapSection';
+import { FactoryGallery } from '@/components/landing/FactoryGallery';
 import { FaqJsonLd } from '@/components/seo/FaqJsonLd';
 import { getProducts } from '@/lib/data/products';
+import { getGalleryItems } from '@/lib/gallery';
 
 // Ensure homepage always reads latest products from SQLite in production
 export const dynamic = 'force-dynamic';
@@ -18,6 +20,8 @@ const CATEGORIES: Array<{
   description: string;
   catalogHref: string;
   catalogLabel: string;
+  quoteButtonLabel: string;
+  quoteButtonHref: string;
   match: (p: Product) => boolean;
 }> = [
   {
@@ -27,6 +31,8 @@ const CATEGORIES: Array<{
       'Tailor‑made aluminium verandas and canopies for British homes. Polycarbonate or safety glass, standard sizes and bespoke on request.',
     catalogHref: '/catalog/verandas',
     catalogLabel: 'View more',
+    quoteButtonLabel: 'Need a bespoke size? Request a custom quote',
+    quoteButtonHref: '/contact',
     match: (p) =>
       (p.applications ?? []).includes('Verandas & Canopies'),
   },
@@ -37,6 +43,8 @@ const CATEGORIES: Array<{
       'Modern privacy fencing that never needs painting. Powder‑coated aluminium boards and posts, low maintenance and long life.',
     catalogHref: '/catalog/fencing',
     catalogLabel: 'View more',
+    quoteButtonLabel: 'Get Fencing Quote',
+    quoteButtonHref: '/contact',
     match: (p) =>
       (p.applications ?? []).includes('Aluminium Fencing'),
   },
@@ -47,6 +55,8 @@ const CATEGORIES: Array<{
       'Aluminium support posts, rafters and fence profiles for verandas and fencing. Trade supply across the UK.',
     catalogHref: '/catalog/profiles',
     catalogLabel: 'View more',
+    quoteButtonLabel: 'Enquire About Profiles',
+    quoteButtonHref: '/contact',
     match: (p) =>
       (p.applications ?? []).includes('Profile Systems'),
   },
@@ -57,6 +67,8 @@ const CATEGORIES: Array<{
       'Seals, gaskets, guttering and fixings for watertight veranda and fencing installations.',
     catalogHref: '/catalog/accessories',
     catalogLabel: 'View more',
+    quoteButtonLabel: 'Ask About Accessories',
+    quoteButtonHref: '/contact',
     match: (p) =>
       (p.applications ?? []).includes('Accessories & Guttering'),
   },
@@ -64,6 +76,7 @@ const CATEGORIES: Array<{
 
 export default async function HomePage() {
   const allProducts = await getProducts();
+  const galleryItems = getGalleryItems();
 
   return (
     <main className="min-h-screen">
@@ -79,9 +92,13 @@ export default async function HomePage() {
           description={cat.description}
           catalogHref={cat.catalogHref}
           catalogLabel={cat.catalogLabel}
+          quoteButtonLabel={cat.quoteButtonLabel}
+          quoteButtonHref={cat.quoteButtonHref}
           products={allProducts.filter(cat.match).slice(0, 3)}
         />
       ))}
+
+      <FactoryGallery items={galleryItems} />
 
       <TrustSection />
       <HowToOrderSection />

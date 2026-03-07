@@ -10,6 +10,9 @@ export interface CategorySectionProps {
   description: string;
   catalogHref: string;
   catalogLabel: string;
+  /** CTA button under the product grid — leads to quote/contact form (per TZ) */
+  quoteButtonLabel: string;
+  quoteButtonHref: string;
   products: Product[];
 }
 
@@ -19,6 +22,8 @@ export function CategorySection({
   description,
   catalogHref,
   catalogLabel,
+  quoteButtonLabel,
+  quoteButtonHref,
   products,
 }: CategorySectionProps) {
   return (
@@ -37,9 +42,20 @@ export function CategorySection({
         </div>
 
         {products.length === 0 ? (
-          <p className="text-sm text-gray-600 text-center">
-            Products for this category will appear here once they are added to the catalog.
-          </p>
+          <div className="flex flex-col items-center gap-4">
+            <p className="text-sm text-gray-600 text-center">
+              Products for this category will appear here once they are added to the catalog.
+            </p>
+            <Link
+              href={quoteButtonHref}
+              className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none shadow-sm hover:shadow-md transition-colors"
+            >
+              {quoteButtonLabel}
+              <span aria-hidden="true" className="ml-1">
+                →
+              </span>
+            </Link>
+          </div>
         ) : (
           <>
             <div className="-mx-4 px-4 lg:mx-0 lg:px-0">
@@ -114,15 +130,21 @@ export function CategorySection({
                 })}
               </div>
             </div>
-            <div className="mt-6 flex justify-center">
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
-                href={catalogHref}
+                href={quoteButtonHref}
                 className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none shadow-sm hover:shadow-md transition-colors"
               >
-                {catalogLabel}
+                {quoteButtonLabel}
                 <span aria-hidden="true" className="ml-1">
                   →
                 </span>
+              </Link>
+              <Link
+                href={catalogHref}
+                className="text-sm font-medium text-[#050544] hover:text-[#445DFE] underline underline-offset-2 transition-colors"
+              >
+                {catalogLabel}
               </Link>
             </div>
           </>
