@@ -40,10 +40,10 @@ const CATALOG_CONFIG: Record<
     title: 'Aluminium Fencing',
     subtitle: 'Guide pricing for aluminium fencing runs (from, excl. VAT)',
     description:
-      'Modern aluminium privacy fencing as a long‑life alternative to timber. Use this overview to understand guide prices for typical fence lengths.',
+      'Modern aluminium privacy fencing as a long‑life alternative to timber. From £100 per metre for 1 m height in RAL 7016 anthracite; other colours on request.',
     breadcrumbLabel: 'Aluminium Fencing',
     filterLabel: 'Fence height',
-    priceHint: 'Guide pricing from around £100 per metre for a 1 m high fence in RAL 7016 (from price, excl. VAT).',
+    priceHint: 'From £100 per metre for a 1 m high fence in RAL 7016 anthracite (excl. VAT). Other colours on request.',
     heroImage:
       'https://images.unsplash.com/photo-1609918488960-6721c37cb0c7?w=1600&auto=format&fit=crop&q=80',
     heroAlt: 'Contemporary aluminium garden fencing',

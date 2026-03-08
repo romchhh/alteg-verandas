@@ -17,6 +17,8 @@ const BENTO_LAYOUT = [
 ];
 
 const BENTO_COUNT = 10;
+const INITIAL_VISIBLE = 18;
+const LOAD_MORE_STEP = 20;
 
 export interface FactoryGalleryProps {
   items: GalleryItem[];
@@ -36,7 +38,10 @@ const ChevronRightIcon: React.FC<{ className?: string }> = ({ className = '' }) 
 
 export const FactoryGallery: React.FC<FactoryGalleryProps> = ({ items }) => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
   const galleryItems = items;
+  const visibleItems = galleryItems.slice(0, visibleCount);
+  const hasMore = visibleCount < galleryItems.length;
 
   const openLightbox = useCallback((index: number) => setLightboxIndex(index), []);
   const closeLightbox = useCallback(() => setLightboxIndex(null), []);
@@ -76,12 +81,16 @@ export const FactoryGallery: React.FC<FactoryGalleryProps> = ({ items }) => {
     };
   }, [lightboxIndex, goPrev, goNext, closeLightbox]);
 
+  const showMore = useCallback(() => {
+    setVisibleCount((prev) => Math.min(prev + LOAD_MORE_STEP, galleryItems.length));
+  }, [galleryItems.length]);
+
   if (galleryItems.length === 0) {
     return null;
   }
 
-  const bentoItems = galleryItems.slice(0, BENTO_COUNT);
-  const restItems = galleryItems.slice(BENTO_COUNT);
+  const bentoItems = visibleItems.slice(0, BENTO_COUNT);
+  const restItems = visibleItems.slice(BENTO_COUNT);
 
   return (
     <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-gray-50">
@@ -131,6 +140,7 @@ export const FactoryGallery: React.FC<FactoryGalleryProps> = ({ items }) => {
                       src={item.src}
                       alt={item.alt}
                       fill
+                      loading="lazy"
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                       sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     />
@@ -141,7 +151,7 @@ export const FactoryGallery: React.FC<FactoryGalleryProps> = ({ items }) => {
             })}
           </div>
 
-          {/* Remaining items: one row on desktop (4 cols), two rows of 2 on mobile */}
+          {/* Remaining visible items */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mt-2 sm:mt-3 md:mt-4 mb-20 sm:mb-16 md:mb-16 lg:mb-0 auto-rows-[120px] sm:auto-rows-[140px] md:auto-rows-[160px] lg:auto-rows-[180px]">
             {restItems.map((item, i) => {
               const index = BENTO_COUNT + i;
@@ -163,7 +173,7 @@ export const FactoryGallery: React.FC<FactoryGalleryProps> = ({ items }) => {
                         muted
                         loop
                         playsInline
-                        preload="metadata"
+                        preload="none"
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 flex items-center justify-center bg-black/30 pointer-events-none">
@@ -179,6 +189,7 @@ export const FactoryGallery: React.FC<FactoryGalleryProps> = ({ items }) => {
                       src={item.src}
                       alt={item.alt}
                       fill
+                      loading="lazy"
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                       sizes="(max-width: 1024px) 50vw, 25vw"
                     />
@@ -188,6 +199,18 @@ export const FactoryGallery: React.FC<FactoryGalleryProps> = ({ items }) => {
               );
             })}
           </div>
+
+          {hasMore && (
+            <div className="flex justify-center mt-8 sm:mt-10">
+              <button
+                type="button"
+                onClick={showMore}
+                className="px-6 py-3 text-sm font-semibold text-[#050544] bg-white border-2 border-[#050544] hover:bg-[#050544] hover:text-white transition-colors rounded-none"
+              >
+                Show more ({galleryItems.length - visibleCount} left)
+              </button>
+            </div>
+          )}
 
           {/* Lightbox: darkened overlay, no white box, arrows on sides */}
           {lightboxIndex !== null && (

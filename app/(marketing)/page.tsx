@@ -40,7 +40,7 @@ const CATEGORIES: Array<{
     id: 'fencing',
     title: 'Aluminium Fencing',
     description:
-      'Modern privacy fencing that never needs painting. Powder‑coated aluminium boards and posts, low maintenance and long life.',
+      'Modern privacy fencing that never needs painting. Powder‑coated aluminium boards and posts, low maintenance and long life. From £100 per metre (1 m height, RAL 7016 anthracite; other colours on request).',
     catalogHref: '/catalog/fencing',
     catalogLabel: 'View more',
     quoteButtonLabel: 'Get Fencing Quote',
