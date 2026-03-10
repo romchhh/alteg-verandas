@@ -313,13 +313,18 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
                                   {product.nameEn}
                                 </h3>
                                 <p className="text-sm text-gray-600 mb-2">{product.dimensions}</p>
-                                <div className="mt-auto">
+                                <div className="mt-auto space-y-2">
                                   <p className="text-sm font-semibold text-[#E65100]">
                                     {fromText}{' '}
                                     {price != null && (
                                       <span className="text-xs text-gray-600">excl. VAT</span>
                                     )}
                                   </p>
+                                  <div className="pt-1">
+                                    <span className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none transition-colors">
+                                      Request a quote
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
                             </Link>
@@ -396,13 +401,18 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
                                   {product.nameEn}
                                 </h3>
                                 <p className="text-sm text-gray-600 mb-2">{product.dimensions}</p>
-                                <div className="mt-auto">
+                                <div className="mt-auto space-y-2">
                                   <p className="text-sm font-semibold text-[#E65100]">
                                     {fromText}{' '}
                                     {price != null && (
                                       <span className="text-xs text-gray-600">excl. VAT</span>
                                     )}
                                   </p>
+                                  <div className="pt-1">
+                                    <span className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none transition-colors">
+                                      Request a quote
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
                             </Link>
@@ -467,13 +477,18 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
                             {product.nameEn}
                           </h3>
                           <p className="text-sm text-gray-600 mb-2">{product.dimensions}</p>
-                          <div className="mt-auto">
+                          <div className="mt-auto space-y-2">
                             <p className="text-sm font-semibold text-[#E65100]">
                               {fromText}{' '}
                               {price != null && (
                                 <span className="text-xs text-gray-600">excl. VAT</span>
                               )}
                             </p>
+                            <div className="pt-1">
+                              <span className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none transition-colors">
+                                Request a quote
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </Link>
