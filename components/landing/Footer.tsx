@@ -68,7 +68,7 @@ export const Footer: React.FC = () => {
               <div className="text-2xl font-bold">Alteg UK (England)</div>
             </div>
             <p className="text-gray-600 text-sm mb-4">
-              European manufacturer of aluminium profiles supplying customers across the UK.
+              European manufacturer of Verandas supplying customers across the UK.
             </p>
             <div className="flex gap-4 justify-center sm:justify-start">
               <a href="https://www.facebook.com/profile.php?id=61588085476531" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#050544] hover:bg-[#445DFE] text-white rounded-full flex items-center justify-center transition-colors" aria-label="Facebook">
