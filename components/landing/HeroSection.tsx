@@ -67,8 +67,8 @@ export const HeroSection: React.FC = () => {
       <div className="absolute inset-0">
         {/* Mobile background */}
         <Image
-          src="/hero-desktop.jpg"
-          alt="ALTEG production facility"
+          src="/The-Value-of-Adding-a-House-Extension.jpg"
+          alt="Modern house with aluminium veranda and extension"
           fill
           className="object-cover object-center lg:hidden"
           priority
@@ -76,10 +76,10 @@ export const HeroSection: React.FC = () => {
         />
         {/* Desktop background */}
         <Image
-          src="/hero-desktop.jpg"
-          alt="ALTEG production facility"
+          src="/The-Value-of-Adding-a-House-Extension.jpg"
+          alt="Modern house with aluminium veranda and extension"
           fill
-          className="hidden lg:block object-cover object-center lg:object-[center_25%]"
+          className="hidden lg:block object-cover object-center lg:object-[center_30%]"
           priority
           sizes="100vw"
         />
