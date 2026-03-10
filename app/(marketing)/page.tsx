@@ -82,7 +82,7 @@ export default async function HomePage() {
       <FaqJsonLd />
       <HeroSection />
 
-      {/* Product categories — same layout for all */}
+      {/* Product categories — same layout for all (first 4 products) */}
       {CATEGORIES.map((cat) => (
         <CategorySection
           key={cat.id}

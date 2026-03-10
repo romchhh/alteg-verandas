@@ -254,6 +254,174 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
                   No products have been added to this category yet. Seed products will appear here once
                   they are created in the database.
                 </div>
+              ) : slug === 'verandas' ? (
+                <>
+                  {/* Polycarbonate veranda kits */}
+                  <div className="mb-8 sm:mb-10">
+                    <h2 className="text-lg sm:text-xl font-semibold text-[#050544] mb-3">
+                      Polycarbonate roof veranda kits
+                    </h2>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                      {products
+                        .filter(
+                          (p) =>
+                            /poly/i.test(p.nameEn) ||
+                            (p.applications ?? []).some((a) =>
+                              /polycarbonate|Terrace roofing kits – polycarbonate/i.test(a)
+                            )
+                        )
+                        .map((product) => {
+                          const price =
+                            product.pricePerMeter ??
+                            (product.pricePerKg && product.weightPerMeter
+                              ? product.pricePerKg * product.weightPerMeter
+                              : undefined);
+                          const isSetHeuristic =
+                            product.id.startsWith('LED-SET-') ||
+                            product.id.startsWith('FENCE-SET-') ||
+                            /set/i.test(product.nameEn);
+                          const unitLabel =
+                            price != null
+                              ? product.priceUnit ?? (isSetHeuristic ? 'per set' : 'per m')
+                              : '';
+                          const fromText =
+                            price != null ? `from ${formatCurrency(price)} ${unitLabel}` : 'Price on request';
+
+                          return (
+                            <Link
+                              key={product.id}
+                              href={`/product/${product.id}`}
+                              className="border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col bg-white"
+                            >
+                              <div className="relative h-56 sm:h-64 bg-gray-100">
+                                {product.image ? (
+                                  <Image
+                                    src={product.image}
+                                    alt={product.nameEn}
+                                    fill
+                                    className="object-cover"
+                                    sizes="(min-width: 1024px) 25vw, 50vw"
+                                  />
+                                ) : (
+                                  <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-xs">
+                                    No image
+                                  </div>
+                                )}
+                              </div>
+                              <div className="p-6 flex flex-col flex-1">
+                                <h3 className="text-lg font-semibold text-[#050544] mb-2 line-clamp-2">
+                                  {product.nameEn}
+                                </h3>
+                                <p className="text-sm text-gray-600 mb-2">{product.dimensions}</p>
+                                <div className="mt-auto">
+                                  <p className="text-sm font-semibold text-[#E65100]">
+                                    {fromText}{' '}
+                                    {price != null && (
+                                      <span className="text-xs text-gray-600">excl. VAT</span>
+                                    )}
+                                  </p>
+                                </div>
+                              </div>
+                            </Link>
+                          );
+                        })}
+                    </div>
+                    <div className="mt-4 flex justify-center">
+                      <Link
+                        href="/contact"
+                        className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none shadow-sm hover:shadow-md transition-colors"
+                      >
+                        Need a bespoke size? Request a custom quote
+                        <span aria-hidden="true" className="ml-1">
+                          →
+                        </span>
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* Safety glass / VSG veranda kits */}
+                  <div>
+                    <h2 className="text-lg sm:text-xl font-semibold text-[#050544] mb-3">
+                      Safety glass (VSG) veranda kits
+                    </h2>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                      {products
+                        .filter(
+                          (p) =>
+                            /vsg|glass/i.test(p.nameEn) ||
+                            (p.applications ?? []).some((a) =>
+                              /VSG|Terrace roofing kits – VSG glass/i.test(a)
+                            )
+                        )
+                        .map((product) => {
+                          const price =
+                            product.pricePerMeter ??
+                            (product.pricePerKg && product.weightPerMeter
+                              ? product.pricePerKg * product.weightPerMeter
+                              : undefined);
+                          const isSetHeuristic =
+                            product.id.startsWith('LED-SET-') ||
+                            product.id.startsWith('FENCE-SET-') ||
+                            /set/i.test(product.nameEn);
+                          const unitLabel =
+                            price != null
+                              ? product.priceUnit ?? (isSetHeuristic ? 'per set' : 'per m')
+                              : '';
+                          const fromText =
+                            price != null ? `from ${formatCurrency(price)} ${unitLabel}` : 'Price on request';
+
+                          return (
+                            <Link
+                              key={product.id}
+                              href={`/product/${product.id}`}
+                              className="border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col bg-white"
+                            >
+                              <div className="relative h-56 sm:h-64 bg-gray-100">
+                                {product.image ? (
+                                  <Image
+                                    src={product.image}
+                                    alt={product.nameEn}
+                                    fill
+                                    className="object-cover"
+                                    sizes="(min-width: 1024px) 25vw, 50vw"
+                                  />
+                                ) : (
+                                  <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-xs">
+                                    No image
+                                  </div>
+                                )}
+                              </div>
+                              <div className="p-6 flex flex-col flex-1">
+                                <h3 className="text-lg font-semibold text-[#050544] mb-2 line-clamp-2">
+                                  {product.nameEn}
+                                </h3>
+                                <p className="text-sm text-gray-600 mb-2">{product.dimensions}</p>
+                                <div className="mt-auto">
+                                  <p className="text-sm font-semibold text-[#E65100]">
+                                    {fromText}{' '}
+                                    {price != null && (
+                                      <span className="text-xs text-gray-600">excl. VAT</span>
+                                    )}
+                                  </p>
+                                </div>
+                              </div>
+                            </Link>
+                          );
+                        })}
+                    </div>
+                    <div className="mt-4 flex justify-center">
+                      <Link
+                        href="/contact"
+                        className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none shadow-sm hover:shadow-md transition-colors"
+                      >
+                        Need a bespoke size? Request a custom quote
+                        <span aria-hidden="true" className="ml-1">
+                          →
+                        </span>
+                      </Link>
+                    </div>
+                  </div>
+                </>
               ) : (
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
                   {products.map((product) => {
@@ -311,6 +479,46 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
                       </Link>
                     );
                   })}
+                </div>
+              )}
+              {/* Category-specific CTAs under grid */}
+              {slug === 'fencing' && products.length > 0 && (
+                <div className="mt-6 flex justify-center">
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none shadow-sm hover:shadow-md transition-colors"
+                  >
+                    Get Fencing Quote
+                    <span aria-hidden="true" className="ml-1">
+                      →
+                    </span>
+                  </Link>
+                </div>
+              )}
+              {slug === 'profiles' && products.length > 0 && (
+                <div className="mt-6 flex justify-center">
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none shadow-sm hover:shadow-md transition-colors"
+                  >
+                    Enquire About Profiles
+                    <span aria-hidden="true" className="ml-1">
+                      →
+                    </span>
+                  </Link>
+                </div>
+              )}
+              {slug === 'accessories' && products.length > 0 && (
+                <div className="mt-6 flex justify-center">
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none shadow-sm hover:shadow-md transition-colors"
+                  >
+                    Ask About Accessories
+                    <span aria-hidden="true" className="ml-1">
+                      →
+                    </span>
+                  </Link>
                 </div>
               )}
             </div>

@@ -65,7 +65,7 @@ export const Footer: React.FC = () => {
                   className="object-contain"
                 />
               </div>
-              <div className="text-2xl font-bold">ALTEG</div>
+              <div className="text-2xl font-bold">Alteg UK (England)</div>
             </div>
             <p className="text-gray-600 text-sm mb-4">
               European manufacturer of aluminium profiles supplying customers across the UK.
@@ -156,8 +156,11 @@ export const Footer: React.FC = () => {
               </li>
               <li className="flex items-start gap-3 justify-center sm:justify-start">
                 <MailIcon className="w-5 h-5 text-[#445DFE] flex-shrink-0 mt-0.5" />
-                <div>
-                  <a href="mailto:info@alteg.co.uk" className="text-[#050544] hover:text-[#445DFE] transition-colors">
+                <div className="space-y-0.5">
+                  <a href="mailto:sales@alteg.co.uk" className="block text-[#050544] hover:text-[#445DFE] transition-colors">
+                    sales@alteg.co.uk
+                  </a>
+                  <a href="mailto:info@alteg.co.uk" className="block text-[#050544] hover:text-[#445DFE] transition-colors">
                     info@alteg.co.uk
                   </a>
                 </div>
