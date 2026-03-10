@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { contactFormSchema, ContactFormData } from '@/lib/utils/validators';
+import { contactFormSchema, ContactFormData, QUOTE_INTEREST_OPTIONS } from '@/lib/utils/validators';
 import { Button } from '@/components/shared/Button';
 
 const HERO_BULLETS = [
@@ -148,12 +148,12 @@ export const HeroSection: React.FC = () => {
 
               <div className="w-full space-y-1 sm:space-y-1.5">
                 <label className="block text-xs sm:text-sm font-medium text-[#050544] mb-0.5 sm:mb-1">
-                  Name <span className="text-red-500">*</span>
+                  Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   {...register('name')}
-                  placeholder="Enter your name"
+                  placeholder="Enter your full name"
                   className="w-full px-0 py-1 sm:py-1.5 bg-transparent border-0 border-b-2 border-black placeholder:text-gray-400 focus:outline-none focus:border-[#050544] text-black text-sm sm:text-base"
                 />
                 {errors.name && (
@@ -199,6 +199,24 @@ export const HeroSection: React.FC = () => {
 
               <div className="w-full space-y-1 sm:space-y-1.5">
                 <label className="block text-xs sm:text-sm font-medium text-[#050544] mb-0.5 sm:mb-1">
+                  I&apos;m interested in
+                </label>
+                <select
+                  {...register('interestedIn')}
+                  className="w-full px-0 py-1 sm:py-1.5 bg-transparent border-0 border-b-2 border-black text-black text-sm sm:text-base focus:outline-none focus:border-[#050544]"
+                  defaultValue=""
+                >
+                  <option value="">— Select —</option>
+                  {QUOTE_INTEREST_OPTIONS.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="w-full space-y-1 sm:space-y-1.5">
+                <label className="block text-xs sm:text-sm font-medium text-[#050544] mb-0.5 sm:mb-1">
                   Project details (optional)
                 </label>
                 <textarea
@@ -231,7 +249,7 @@ export const HeroSection: React.FC = () => {
                 disabled={isSubmitting}
                 className="w-full bg-black text-white font-medium py-2 sm:py-2.5 lg:py-3 px-6 transition-colors duration-200 mt-2 sm:mt-3 rounded-none text-sm sm:text-base disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {isSubmitting ? 'Sending...' : 'Send request'}
+                {isSubmitting ? 'Sending...' : 'Send Request'}
               </button>
             </form>
           </div>

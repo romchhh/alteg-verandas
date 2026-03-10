@@ -2,7 +2,6 @@ import React from 'react';
 import type { Product } from '@/lib/types/product';
 import { HeroSection } from '@/components/landing/HeroSection';
 import { CategorySection } from '@/components/landing/CategorySection';
-import { TrustSection } from '@/components/landing/TrustSection';
 import { HowToOrderSection } from '@/components/landing/HowToOrderSection';
 import { FAQSection } from '@/components/landing/FAQSection';
 import { MapSection } from '@/components/landing/MapSection';
@@ -30,7 +29,7 @@ const CATEGORIES: Array<{
     description:
       'Tailor‑made aluminium verandas and canopies for British homes. Polycarbonate or safety glass, standard sizes and bespoke on request.',
     catalogHref: '/catalog/verandas',
-    catalogLabel: 'View more',
+    catalogLabel: 'Show more',
     quoteButtonLabel: 'Need a bespoke size? Request a custom quote',
     quoteButtonHref: '/contact',
     match: (p) =>
@@ -42,7 +41,7 @@ const CATEGORIES: Array<{
     description:
       'Modern privacy fencing that never needs painting. Powder‑coated aluminium boards and posts, low maintenance and long life. From £100 per metre (1 m height, RAL 7016 anthracite; other colours on request).',
     catalogHref: '/catalog/fencing',
-    catalogLabel: 'View more',
+    catalogLabel: 'Show more',
     quoteButtonLabel: 'Get Fencing Quote',
     quoteButtonHref: '/contact',
     match: (p) =>
@@ -54,7 +53,7 @@ const CATEGORIES: Array<{
     description:
       'Aluminium support posts, rafters and fence profiles for verandas and fencing. Trade supply across the UK.',
     catalogHref: '/catalog/profiles',
-    catalogLabel: 'View more',
+    catalogLabel: 'Show more',
     quoteButtonLabel: 'Enquire About Profiles',
     quoteButtonHref: '/contact',
     match: (p) =>
@@ -66,7 +65,7 @@ const CATEGORIES: Array<{
     description:
       'Seals, gaskets, guttering and fixings for watertight veranda and fencing installations.',
     catalogHref: '/catalog/accessories',
-    catalogLabel: 'View more',
+    catalogLabel: 'Show more',
     quoteButtonLabel: 'Ask About Accessories',
     quoteButtonHref: '/contact',
     match: (p) =>
@@ -94,13 +93,11 @@ export default async function HomePage() {
           catalogLabel={cat.catalogLabel}
           quoteButtonLabel={cat.quoteButtonLabel}
           quoteButtonHref={cat.quoteButtonHref}
-          products={allProducts.filter(cat.match).slice(0, 3)}
+          products={allProducts.filter(cat.match).slice(0, 4)}
         />
       ))}
 
       <FactoryGallery items={galleryItems} />
-
-      <TrustSection />
       <HowToOrderSection />
       <FAQSection />
       <MapSection />
