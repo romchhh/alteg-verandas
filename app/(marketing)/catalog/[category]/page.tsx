@@ -180,38 +180,99 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
   return (
     <main className="min-h-screen bg-white pt-16 md:pt-20">
       {/* Hero / breadcrumbs */}
-      <section className="relative border-b border-gray-200 bg-[#050544] text-white overflow-hidden">
+      <section
+        className={
+          slug === 'verandas'
+            ? 'relative border-b border-gray-200 bg-[#050544] text-white overflow-hidden'
+            : 'relative border-b border-gray-200 bg-white text-[#050544] overflow-hidden'
+        }
+      >
         <div className="absolute inset-0">
-          <Image
-            src={firstProductWithImage?.image ?? config.heroImage}
-            alt={firstProductWithImage?.nameEn ?? config.heroAlt}
-            fill
-            className="object-cover"
-            sizes="100vw"
-            priority={slug === 'verandas'}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/10" />
+          {slug === 'verandas' ? (
+            <>
+              <Image
+                src={firstProductWithImage?.image ?? config.heroImage}
+                alt={firstProductWithImage?.nameEn ?? config.heroAlt}
+                fill
+                className="object-cover"
+                sizes="100vw"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/10" />
+            </>
+          ) : (
+            <div className="w-full h-full bg-white flex items-center justify-center">
+              <Image
+                src={firstProductWithImage?.image ?? config.heroImage}
+                alt={firstProductWithImage?.nameEn ?? config.heroAlt}
+                width={1600}
+                height={900}
+                className="max-h-full w-auto object-contain"
+                priority={false}
+              />
+            </div>
+          )}
         </div>
         <div className="relative py-10 sm:py-14 md:py-16 lg:py-20 min-h-[260px] sm:min-h-[320px] md:min-h-[380px] lg:min-h-[440px] flex items-center">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <nav className="text-xs sm:text-sm text-white/80 mb-2 flex flex-wrap gap-1 items-center">
-              <Link href="/" className="hover:text-white">
+            <nav
+              className={
+                slug === 'verandas'
+                  ? 'text-xs sm:text-sm text-white/80 mb-2 flex flex-wrap gap-1 items-center'
+                  : 'text-xs sm:text-sm text-gray-600 mb-2 flex flex-wrap gap-1 items-center'
+              }
+            >
+              <Link
+                href="/"
+                className={
+                  slug === 'verandas'
+                    ? 'hover:text-white'
+                    : 'hover:text-[#050544]'
+                }
+              >
                 Home
               </Link>
               <span className="opacity-70">/</span>
-              <Link href="/categories" className="hover:text-white">
+              <Link
+                href="/categories"
+                className={
+                  slug === 'verandas'
+                    ? 'hover:text-white'
+                    : 'hover:text-[#050544]'
+                }
+              >
                 Categories
               </Link>
               <span className="opacity-70">/</span>
-              <span className="text-white font-medium">{config.breadcrumbLabel}</span>
+              <span
+                className={
+                  slug === 'verandas'
+                    ? 'text-white font-medium'
+                    : 'text-[#050544] font-medium'
+                }
+              >
+                {config.breadcrumbLabel}
+              </span>
             </nav>
 
             <div className="flex flex-col gap-3">
               <div>
-                <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-5xl font-bold text-white leading-tight mb-2">
+                <h1
+                  className={
+                    slug === 'verandas'
+                      ? 'text-2xl sm:text-3xl md:text-5xl lg:text-5xl font-bold text-white leading-tight mb-2'
+                      : 'text-2xl sm:text-3xl md:text-5xl lg:text-5xl font-bold text-[#050544] leading-tight mb-2'
+                  }
+                >
                   {config.title}
                 </h1>
-                <p className="text-sm sm:text-base md:text-lg text-white/80 max-w-2xl">
+                <p
+                  className={
+                    slug === 'verandas'
+                      ? 'text-sm sm:text-base md:text-lg text-white/80 max-w-2xl'
+                      : 'text-sm sm:text-base md:text-lg text-gray-700 max-w-2xl'
+                  }
+                >
                   {config.subtitle}
                 </p>
               </div>
@@ -293,13 +354,13 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
                               href={`/product/${product.id}`}
                               className="border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col bg-white"
                             >
-                              <div className="relative h-56 sm:h-64 bg-gray-100">
+                              <div className="relative aspect-square bg-gray-100">
                                 {product.image ? (
                                   <Image
                                     src={product.image}
                                     alt={product.nameEn}
                                     fill
-                                    className="object-cover"
+                                    className="object-cover object-left-top"
                                     sizes="(min-width: 1024px) 25vw, 50vw"
                                   />
                                 ) : (
@@ -381,13 +442,13 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
                               href={`/product/${product.id}`}
                               className="border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col bg-white"
                             >
-                              <div className="relative h-56 sm:h-64 bg-gray-100">
+                              <div className="relative aspect-square bg-gray-100">
                                 {product.image ? (
                                   <Image
                                     src={product.image}
                                     alt={product.nameEn}
                                     fill
-                                    className="object-cover"
+                                    className="object-cover object-left-top"
                                     sizes="(min-width: 1024px) 25vw, 50vw"
                                   />
                                 ) : (
@@ -457,13 +518,13 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
                         href={`/product/${product.id}`}
                         className="border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col bg-white"
                       >
-                        <div className="relative h-56 sm:h-64 bg-gray-100">
+                        <div className="relative aspect-square bg-gray-100">
                           {product.image ? (
                             <Image
                               src={product.image}
                               alt={product.nameEn}
                               fill
-                              className="object-cover"
+                              className="object-cover object-left-top"
                               sizes="(min-width: 1024px) 25vw, 50vw"
                             />
                           ) : (

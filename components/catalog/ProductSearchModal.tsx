@@ -151,7 +151,7 @@ export function ProductSearchModal({ isOpen, onClose }: ProductSearchModalProps)
                         src={product.image}
                         alt={product.nameEn}
                         fill
-                        className="object-cover"
+                        className="object-cover object-left-top"
                         sizes="56px"
                       />
                     ) : (

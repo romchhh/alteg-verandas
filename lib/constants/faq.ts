@@ -13,7 +13,7 @@ export const FAQ_ITEMS = [
   {
     question: 'How are prices shown on the website?',
     answer:
-      'On the UK site we show guide prices on a “from” basis and always “excl. VAT”. Final pricing depends on the exact size, roof type, colour and any accessories such as side infill, glass sliding walls or lighting. Once you send us your project details we confirm the full price in writing before you place an order.',
+      'On the site we show guide prices on a “from” basis and always “excl. VAT”. Final pricing depends on the exact size, roof type, colour and any accessories such as side infill, glass sliding walls or lighting. Once you send us your project details we confirm the full price in writing before you place an order.',
   },
   {
     question: 'Do I always need planning permission for a veranda?',

@@ -113,7 +113,7 @@ export const HeroSection: React.FC = () => {
           <div className="w-full flex justify-center mt-8 sm:mt-10 lg:mt-12 sm:hidden order-2">
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 lg:gap-6 w-full max-w-2xl">
               <Button
-                href="#verandas"
+                href="/catalog/verandas"
                 variant="outline"
                 className="w-full border-2 border-white text-white hover:bg-white/10 rounded-none text-base sm:text-lg lg:text-xl font-semibold"
               >
@@ -259,7 +259,7 @@ export const HeroSection: React.FC = () => {
         <div className="w-full hidden sm:flex justify-center mt-8 sm:mt-10 lg:mt-12">
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 lg:gap-6 w-full max-w-2xl">
             <Button
-              href="#verandas"
+              href="/catalog/verandas"
               variant="outline"
               className="w-full border-2 border-white text-white hover:bg-white/10 rounded-none text-base sm:text-lg lg:text-xl font-semibold"
             >

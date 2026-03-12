@@ -87,21 +87,21 @@ export function CategorySection({
                       href={`/product/${product.id}`}
                       className="border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col bg-white min-w-0"
                     >
-                      <div className="relative h-56 sm:h-64 bg-gray-100">
+                      <div className="relative aspect-square bg-gray-100">
                         {imgSrc ? (
                           imgIsServer ? (
                             <Image
                               src={imgSrc}
                               alt={product.nameEn}
                               fill
-                              className="object-cover"
+                              className="object-cover object-left-top"
                               sizes="256px"
                             />
                           ) : (
                             <img
                               src={imgSrc}
                               alt={product.nameEn}
-                              className="h-full w-full object-cover"
+                              className="h-full w-full object-cover object-left-top"
                               loading="lazy"
                             />
                           )

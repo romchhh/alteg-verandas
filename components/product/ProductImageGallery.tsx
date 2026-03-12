@@ -13,10 +13,8 @@ export function ProductImageGallery({ images, alt }: ProductImageGalleryProps) {
 
   if (validImages.length === 0) {
     return (
-      <div className="relative aspect-[4/3] md:h-[420px] lg:h-[480px] rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
-        <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-          No image
-        </div>
+      <div className="relative w-full rounded-2xl overflow-hidden bg-gray-100 shadow-lg flex items-center justify-center max-h-[320px] md:max-h-[420px] lg:max-h-[480px]">
+        <div className="text-gray-400">No image</div>
       </div>
     );
   }
@@ -25,11 +23,11 @@ export function ProductImageGallery({ images, alt }: ProductImageGalleryProps) {
 
   return (
     <div className="w-full">
-      <div className="relative aspect-[4/3] md:h-[420px] lg:h-[480px] rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
+      <div className="relative w-full rounded-2xl overflow-hidden bg-gray-100 shadow-lg flex items-center justify-center max-h-[320px] md:max-h-[420px] lg:max-h-[480px]">
         <img
           src={active}
           alt={alt}
-          className="h-full w-full object-cover"
+          className="w-auto h-auto max-h-[320px] md:max-h-[420px] lg:max-h-[480px] object-contain"
           loading="lazy"
         />
       </div>

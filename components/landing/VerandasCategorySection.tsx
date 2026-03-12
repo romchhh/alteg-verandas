@@ -51,7 +51,7 @@ export const VerandasCategorySection: React.FC<VerandasCategorySectionProps> = (
     return (
       <div className="-mx-4 px-4 lg:mx-0 lg:px-0">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-          {items.map((product) => {
+          {items.slice(0, 4).map((product) => {
             const price =
               product.pricePerMeter ??
               (product.pricePerKg && product.weightPerMeter
@@ -77,21 +77,21 @@ export const VerandasCategorySection: React.FC<VerandasCategorySectionProps> = (
                 href={`/product/${product.id}`}
                 className="border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col bg-white min-w-0"
               >
-                <div className="relative h-56 sm:h-64 bg-gray-100">
+                <div className="relative aspect-square bg-gray-100">
                   {imgSrc ? (
                     imgIsServer ? (
                       <Image
                         src={imgSrc}
                         alt={product.nameEn}
                         fill
-                        className="object-cover"
+                        className="object-cover object-left-top"
                         sizes="256px"
                       />
                     ) : (
                       <img
                         src={imgSrc}
                         alt={product.nameEn}
-                        className="h-full w-full object-cover"
+                        className="h-full w-full object-cover object-left-top"
                         loading="lazy"
                       />
                     )

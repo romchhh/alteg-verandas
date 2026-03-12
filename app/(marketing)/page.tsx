@@ -2,6 +2,7 @@ import React from 'react';
 import type { Product } from '@/lib/types/product';
 import { HeroSection } from '@/components/landing/HeroSection';
 import { CategorySection } from '@/components/landing/CategorySection';
+import { VerandasCategorySection } from '@/components/landing/VerandasCategorySection';
 import { HowToOrderSection } from '@/components/landing/HowToOrderSection';
 import { FAQSection } from '@/components/landing/FAQSection';
 import { MapSection } from '@/components/landing/MapSection';
@@ -76,26 +77,62 @@ const CATEGORIES: Array<{
 export default async function HomePage() {
   const allProducts = await getProducts();
   const galleryItems = getGalleryItems();
+  const verandaCategory = CATEGORIES.find((c) => c.id === 'verandas');
+  const verandaProducts = verandaCategory
+    ? allProducts.filter(verandaCategory.match)
+    : [];
+  const fencingCategory = CATEGORIES.find((c) => c.id === 'fencing');
+  const profilesCategory = CATEGORIES.find((c) => c.id === 'profiles');
+  const fencingProducts = fencingCategory
+    ? allProducts.filter(fencingCategory.match)
+    : [];
+  const profileProducts = profilesCategory
+    ? allProducts.filter(profilesCategory.match)
+    : [];
 
   return (
     <main className="min-h-screen">
       <FaqJsonLd />
       <HeroSection />
 
-      {/* Product categories — same layout for all (first 4 products) */}
-      {CATEGORIES.map((cat) => (
-        <CategorySection
-          key={cat.id}
-          id={cat.id}
-          title={cat.title}
-          description={cat.description}
-          catalogHref={cat.catalogHref}
-          catalogLabel={cat.catalogLabel}
-          quoteButtonLabel={cat.quoteButtonLabel}
-          quoteButtonHref={cat.quoteButtonHref}
-          products={allProducts.filter(cat.match).slice(0, 4)}
+      {/* Verandas section — split into polycarbonate and glass rows */}
+      {verandaCategory && verandaProducts.length > 0 && (
+        <VerandasCategorySection
+          id={verandaCategory.id}
+          title={verandaCategory.title}
+          description={verandaCategory.description}
+          catalogHref={verandaCategory.catalogHref}
+          quoteButtonHref={verandaCategory.quoteButtonHref}
+          quoteButtonLabel={verandaCategory.quoteButtonLabel}
+          products={verandaProducts}
         />
-      ))}
+      )}
+
+      {/* Other product categories — fencing mixes with profiles, others show first 4 products */}
+      {CATEGORIES.filter((cat) => cat.id !== 'verandas').map((cat) => {
+        let products: Product[];
+
+        if (cat.id === 'fencing') {
+          const extraProfiles = profileProducts.slice(0, 3);
+          products = [...fencingProducts, ...extraProfiles];
+        } else {
+          products = allProducts.filter(cat.match).slice(0, 4);
+        }
+
+        return (
+          <CategorySection
+            key={cat.id}
+            id={cat.id}
+            title={cat.title}
+            description={cat.description}
+            catalogHref={cat.catalogHref}
+            catalogLabel={cat.catalogLabel}
+            quoteButtonLabel={cat.quoteButtonLabel}
+            quoteButtonHref={cat.quoteButtonHref}
+            products={products}
+          />
+        );
+      })}
 
       <FactoryGallery items={galleryItems} />
       <HowToOrderSection />

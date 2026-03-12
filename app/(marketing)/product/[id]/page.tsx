@@ -102,11 +102,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 }
                 alt={product.nameEn}
               />
-              {product.dimensions && (
-                <div className="absolute top-4 left-4 rounded-lg bg-amber-400 px-3 py-2 text-sm font-bold text-gray-900 shadow-md">
-                  {product.dimensions} · Aluminium
-                </div>
-              )}
             </div>
 
             {/* Right: details */}
@@ -192,21 +187,21 @@ export default async function ProductPage({ params }: ProductPageProps) {
                         href={`/product/${p.id}`}
                         className="w-72 flex-shrink-0 border border-gray-200 overflow-hidden shadow-sm bg-white flex flex-col hover:shadow-md transition-shadow"
                       >
-                        <div className="relative h-56 bg-gray-100">
+                        <div className="relative aspect-square bg-gray-100">
                           {imgSrc ? (
                             imgIsServer ? (
                               <Image
                                 src={imgSrc}
                                 alt={p.nameEn}
                                 fill
-                                className="object-cover"
+                                className="object-cover object-left-top"
                                 sizes="224px"
                               />
                             ) : (
                               <img
                                 src={imgSrc}
                                 alt={p.nameEn}
-                                className="h-full w-full object-cover"
+                                className="h-full w-full object-cover object-left-top"
                                 loading="lazy"
                               />
                             )
