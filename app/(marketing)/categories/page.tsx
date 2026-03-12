@@ -113,7 +113,7 @@ export default async function CategoriesPage() {
       {/* Category cards */}
       <section className="py-12 sm:py-16 md:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-2 max-w-5xl mx-auto">
+          <div className="flex flex-col gap-8 max-w-5xl mx-auto">
             {CATEGORY_CONFIG.map((cat) => {
               const firstProductWithImage = allProducts.find(
                 (p) => cat.match(p) && p.image
@@ -146,55 +146,63 @@ export default async function CategoriesPage() {
                   key={cat.id}
                   className="border-2 border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:border-[#445DFE]/40 transition-all duration-300"
                 >
-                  <div className="relative h-56 sm:h-64 md:h-72 bg-gray-100">
-                    {imageSrc ? (
-                      imageIsServer ? (
-                        <Image
-                          src={imageSrc}
-                          alt={imageAlt}
-                          fill
-                          className="object-cover"
-                          sizes="(min-width: 1024px) 50vw, 100vw"
-                        />
-                      ) : (
-                        <img
-                          src={imageSrc}
-                          alt={imageAlt}
-                          className="h-full w-full object-cover"
-                          loading="lazy"
-                        />
-                      )
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-xs">
-                        No image
+                  <div className="flex flex-row items-stretch">
+                    <div className="relative w-32 sm:w-40 md:w-1/3 bg-white flex-shrink-0">
+                      <div className="relative w-full h-full aspect-[4/3] md:aspect-square">
+                        {imageSrc ? (
+                          imageIsServer ? (
+                            <Image
+                              src={imageSrc}
+                              alt={imageAlt}
+                              fill
+                              className="object-contain"
+                              sizes="(min-width: 1024px) 320px, 100vw"
+                            />
+                          ) : (
+                            <img
+                              src={imageSrc}
+                              alt={imageAlt}
+                              className="h-full w-full object-contain"
+                              loading="lazy"
+                            />
+                          )
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-xs">
+                            No image
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  <div className="p-6 sm:p-8">
-                    <h2 className="text-xl sm:text-2xl font-bold text-[#050544] mb-2">
-                      {cat.title}
-                    </h2>
-                    <p className="text-sm sm:text-base text-gray-700 mb-4">
-                      {cat.heroDescription}
-                    </p>
-                    <ul className="text-sm text-gray-700 mb-5 list-disc list-inside space-y-1">
-                      {cat.bulletPoints.map((point) => (
-                        <li key={point}>{point}</li>
-                      ))}
-                    </ul>
-                    <div className="flex flex-wrap gap-3">
-                      <Link
-                        href={cat.catalogHref}
-                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold border border-[#050544] text-[#050544] hover:bg-[#050544] hover:text-white rounded-none transition-colors"
-                      >
-                        {cat.primaryCtaLabel}
-                      </Link>
-                      <Link
-                        href="/contact"
-                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none transition-colors"
-                      >
-                        {cat.secondaryCtaLabel}
-                      </Link>
+                    </div>
+                    <div className="flex-1 p-6 sm:p-8">
+                      <h2 className="text-xl sm:text-2xl font-bold text-[#050544] mb-1 sm:mb-2">
+                        {cat.title}
+                      </h2>
+                      {/* Shorter copy on mobile, full hero text on tablet/desktop */}
+                      <p className="text-sm text-gray-700 mb-2 sm:hidden">
+                        {cat.description}
+                      </p>
+                      <p className="hidden sm:block text-sm sm:text-base text-gray-700 mb-4">
+                        {cat.heroDescription}
+                      </p>
+                      <ul className="hidden sm:block text-sm text-gray-700 mb-5 list-disc list-inside space-y-1">
+                        {cat.bulletPoints.map((point) => (
+                          <li key={point}>{point}</li>
+                        ))}
+                      </ul>
+                      <div className="flex flex-wrap gap-3">
+                        <Link
+                          href={cat.catalogHref}
+                          className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold border border-[#050544] text-[#050544] hover:bg-[#050544] hover:text-white rounded-none transition-colors"
+                        >
+                          {cat.primaryCtaLabel}
+                        </Link>
+                        <Link
+                          href="/contact"
+                          className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none transition-colors"
+                        >
+                          {cat.secondaryCtaLabel}
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </article>

@@ -183,36 +183,10 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
       <section
         className={
           slug === 'verandas'
-            ? 'relative border-b border-gray-200 bg-[#050544] text-white overflow-hidden'
-            : 'relative border-b border-gray-200 bg-white text-[#050544] overflow-hidden'
+            ? 'relative border-b border-gray-200 bg-[#050544] text-white'
+            : 'relative border-b border-gray-200 bg-white text-[#050544]'
         }
       >
-        <div className="absolute inset-0">
-          {slug === 'verandas' ? (
-            <>
-              <Image
-                src={firstProductWithImage?.image ?? config.heroImage}
-                alt={firstProductWithImage?.nameEn ?? config.heroAlt}
-                fill
-                className="object-cover"
-                sizes="100vw"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/10" />
-            </>
-          ) : (
-            <div className="w-full h-full bg-white flex items-center justify-center">
-              <Image
-                src={firstProductWithImage?.image ?? config.heroImage}
-                alt={firstProductWithImage?.nameEn ?? config.heroAlt}
-                width={1600}
-                height={900}
-                className="max-h-full w-auto object-contain"
-                priority={false}
-              />
-            </div>
-          )}
-        </div>
         <div className="relative py-10 sm:py-14 md:py-16 lg:py-20 min-h-[260px] sm:min-h-[320px] md:min-h-[380px] lg:min-h-[440px] flex items-center">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <nav
