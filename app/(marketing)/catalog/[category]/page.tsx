@@ -187,7 +187,7 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
             : 'relative border-b border-gray-200 bg-white text-[#050544]'
         }
       >
-        <div className="relative py-10 sm:py-14 md:py-16 lg:py-20 min-h-[260px] sm:min-h-[320px] md:min-h-[380px] lg:min-h-[440px] flex items-center">
+        <div className="relative py-6 sm:py-8 md:py-10 lg:py-12 min-h-[140px] sm:min-h-[160px] md:min-h-[180px] lg:min-h-[200px] flex items-center">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <nav
               className={
