@@ -149,12 +149,21 @@ export const VerandasCategorySection: React.FC<VerandasCategorySectionProps> = (
             Polycarbonate roof veranda kits
           </h3>
           {renderGrid(polycarbonate)}
-          <div className="mt-4 flex justify-center">
+          <div className="mt-4 flex flex-col sm:flex-row items-center gap-3">
             <Link
               href={quoteButtonHref}
               className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none shadow-sm hover:shadow-md transition-colors"
             >
               Need a bespoke size? Request a custom quote
+              <span aria-hidden="true" className="ml-1">
+                →
+              </span>
+            </Link>
+            <Link
+              href={catalogHref}
+              className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold border border-[#050544] text-[#050544] hover:bg-[#050544] hover:text-white rounded-none shadow-sm hover:shadow-md transition-colors ml-0 sm:ml-auto"
+            >
+              Show more veranda sizes
               <span aria-hidden="true" className="ml-1">
                 →
               </span>
@@ -168,7 +177,7 @@ export const VerandasCategorySection: React.FC<VerandasCategorySectionProps> = (
             Safety glass (VSG) veranda kits
           </h3>
           {renderGrid(vsg)}
-          <div className="mt-4 flex justify-center">
+          <div className="mt-4 flex flex-col sm:flex-row items-center gap-3">
             <Link
               href={quoteButtonHref}
               className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none shadow-sm hover:shadow-md transition-colors"
@@ -178,18 +187,18 @@ export const VerandasCategorySection: React.FC<VerandasCategorySectionProps> = (
                 →
               </span>
             </Link>
+            <Link
+              href={catalogHref}
+              className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold border border-[#050544] text-[#050544] hover:bg-[#050544] hover:text-white rounded-none shadow-sm hover:shadow-md transition-colors ml-0 sm:ml-auto"
+            >
+              Show more veranda sizes
+              <span aria-hidden="true" className="ml-1">
+                →
+              </span>
+            </Link>
           </div>
         </div>
 
-        {/* Link to full catalog */}
-        <div className="mt-6 flex justify-center">
-          <Link
-            href={catalogHref}
-            className="text-sm font-medium text-[#050544] hover:text-[#445DFE] underline underline-offset-2 transition-colors"
-          >
-            Show more veranda sizes
-          </Link>
-        </div>
       </div>
     </section>
   );

@@ -205,9 +205,15 @@ export const FactoryGallery: React.FC<FactoryGalleryProps> = ({ items }) => {
               <button
                 type="button"
                 onClick={showMore}
-                className="px-6 py-3 text-sm font-semibold text-[#050544] bg-white border-2 border-[#050544] hover:bg-[#050544] hover:text-white transition-colors rounded-none"
+                className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold border border-[#050544] text-[#050544] bg-white hover:bg-[#050544] hover:text-white rounded-none shadow-sm hover:shadow-md transition-colors"
               >
-                Show more ({galleryItems.length - visibleCount} left)
+                Show more
+                <span className="ml-1 text-xs text-gray-600">
+                  ({galleryItems.length - visibleCount} left)
+                </span>
+                <span aria-hidden="true" className="ml-1">
+                  →
+                </span>
               </button>
             </div>
           )}

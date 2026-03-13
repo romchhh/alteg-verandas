@@ -135,7 +135,7 @@ export function CategorySection({
                 })}
               </div>
             </div>
-            <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
               <Link
                 href={quoteButtonHref}
                 className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold bg-[#050544] text-white hover:bg-[#445DFE] rounded-none shadow-sm hover:shadow-md transition-colors"
@@ -147,9 +147,12 @@ export function CategorySection({
               </Link>
               <Link
                 href={catalogHref}
-                className="text-sm font-medium text-[#050544] hover:text-[#445DFE] underline underline-offset-2 transition-colors"
+                className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold border border-[#050544] text-[#050544] hover:bg-[#050544] hover:text-white rounded-none shadow-sm hover:shadow-md transition-colors ml-0 sm:ml-auto"
               >
                 {catalogLabel}
+                <span aria-hidden="true" className="ml-1">
+                  →
+                </span>
               </Link>
             </div>
           </>
