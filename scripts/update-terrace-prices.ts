@@ -18,8 +18,13 @@ async function run() {
 
   for (const product of products) {
     const applications = product.applications ?? [];
-    const hasPolyTerrace = applications.includes("Terrace roofing kits – polycarbonate");
-    const hasVsgTerrace = applications.includes("Terrace roofing kits – VSG glass");
+    const nameEn = product.nameEn ?? "";
+
+    // Match veranda kits the same way as in the VerandasCategorySection:
+    const hasPolyTerrace =
+      applications.includes("Terrace roofing kits – polycarbonate") || /poly/i.test(nameEn);
+    const hasVsgTerrace =
+      applications.includes("Terrace roofing kits – VSG glass") || /vsg|glass/i.test(nameEn);
     const isFencing = applications.includes("Aluminium Fencing");
     const isProfiles = applications.includes("Profile Systems");
     const isAccessoriesMarketing = applications.includes("Accessories & Guttering");
