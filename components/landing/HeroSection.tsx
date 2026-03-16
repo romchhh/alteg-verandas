@@ -93,11 +93,13 @@ export const HeroSection: React.FC = () => {
 
       {/* Content Overlay - Grid Layout */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20 md:py-24 lg:pt-24 lg:pb-8 xl:pb-10">
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-10 items-start min-h-[calc(100vh-4rem)] md:min-h-[calc(90vh-5rem)] lg:min-h-0">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 lg:[grid-template-columns:minmax(0,1.3fr)_minmax(0,0.7fr)] gap-8 lg:gap-10 items-start min-h-[calc(100vh-4rem)] md:min-h-[calc(90vh-5rem)] lg:min-h-0">
           {/* Left Side - Content */}
           <div className="w-full flex flex-col items-start text-left order-1">
-            <h1 className="text-4xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 sm:mb-5 leading-tight tracking-tight max-w-3xl">
-              Alteg verandas, canopies &amp; aluminium fencing for UK homes
+            <h1 className="text-4xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 sm:mb-5 leading-tight tracking-tight max-w-3xl lg:max-w-4xl xl:max-w-5xl">
+              Alteg
+              <br />
+              verandas&nbsp;&amp;&nbsp;canopies, aluminium fencing for UK homes
             </h1>
             <ul className="text-lg sm:text-xl md:text-xl lg:text-xl xl:text-2xl text-white/90 space-y-2 sm:space-y-2.5 max-w-2xl list-none pl-0">
               {HERO_BULLETS.map((item) => (

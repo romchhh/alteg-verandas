@@ -294,7 +294,7 @@ export async function createOrderLead(order: Order): Promise<Bitrix24Response> {
     notes: order.notes,
   });
   const leadData: Bitrix24Lead = {
-    TITLE: `Lead web B2C — ${order.customer.phone}`,
+    TITLE: `Lead Verandas & Caponies — ${order.customer.phone}`,
     NAME: order.customer.name,
     COMPANY_TITLE: order.customer.company,
     EMAIL: [{ VALUE: order.customer.email, VALUE_TYPE: 'WORK' }],
@@ -304,7 +304,7 @@ export async function createOrderLead(order: Order): Promise<Bitrix24Response> {
     ADDRESS_POSTAL_CODE: order.customer.address?.postcode,
     COMMENTS: `Form type: Website Order\n\n${orderDetails}`,
     SOURCE_ID: BITRIX_SOURCE_WEB,
-    SOURCE_DESCRIPTION: 'Lead web B2C verandas.alteg.co.uk',
+    SOURCE_DESCRIPTION: 'Lead Verandas & Caponies verandas.alteg.co.uk',
     ASSIGNED_BY_ID: defaultAssignedById(),
     OPPORTUNITY: Number(order.total.toFixed(2)), // Сума замовлення для поля "Сумма і валюта" (число)
     // CURRENCY_ID тимчасово прибрано через помилку "Currency is incorrect"
