@@ -99,7 +99,7 @@ export const HeroSection: React.FC = () => {
             <h1 className="text-4xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 sm:mb-5 leading-tight tracking-tight max-w-3xl lg:max-w-4xl xl:max-w-5xl">
               Alteg
               <br />
-              verandas&nbsp;&amp;&nbsp;canopies, aluminium fencing for UK homes
+              verandas&nbsp;&amp;&nbsp;canopies aluminium fencing for UK homes
             </h1>
             <ul className="text-lg sm:text-xl md:text-xl lg:text-xl xl:text-2xl text-white/90 space-y-2 sm:space-y-2.5 max-w-2xl list-none pl-0">
               {HERO_BULLETS.map((item) => (
