@@ -95,15 +95,20 @@ export const HeroSection: React.FC = () => {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20 md:py-24 lg:pt-24 lg:pb-8 xl:pb-10">
         <div className="flex flex-col lg:grid lg:grid-cols-2 lg:[grid-template-columns:minmax(0,1.3fr)_minmax(0,0.7fr)] gap-8 lg:gap-10 items-start min-h-[calc(100vh-4rem)] md:min-h-[calc(90vh-5rem)] lg:min-h-0">
           {/* Left Side - Content */}
-          <div className="w-full flex flex-col items-start text-left order-1">
+          <div className="w-full flex flex-col items-center lg:items-start text-center lg:text-left order-1">
             <h1 className="text-4xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 sm:mb-5 leading-tight tracking-tight max-w-3xl lg:max-w-4xl xl:max-w-5xl">
-              Alteg
+              Verandas&nbsp;&amp;&nbsp;canopies aluminium fencing
               <br />
-              verandas&nbsp;&amp;&nbsp;canopies aluminium fencing for UK homes
+              <span className="inline-flex items-center mt-3 sm:mt-4 px-5 py-2 sm:px-6 sm:py-2.5 border border-red-300/80 bg-red-500/20 text-red-100 text-2xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-4xl font-bold tracking-wide shadow-[0_0_28px_rgba(239,68,68,0.45)] animate-pulse">
+                From&nbsp;&pound;1,999
+              </span>
             </h1>
-            <ul className="text-lg sm:text-xl md:text-xl lg:text-xl xl:text-2xl text-white/90 space-y-2 sm:space-y-2.5 max-w-2xl list-none pl-0">
+            <ul className="text-base sm:text-lg md:text-xl lg:text-xl xl:text-2xl text-white/90 space-y-2 sm:space-y-2.5 max-w-2xl list-none pl-0 w-full mt-1 sm:mt-0">
               {HERO_BULLETS.map((item) => (
-                <li key={item} className="flex items-start gap-2">
+                <li
+                  key={item}
+                  className="flex items-start gap-2 justify-center lg:justify-start text-left max-w-xl mx-auto lg:mx-0 lg:max-w-none"
+                >
                   <span className="text-white shrink-0 mt-0.5">*</span>
                   <span>{item}</span>
                 </li>
@@ -113,18 +118,18 @@ export const HeroSection: React.FC = () => {
 
           {/* Mobile CTA Buttons Block — before form on small screens */}
           <div className="w-full flex justify-center mt-8 sm:mt-10 lg:mt-12 sm:hidden order-2">
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 lg:gap-6 w-full max-w-2xl">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 lg:gap-6 w-full max-w-sm">
               <Button
                 href="/catalog/verandas"
                 variant="outline"
-                className="w-full border-2 border-white text-white hover:bg-white/10 rounded-none text-base sm:text-lg lg:text-xl font-semibold"
+                className="w-full min-h-[58px] border-2 border-white bg-black/45 text-white hover:bg-white/10 rounded-none text-lg font-bold tracking-wide shadow-[0_8px_20px_rgba(0,0,0,0.45)]"
               >
                 Explore verandas &amp; canopies
               </Button>
               <Button
                 href="/contact"
                 variant="outline"
-                className="w-full bg-white text-black border-white hover:bg-white/90 rounded-none text-base sm:text-lg lg:text-xl font-semibold"
+                className="w-full min-h-[58px] bg-white text-black border-white hover:bg-white/90 rounded-none text-lg font-bold tracking-wide shadow-[0_8px_20px_rgba(0,0,0,0.45)]"
               >
                 Get a free quote
               </Button>
@@ -156,7 +161,7 @@ export const HeroSection: React.FC = () => {
                   type="text"
                   {...register('name')}
                   placeholder="Enter your full name"
-                  className="w-full px-0 py-1 sm:py-1.5 bg-transparent border-0 border-b-2 border-black placeholder:text-gray-400 focus:outline-none focus:border-[#050544] text-black text-sm sm:text-base"
+                  className="hero-active-field w-full px-0 py-1 sm:py-1.5 bg-transparent border-0 border-b-2 border-red-500 placeholder:text-gray-400 focus:outline-none focus:border-red-600 text-black text-sm sm:text-base"
                 />
                 {errors.name && (
                   <p className="mt-1 text-xs sm:text-sm text-red-600" role="alert">
@@ -173,7 +178,7 @@ export const HeroSection: React.FC = () => {
                   type="tel"
                   {...register('phone')}
                   placeholder="+44"
-                  className="w-full px-0 py-1 sm:py-1.5 bg-transparent border-0 border-b-2 border-black placeholder:text-gray-400 focus:outline-none focus:border-[#050544] text-black text-sm sm:text-base"
+                  className="hero-active-field w-full px-0 py-1 sm:py-1.5 bg-transparent border-0 border-b-2 border-red-500 placeholder:text-gray-400 focus:outline-none focus:border-red-600 text-black text-sm sm:text-base"
                 />
                 {errors.phone && (
                   <p className="mt-1 text-xs sm:text-sm text-red-600" role="alert">
@@ -190,7 +195,7 @@ export const HeroSection: React.FC = () => {
                   type="email"
                   {...register('email')}
                   placeholder="your@email.com"
-                  className="w-full px-0 py-1 sm:py-1.5 bg-transparent border-0 border-b-2 border-black placeholder:text-gray-400 focus:outline-none focus:border-[#050544] text-black text-sm sm:text-base"
+                  className="hero-active-field w-full px-0 py-1 sm:py-1.5 bg-transparent border-0 border-b-2 border-red-500 placeholder:text-gray-400 focus:outline-none focus:border-red-600 text-black text-sm sm:text-base"
                 />
                 {errors.email && (
                   <p className="mt-1 text-xs sm:text-sm text-red-600" role="alert">
@@ -205,7 +210,7 @@ export const HeroSection: React.FC = () => {
                 </label>
                 <select
                   {...register('interestedIn')}
-                  className="w-full px-0 py-1 sm:py-1.5 bg-transparent border-0 border-b-2 border-black text-black text-sm sm:text-base focus:outline-none focus:border-[#050544]"
+                  className="hero-active-field w-full px-0 py-1 sm:py-1.5 bg-transparent border-0 border-b-2 border-red-500 text-black text-sm sm:text-base focus:outline-none focus:border-red-600"
                   defaultValue=""
                 >
                   <option value="">— Select —</option>
@@ -225,7 +230,7 @@ export const HeroSection: React.FC = () => {
                   {...register('projectDetails')}
                   rows={3}
                   placeholder="For example: veranda 6x3m with glass roof, or aluminium fencing along rear boundary…"
-                  className="w-full px-0 py-1 sm:py-1.5 bg-transparent border-0 border-b-2 border-black placeholder:text-gray-400 focus:outline-none focus:border-[#050544] text-black text-sm sm:text-base resize-none"
+                  className="hero-active-field w-full px-0 py-1 sm:py-1.5 bg-transparent border-0 border-b-2 border-red-500 placeholder:text-gray-400 focus:outline-none focus:border-red-600 text-black text-sm sm:text-base resize-none"
                 />
                 {errors.projectDetails && (
                   <p className="mt-1 text-xs sm:text-sm text-red-600" role="alert">
@@ -277,6 +282,23 @@ export const HeroSection: React.FC = () => {
           </div>
         </div>
       </div>
+      <style jsx>{`
+        @keyframes heroFieldBlink {
+          0%,
+          100% {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+          }
+          50% {
+            border-color: #dc2626;
+            box-shadow: 0 4px 14px -8px rgba(220, 38, 38, 0.9);
+          }
+        }
+
+        .hero-active-field {
+          animation: heroFieldBlink 1.1s ease-in-out infinite;
+        }
+      `}</style>
     </section>
   );
 };
