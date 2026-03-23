@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const data = validationResult.data;
     const formType = (body as { formType?: string }).formType === 'request_individual_quote' ? 'Request individual quote' : 'Get a Quote';
     const isB2B = formType === 'Request individual quote';
-    const leadTitle = isB2B ? `Lead Verandas & Caponies — ${data.name} — ${data.phone}` : `Lead web B2C — ${data.name} — ${data.phone}`;
+    const leadTitle = isB2B ? `Lead Verandas & Caponies — ${data.name} — ${data.phone}` : `Lead Verandas & Caponies — ${data.name} — ${data.phone}`;
     const details = data.projectDetails?.trim() || '';
 
     // Create lead in Bitrix24
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
         details ? `Project details:\n${details}` : '',
       ].filter(Boolean).join('\n'),
       SOURCE_ID: 'WEB',
-      SOURCE_DESCRIPTION: isB2B ? 'Lead web B2B' : 'Lead web B2C',
+      SOURCE_DESCRIPTION: isB2B ? 'Lead Verandas & Caponies B2B' : 'Lead Verandas & Caponies B2C',
     };
 
     try {

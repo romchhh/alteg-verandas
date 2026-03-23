@@ -124,14 +124,18 @@ export const HeroSection: React.FC = () => {
                 variant="outline"
                 className="w-full min-h-[58px] border-2 border-white bg-black/45 text-white hover:bg-white/10 rounded-none text-lg font-bold tracking-wide shadow-[0_8px_20px_rgba(0,0,0,0.45)]"
               >
-                Explore verandas &amp; canopies
+                <span className="hero-cta-blink-text text-red-500">
+                  Explore verandas &amp; canopies
+                </span>
               </Button>
               <Button
                 href="/contact"
                 variant="outline"
                 className="w-full min-h-[58px] bg-white text-black border-white hover:bg-white/90 rounded-none text-lg font-bold tracking-wide shadow-[0_8px_20px_rgba(0,0,0,0.45)]"
               >
-                Get a free quote
+                <span className="hero-cta-blink-text text-red-500">
+                  Get a free quote
+                </span>
               </Button>
             </div>
           </div>
@@ -270,14 +274,18 @@ export const HeroSection: React.FC = () => {
               variant="outline"
               className="w-full border-2 border-white text-white hover:bg-white/10 rounded-none text-base sm:text-lg lg:text-xl font-semibold"
             >
-              Explore verandas &amp; canopies
+              <span className="hero-cta-blink-text text-red-500">
+                Explore verandas &amp; canopies
+              </span>
             </Button>
             <Button
               href="/contact"
               variant="outline"
               className="w-full bg-white text-black border-white hover:bg-white/90 rounded-none text-base sm:text-lg lg:text-xl font-semibold"
             >
-              Get a free quote
+              <span className="hero-cta-blink-text text-red-500">
+                Get a free quote
+              </span>
             </Button>
           </div>
         </div>
@@ -297,6 +305,24 @@ export const HeroSection: React.FC = () => {
 
         .hero-active-field {
           animation: heroFieldBlink 1.1s ease-in-out infinite;
+        }
+
+        @keyframes heroCtaTextBlink {
+          0%,
+          100% {
+            color: #ef4444;
+            text-shadow: 0 0 0 rgba(239, 68, 68, 0);
+            filter: drop-shadow(0 0 0 rgba(239, 68, 68, 0));
+          }
+          50% {
+            color: #dc2626;
+            text-shadow: 0 0 18px rgba(239, 68, 68, 0.75);
+            filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.85));
+          }
+        }
+
+        .hero-cta-blink-text {
+          animation: heroCtaTextBlink 1.1s ease-in-out infinite;
         }
       `}</style>
     </section>
