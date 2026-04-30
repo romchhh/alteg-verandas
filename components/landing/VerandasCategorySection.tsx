@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/types/product';
-import { formatCurrency } from '@/lib/utils/calculations';
+import { formatCurrency, getPricePerMeter } from '@/lib/utils/calculations';
 
 export interface VerandasCategorySectionProps {
   id: string;
@@ -52,11 +52,7 @@ export const VerandasCategorySection: React.FC<VerandasCategorySectionProps> = (
       <div className="-mx-4 px-4 lg:mx-0 lg:px-0">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
           {items.slice(0, 4).map((product) => {
-            const price =
-              product.pricePerMeter ??
-              (product.pricePerKg && product.weightPerMeter
-                ? product.pricePerKg * product.weightPerMeter
-                : undefined);
+            const price = getPricePerMeter(product);
             const isSetHeuristic =
               product.id.startsWith('LED-SET-') ||
               product.id.startsWith('FENCE-SET-') ||

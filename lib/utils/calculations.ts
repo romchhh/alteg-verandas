@@ -1,12 +1,12 @@
 import { Product } from '@/lib/types/product';
 import { getVolumeDiscountByCartTotal, getLengthDiscount } from '@/lib/constants/prices';
 
-/** Price per meter = price per kg × weight per meter (density). */
+/** Single source of truth for product pricing: explicit pricePerMeter only. */
 export function getPricePerMeter(product: Product): number | undefined {
-  if (product.pricePerKg != null && product.weightPerMeter != null) {
-    return product.pricePerKg * product.weightPerMeter;
+  if (product.pricePerMeter != null) {
+    return product.pricePerMeter;
   }
-  return product.pricePerMeter;
+  return undefined;
 }
 
 export interface CalculationResult {
@@ -32,7 +32,7 @@ export function calculateOrder(
   const pricePerMeter = getPricePerMeter(product);
   const materialCost = pricePerMeter != null
     ? totalLength * pricePerMeter
-    : totalWeight * (product.pricePerKg ?? 0);
+    : 0;
 
   const lengthDiscount = getLengthDiscount(totalLength);
   const lengthDiscountAmount = materialCost * lengthDiscount;

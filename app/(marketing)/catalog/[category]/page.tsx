@@ -306,11 +306,7 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
                             )
                         )
                         .map((product) => {
-                          const price =
-                            product.pricePerMeter ??
-                            (product.pricePerKg && product.weightPerMeter
-                              ? product.pricePerKg * product.weightPerMeter
-                              : undefined);
+                          const price = getPricePerMeter(product);
                           const isSetHeuristic =
                             product.id.startsWith('LED-SET-') ||
                             product.id.startsWith('FENCE-SET-') ||
@@ -394,11 +390,7 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
                             )
                         )
                         .map((product) => {
-                          const price =
-                            product.pricePerMeter ??
-                            (product.pricePerKg && product.weightPerMeter
-                              ? product.pricePerKg * product.weightPerMeter
-                              : undefined);
+                          const price = getPricePerMeter(product);
                           const isSetHeuristic =
                             product.id.startsWith('LED-SET-') ||
                             product.id.startsWith('FENCE-SET-') ||
@@ -470,11 +462,7 @@ export default async function CategoryCatalogPage({ params, searchParams }: Cate
               ) : (
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
                   {products.map((product) => {
-                    const price =
-                      product.pricePerMeter ??
-                      (product.pricePerKg && product.weightPerMeter
-                        ? product.pricePerKg * product.weightPerMeter
-                        : undefined);
+                    const price = getPricePerMeter(product);
                     const isSetHeuristic =
                       product.id.startsWith('LED-SET-') ||
                       product.id.startsWith('FENCE-SET-') ||

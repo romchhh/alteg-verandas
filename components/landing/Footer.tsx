@@ -65,7 +65,7 @@ export const Footer: React.FC = () => {
                   className="object-contain"
                 />
               </div>
-              <div className="text-2xl font-bold">Alteg UK (England)</div>
+              <div className="text-2xl font-bold">Alteg UK</div>
             </div>
             <p className="text-gray-600 text-sm mb-4">
               European manufacturer of Verandas supplying customers across the UK.
