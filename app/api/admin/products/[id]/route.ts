@@ -19,8 +19,8 @@ const productUpdateSchema = z.object({
   finish: z.string().optional(),
   image: z.string().optional(),
   images: z.array(z.string()).optional(),
-  description: z.string().optional(),
-  descriptionEn: z.string().optional(),
+  description: z.union([z.string(), z.null()]).optional(),
+  descriptionEn: z.union([z.string(), z.null()]).optional(),
   priceUnit: z.string().optional(),
   supplierPricePerMeter: z.number().optional(),
   supplierPricePerSquareMeterSet: z.number().optional(),
@@ -60,7 +60,12 @@ export async function PUT(
         { status: 400 }
       );
     }
-    const update: Record<string, unknown> = { ...parsed.data };
+    const data = {
+      ...parsed.data,
+      description: parsed.data.description === null ? undefined : parsed.data.description,
+      descriptionEn: parsed.data.descriptionEn === null ? undefined : parsed.data.descriptionEn,
+    };
+    const update: Record<string, unknown> = { ...data };
     if (body.applications !== undefined) update.applications = body.applications;
     if (parsed.data.image !== undefined) {
       const existing = await getProductById(id);

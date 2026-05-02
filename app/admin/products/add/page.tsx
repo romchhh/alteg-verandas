@@ -5,6 +5,7 @@ import PageBreadcrumb from "@/components/admin/PageBreadCrumb";
 import ComponentCard from "@/components/admin/ComponentCard";
 import Label from "@/components/admin/form/Label";
 import Input from "@/components/admin/form/Input";
+import TextArea from "@/components/admin/form/TextArea";
 import ToggleSwitch from "@/components/admin/form/ToggleSwitch";
 import { MultiImageUpload } from "@/components/admin/MultiImageUpload";
 
@@ -30,6 +31,8 @@ export default function AddProductPage() {
   const [hidden, setHidden] = useState(false);
   const [material, setMaterial] = useState("");
   const [finish, setFinish] = useState("");
+  const [description, setDescription] = useState("");
+  const [descriptionEn, setDescriptionEn] = useState("");
   const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
@@ -88,6 +91,8 @@ export default function AddProductPage() {
         hidden,
         material: material || undefined,
         finish: finish || undefined,
+        description: description.trim() || undefined,
+        descriptionEn: descriptionEn.trim() || undefined,
         image: (images[0] || image || "").trim() || undefined,
         images: images.length ? images : undefined,
         priceUnit,
@@ -115,6 +120,8 @@ export default function AddProductPage() {
       setImage("");
       setSupplierPricePerMeter("");
       setSupplierPricePerSquareMeterSet("");
+      setDescription("");
+      setDescriptionEn("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create product");
     } finally {
@@ -238,6 +245,27 @@ export default function AddProductPage() {
                 value={finish}
                 onChange={(e) => setFinish(e.target.value)}
                 placeholder="Mill finish"
+              />
+            </div>
+            <div>
+              <Label>Description (English)</Label>
+              <TextArea
+                rows={6}
+                value={descriptionEn}
+                onChange={setDescriptionEn}
+                placeholder="Short product description shown on the public product page (Details section)."
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                This text appears in the product details on the storefront.
+              </p>
+            </div>
+            <div>
+              <Label>Description (optional / other language)</Label>
+              <TextArea
+                rows={4}
+                value={description}
+                onChange={setDescription}
+                placeholder="Optional secondary description stored in the database."
               />
             </div>
             <div>

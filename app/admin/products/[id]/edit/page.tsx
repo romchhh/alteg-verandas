@@ -7,6 +7,7 @@ import ComponentCard from "@/components/admin/ComponentCard";
 import { useAdminToast } from "@/lib/AdminToastContext";
 import Label from "@/components/admin/form/Label";
 import Input from "@/components/admin/form/Input";
+import TextArea from "@/components/admin/form/TextArea";
 import ToggleSwitch from "@/components/admin/form/ToggleSwitch";
 import { MultiImageUpload } from "@/components/admin/MultiImageUpload";
 export default function EditProductPage() {
@@ -38,6 +39,8 @@ export default function EditProductPage() {
   const [priceUnit, setPriceUnit] = useState<"per m" | "per m²" | "per set" | "per item">("per m");
   const [supplierPricePerMeter, setSupplierPricePerMeter] = useState("");
   const [supplierPricePerSquareMeterSet, setSupplierPricePerSquareMeterSet] = useState("");
+  const [description, setDescription] = useState("");
+  const [descriptionEn, setDescriptionEn] = useState("");
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [success, setSuccess] = useState<string | null>(null);
@@ -105,6 +108,8 @@ export default function EditProductPage() {
             ? String(p.supplierPricePerSquareMeterSet)
             : ""
         );
+        setDescription(p.description || "");
+        setDescriptionEn(p.descriptionEn || "");
       } catch (err) {
         setError("Failed to load product");
       } finally {
@@ -146,6 +151,8 @@ export default function EditProductPage() {
         hidden,
         material: material || undefined,
         finish: finish || undefined,
+        description: description.trim().length ? description.trim() : null,
+        descriptionEn: descriptionEn.trim().length ? descriptionEn.trim() : null,
         image: (images[0] || image).trim(),
         images: images.length ? images : undefined,
         priceUnit,
@@ -333,6 +340,32 @@ export default function EditProductPage() {
             <div className="flex items-center justify-between gap-4">
               <Label className="mb-0">Hidden from catalog</Label>
               <ToggleSwitch enabled={hidden} setEnabled={setHidden} label="Hidden (not shown on site)" />
+            </div>
+          </div>
+        </ComponentCard>
+
+        <ComponentCard title="Description">
+          <div className="space-y-4">
+            <div>
+              <Label>Description (English)</Label>
+              <TextArea
+                rows={6}
+                value={descriptionEn}
+                onChange={setDescriptionEn}
+                placeholder="Short product description shown on the public product page (Details section)."
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                This text appears in the product details on the storefront.
+              </p>
+            </div>
+            <div>
+              <Label>Description (optional / other language)</Label>
+              <TextArea
+                rows={4}
+                value={description}
+                onChange={setDescription}
+                placeholder="Optional secondary description stored in the database."
+              />
             </div>
           </div>
         </ComponentCard>
